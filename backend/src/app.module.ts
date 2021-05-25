@@ -11,6 +11,7 @@ import { Dialect } from 'sequelize';
 import { AuthModule } from './auth/auth.module';
 import { CourseModule } from './course/course.module';
 import { EventModule } from './event/event.module';
+import { MailModule } from './mail/mail.module';
 import { RoleModule } from './role/role.module';
 import { UserModule } from './user/user.module';
 
@@ -44,7 +45,8 @@ import { UserModule } from './user/user.module';
     CourseModule,
     EventModule,
     UserModule,
-    AuthModule
+    AuthModule,
+    MailModule
   ],
   controllers: [],
   providers: [],

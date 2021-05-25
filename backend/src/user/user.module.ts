@@ -8,6 +8,7 @@ import { UserController } from './user.controller';
 import { User } from './user.model';
 import { SeedUser } from './user.seed';
 import { UserService } from './user.service';
+import { MailModule } from '../mail/mail.module';
 import { RoleModule } from '../role/role.module';
 
 @Module({
@@ -18,7 +19,8 @@ import { RoleModule } from '../role/role.module';
     JwtModule.register({
       secret: process.env.JWT_SECRET
     }),
-    RoleModule
+    RoleModule,
+    MailModule
   ],
   controllers: [UserController],
   providers: [UserService],
