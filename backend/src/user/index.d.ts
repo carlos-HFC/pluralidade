@@ -5,13 +5,11 @@ export type ICreateUser = {
   confirmPassword: string;
   birthday: string;
   cpf: string;
-  rg: string;
   gender: string;
   cep: string;
   address: string;
   number: string;
   district: string;
-  complement?: string;
   city: string;
   uf: string;
   phone: string;
