@@ -1,10 +1,10 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { isValid, isWeekend, parseISO } from 'date-fns';
-import { convertHour, emptyFields, trimObj } from 'src/utils';
 
 import { ICreateEvent, IUpdateEvent } from '.';
 import { Event } from './event.model';
+import { convertHour, emptyFields, trimObj } from '../utils';
 
 @Injectable()
 export class EventService {
@@ -68,9 +68,9 @@ export class EventService {
   }
 
   async put(id: number, data: IUpdateEvent, image: Express.Multer.File) {
-    trimObj(data);
-    
     const event = await this.getById(id);
+
+    trimObj(data);
 
     const { initHour, endHour } = data;
 
