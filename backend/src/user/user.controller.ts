@@ -1,9 +1,11 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Req, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import multerConfig from 'src/multer';
-import { ICreateUser } from '.';
+import { Request } from 'express';
 
+import { ICreateUser, IUpdateUser } from '.';
 import { UserService } from './user.service';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import multerConfig from '../multer';
 
 @Controller('users')
 export class UserController {
@@ -42,7 +44,12 @@ export class UserController {
     return await this.userService.post(data, avatar);
   }
 
-  async update(@Param('id') id: number) { }
+  @UseGuards(JwtAuthGuard)
+  @Put()
+  @UseInterceptors(FileInterceptor('avatar', multerConfig))
+  async update(@Req() req: Request, @Body() data: IUpdateUser, @UploadedFile() avatar: Express.Multer.File) {
+    return await this.userService.put(req.user, data, avatar);
+  }
 
   @Put('inactives/:id')
   async reactiveData(@Param('id') id: number) {
