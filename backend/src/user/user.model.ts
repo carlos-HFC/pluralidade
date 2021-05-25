@@ -76,13 +76,6 @@ export class User extends Model {
   cpf: string;
 
   @Column({
-    type: DataType.STRING,
-    allowNull: false,
-    unique: true
-  })
-  rg: string;
-
-  @Column({
     type: DataType.ENUM('M', 'F', 'O'),
     allowNull: false
   })
@@ -102,9 +95,6 @@ export class User extends Model {
 
   @Column(DataType.STRING)
   number: string;
-
-  @Column(DataType.STRING)
-  complement?: string;
 
   @Column({
     type: DataType.STRING,
