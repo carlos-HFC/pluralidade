@@ -67,4 +67,10 @@ export class UserController {
   async delete(@Param('id') id: number) {
     return await this.userService.delete(id);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('/course')
+  async registerCourse(@Req() req: Request, @Body() data: { courseId: number; }) {
+    return await this.userService.registerCourse(req.user, data.courseId);
+  }
 }
