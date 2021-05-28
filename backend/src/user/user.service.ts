@@ -4,6 +4,7 @@ import { differenceInCalendarYears, isValid, parseISO } from 'date-fns';
 
 import { ICreateUser, IUpdateUser } from '.';
 import { User } from './user.model';
+import { CourseService } from '../course/course.service';
 import { MailService } from '../mail/mail.service';
 import { RoleService } from '../role/role.service';
 import { trimObj, validateCEP, validateCPF, validateEmail } from '../utils';
@@ -13,8 +14,9 @@ export class UserService {
   constructor(
     @InjectModel(User)
     private readonly userModel: typeof User,
+    private readonly courseService: CourseService,
+    private readonly mailService: MailService,
     private readonly roleService: RoleService,
-    private readonly mailService: MailService
   ) { }
 
   async get() {
@@ -34,6 +36,18 @@ export class UserService {
       attributes: { exclude: ['hash'] }
     });
   }
+
+  // async getAlunos(id?: number) {
+  //   if (id) return await this.userModel.scope('aluno').findByPk(id);
+
+  //   return await this.userModel.scope('aluno').findAll();
+  // }
+
+  // async getAdmins(id?: number) {
+  //   if (id) return await this.userModel.scope('admin').findByPk(id);
+
+  //   return await this.userModel.scope('admin').findAll();
+  // }
 
   async getById(id: number) {
     const user = await this.userModel.findByPk(id);
@@ -103,7 +117,7 @@ export class UserService {
     return user;
   }
 
-  async put(user: User, data: IUpdateUser, avatar: Express.Multer.File) {
+  async put(user: User, data: IUpdateUser, avatar?: Express.Multer.File) {
     trimObj(data);
 
     if (data.cep) validateCEP(data.cep);
@@ -179,5 +193,22 @@ export class UserService {
     if (!user) throw new HttpException("Usuário não encontrado", 404);
 
     await user.destroy({ force: true });
+  }
+
+  async registerCourse(user: User, courseId: number) {
+    const aluno = await this.getById(user.id);
+
+    switch (true) {
+      case aluno.role.type !== 'Aluno':
+        throw new HttpException("Você não é um aluno", 400);
+      case aluno.courseId === courseId:
+        throw new HttpException("Você já está inscrito neste curso", 400);
+      default:
+        break;
+    }
+
+    await this.courseService.getById(courseId);
+
+    await this.put(user, { courseId });
   }
 }
