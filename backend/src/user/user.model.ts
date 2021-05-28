@@ -1,6 +1,5 @@
-import { HttpException } from '@nestjs/common';
 import { compare, hash } from 'bcrypt';
-import { differenceInCalendarYears, format, isValid, parseISO } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { Op as $ } from 'sequelize';
 import { BeforeSave, BelongsTo, Column, DataType, DefaultScope, ForeignKey, Model, Scopes, Table } from 'sequelize-typescript';
 
@@ -8,9 +7,6 @@ import { Course } from '../course/course.model';
 import { Role } from '../role/role.model';
 
 @DefaultScope(() => ({
-  attributes: {
-    exclude: ['resetPasswordToken', 'resetPasswordExpires']
-  },
   include: [
     { model: Role }
   ]
