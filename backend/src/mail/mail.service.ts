@@ -1,6 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { InjectSendGrid, SendGridService } from '@ntegral/nestjs-sendgrid';
-import { resolve } from 'path';
 import { User } from 'src/user/user.model';
 
 @Injectable()
@@ -31,8 +30,36 @@ export class MailService {
         ],
       });
     } catch (error) {
-      return error;
+      throw new HttpException(error, 400);
     }
+  }
 
+  async forgotPass(user: User, token: string) {
+    const envelope = {
+      from: "NoReply <chfcchfc@hotmail.com>",
+      html: `
+      <h1>Esqueceu a senha?</h1>
+      <span>Não se preocupe, siga os passos abaixo</span>
+      
+      <ol>
+        <li>Entre nessa <a href="">página</a></li>
+        <li>Copie o token ao lado ${token}</li>
+        <li>Cole o token no campo correspondente</li>
+        <li>Clique em confirmar</li>
+      </ol>
+      
+      <p><strong>Lembre-se:</strong> Você só tem 1 hora para concluir essa ação para o token não expirar</p>
+      `,
+      subject: "Esqueci a senha",
+      to: user.email
+    };
+
+    try {
+      await this.client.send({
+        ...envelope
+      });
+    } catch (error) {
+      throw new HttpException(error, 400)
+    }
   }
 }
