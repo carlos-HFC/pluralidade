@@ -1,6 +1,7 @@
 import { compare, hash } from 'bcrypt';
 import { format, parseISO } from 'date-fns';
-import { Op as $ } from 'sequelize';
+import { where } from 'sequelize';
+import { Op as $, fn, col } from 'sequelize';
 import { BeforeSave, BelongsTo, Column, DataType, DefaultScope, ForeignKey, Model, Scopes, Table } from 'sequelize-typescript';
 
 import { Course } from '../course/course.model';
@@ -8,17 +9,32 @@ import { Role } from '../role/role.model';
 
 @DefaultScope(() => ({
   include: [
-    { model: Role }
+    { model: Role },
+    { model: Course },
   ]
 }))
 @Scopes(() => ({
+  admin: {
+    include: [
+      { model: Role }
+    ],
+    where: where(col('role.type'), 'Admin')
+  },
+  aluno: {
+    include: [
+      { model: Role },
+      { model: Course }
+    ],
+    where: where(col('role.type'), 'Aluno')
+  },
   all: {
     paranoid: false,
     attributes: {
       exclude: ['hash', 'resetPasswordToken', 'resetPasswordExpires']
     },
     include: [
-      { model: Role }
+      { model: Role },
+      { model: Course },
     ]
   },
   inactives: {
@@ -30,7 +46,8 @@ import { Role } from '../role/role.model';
       deletedAt: { [$.not]: null }
     },
     include: [
-      { model: Role }
+      { model: Role },
+      { model: Course },
     ]
   }
 }))
