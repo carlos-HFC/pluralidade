@@ -45,18 +45,12 @@ export class UserService {
 
   async getByCPF(cpf: string) {
     validateCPF(cpf);
-
-    const user = await this.userModel.findOne({ where: { cpf } });
-
-    return user;
+    return await this.userModel.findOne({ where: { cpf } });
   }
 
   async getByEmail(email: string) {
     validateEmail(email);
-
-    const user = await this.userModel.findOne({ where: { email } });
-
-    return user;
+    return await this.userModel.findOne({ where: { email } });
   }
 
   async getInactiveById(id: number) {
