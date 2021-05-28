@@ -8,6 +8,7 @@ import { UserController } from './user.controller';
 import { User } from './user.model';
 import { SeedUser } from './user.seed';
 import { UserService } from './user.service';
+import { CourseModule } from '../course/course.module';
 import { MailModule } from '../mail/mail.module';
 import { RoleModule } from '../role/role.module';
 
@@ -20,7 +21,8 @@ import { RoleModule } from '../role/role.module';
       secret: process.env.JWT_SECRET
     }),
     RoleModule,
-    MailModule
+    MailModule,
+    CourseModule
   ],
   controllers: [UserController],
   providers: [UserService],
