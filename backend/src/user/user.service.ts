@@ -1,6 +1,6 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { differenceInCalendarYears, isValid, parseISO } from 'date-fns';
+import { differenceInCalendarYears, isAfter, isValid, parseISO } from 'date-fns';
 
 import { ICreateUser, IUpdateUser } from '.';
 import { User } from './user.model';
@@ -198,16 +198,24 @@ export class UserService {
   async registerCourse(user: User, courseId: number) {
     const aluno = await this.getById(user.id);
 
+    const course = await this.courseService.getById(courseId);
+
+    if (isAfter(new Date(), parseISO(course.limitDate))) await this.courseService.put(course.id, { closed: true });
+
     switch (true) {
       case aluno.role.type !== 'Aluno':
         throw new HttpException("Você não é um aluno", 400);
       case aluno.courseId === courseId:
         throw new HttpException("Você já está inscrito neste curso", 400);
+      case course.closed === true:
+        throw new HttpException("A inscrição neste curso está interrompida no momento", 400);
       default:
         break;
     }
 
-    await this.courseService.getById(courseId);
+    const spots = course.spots > 0 ? course.spots - 1 : course.spots;
+
+    await this.courseService.put(course.id, { spots });
 
     await this.put(user, { courseId });
   }
