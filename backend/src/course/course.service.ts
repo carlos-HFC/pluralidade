@@ -65,7 +65,7 @@ export class CourseService {
     return course;
   }
 
-  async put(id: number, data: IUpdateCourse, image: Express.Multer.File) {
+  async put(id: number, data: IUpdateCourse, image?: Express.Multer.File) {
     trimObj(data);
 
     const course = await this.getById(id);
