@@ -8,4 +8,6 @@ export interface ICreateCourse {
   pcd: boolean;
 }
 
-export interface IUpdateCourse extends Partial<ICreateCourse> { }
+export interface IUpdateCourse extends Partial<ICreateCourse> {
+  closed?: boolean;
+}
