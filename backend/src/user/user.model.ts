@@ -1,7 +1,7 @@
 import { compare, hash } from 'bcrypt';
 import { format, parseISO } from 'date-fns';
 import { where } from 'sequelize';
-import { Op as $, fn, col } from 'sequelize';
+import { Op as $, col } from 'sequelize';
 import { BeforeSave, BelongsTo, Column, DataType, DefaultScope, ForeignKey, Model, Scopes, Table } from 'sequelize-typescript';
 
 import { Course } from '../course/course.model';
