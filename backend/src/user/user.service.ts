@@ -196,15 +196,15 @@ export class UserService {
   }
 
   async registerCourse(user: User, courseId: number) {
-    const aluno = await this.getById(user.id);
+    const aluno = await this.userModel.scope('aluno').findByPk(user.id);
+
+    if (!aluno) throw new HttpException("Você não é um aluno", 400);
 
     const course = await this.courseService.getById(courseId);
 
     if (isAfter(new Date(), parseISO(course.limitDate))) await this.courseService.put(course.id, { closed: true });
 
     switch (true) {
-      case aluno.role.type !== 'Aluno':
-        throw new HttpException("Você não é um aluno", 400);
       case aluno.courseId === courseId:
         throw new HttpException("Você já está inscrito neste curso", 400);
       case course.closed === true:
