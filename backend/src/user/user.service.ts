@@ -37,6 +37,15 @@ export class UserService {
     });
   }
 
+  async getAlunoById(id: number) {
+    await this.getById(id);
+
+    const aluno = await this.userModel.scope('aluno').findByPk(id);
+
+    if (!aluno) throw new HttpException('Usuário não é aluno', 404);
+
+    return aluno;
+  }
   // async getAlunos(id?: number) {
   //   if (id) return await this.userModel.scope('aluno').findByPk(id);
 
