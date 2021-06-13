@@ -1,16 +1,19 @@
 import { compare, hash } from 'bcrypt';
 import { format, parseISO } from 'date-fns';
-import { where } from 'sequelize';
-import { Op as $, col } from 'sequelize';
-import { BeforeSave, BelongsTo, Column, DataType, DefaultScope, ForeignKey, Model, Scopes, Table } from 'sequelize-typescript';
+import { Op as $, col, where } from 'sequelize';
+import { BeforeSave, BelongsTo, Column, DataType, DefaultScope, ForeignKey, HasMany, Model, Scopes, Table } from 'sequelize-typescript';
 
+import { Academic } from '../academic/academic.model';
 import { Course } from '../course/course.model';
+import { Experience } from '../experience/experience.model';
 import { Role } from '../role/role.model';
 
 @DefaultScope(() => ({
   include: [
     { model: Role },
     { model: Course },
+    { model: Academic },
+    { model: Experience },
   ]
 }))
 @Scopes(() => ({
@@ -23,7 +26,9 @@ import { Role } from '../role/role.model';
   aluno: {
     include: [
       { model: Role },
-      { model: Course }
+      { model: Course },
+      { model: Academic },
+      { model: Experience },
     ],
     where: where(col('role.type'), 'Aluno')
   },
@@ -35,6 +40,8 @@ import { Role } from '../role/role.model';
     include: [
       { model: Role },
       { model: Course },
+      { model: Academic },
+      { model: Experience },
     ]
   },
   inactives: {
@@ -48,6 +55,8 @@ import { Role } from '../role/role.model';
     include: [
       { model: Role },
       { model: Course },
+      { model: Academic },
+      { model: Experience },
     ]
   }
 }))
@@ -165,6 +174,12 @@ export class User extends Model {
 
   @BelongsTo(() => Course)
   course: Course;
+
+  @HasMany(() => Academic)
+  academic: Academic[]
+
+  @HasMany(() => Experience)
+  experience: Experience[]
 
   @BeforeSave
   static async hashPass(user: User) {
