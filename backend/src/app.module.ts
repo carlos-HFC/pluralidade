@@ -8,9 +8,11 @@ import { SeederModule } from 'nestjs-sequelize-seeder';
 import { join, resolve } from 'path';
 import { Dialect } from 'sequelize';
 
+import { AcademicModule } from './academic/academic.module';
 import { AuthModule } from './auth/auth.module';
 import { CourseModule } from './course/course.module';
 import { EventModule } from './event/event.module';
+import { ExperienceModule } from './experience/experience.module';
 import { MailModule } from './mail/mail.module';
 import { RoleModule } from './role/role.module';
 import { UserModule } from './user/user.module';
@@ -46,7 +48,9 @@ import { UserModule } from './user/user.module';
     EventModule,
     UserModule,
     AuthModule,
-    MailModule
+    MailModule,
+    AcademicModule,
+    ExperienceModule,
   ],
   controllers: [],
   providers: [],
