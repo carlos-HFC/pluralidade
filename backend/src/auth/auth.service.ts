@@ -33,7 +33,6 @@ export class AuthService {
       user: {
         name: user.name,
         email,
-        role: user.role.type,
       },
       token
     };
@@ -53,10 +52,6 @@ export class AuthService {
     const token = randomBytes(20).toString('hex');
 
     const now = new Date().setHours(new Date().getHours() + 1);
-
-    // console.log(typeof now.toString());
-
-    // return { token, now, nowStr: now.toString() };
 
     await user.update({
       resetPasswordToken: token,
@@ -93,10 +88,10 @@ export class AuthService {
       ...data,
       resetPasswordToken: null,
       resetPasswordExpires: null
-    })
+    });
   }
 
   private createToken(user: User) {
-    return this.jwtService.sign({ id: user.id, email: user.email });
+    return this.jwtService.sign({ id: user.id, email: user.email, role: user.role.type });
   }
 }
