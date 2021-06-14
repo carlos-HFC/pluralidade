@@ -15,7 +15,7 @@ export class RolesGuard implements CanActivate {
 
     const { user } = ctx.switchToHttp().getRequest() as Request;
 
-    const hasRole = () => roles.find(item => item === user.role.type);
+    const hasRole = () => roles.find(item => item.toLowerCase() === user.role.type.toLowerCase());
 
     if (!hasRole()) throw new HttpException("Você não tem permissão", 403);
 
