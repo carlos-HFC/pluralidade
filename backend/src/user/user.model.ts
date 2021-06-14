@@ -7,29 +7,15 @@ import { Academic } from '../academic/academic.model';
 import { Course } from '../course/course.model';
 import { Experience } from '../experience/experience.model';
 import { Role } from '../role/role.model';
+import { Solicitation } from '../solicitation/solicitation.model';
 
-@DefaultScope(() => ({
-  include: [
-    { model: Role },
-    { model: Course },
-    { model: Academic },
-    { model: Experience },
-  ]
-}))
 @Scopes(() => ({
   admin: {
-    include: [
-      { model: Role }
-    ],
+    include: [Role, Academic, Experience, Solicitation],
     where: where(col('role.type'), 'Admin')
   },
   aluno: {
-    include: [
-      { model: Role },
-      { model: Course },
-      { model: Academic },
-      { model: Experience },
-    ],
+    include: [Role, Course, Academic, Experience, Solicitation],
     where: where(col('role.type'), 'Aluno')
   },
   all: {
@@ -37,12 +23,7 @@ import { Role } from '../role/role.model';
     attributes: {
       exclude: ['hash', 'resetPasswordToken', 'resetPasswordExpires']
     },
-    include: [
-      { model: Role },
-      { model: Course },
-      { model: Academic },
-      { model: Experience },
-    ]
+    include: [Role, Course, Academic, Experience, Solicitation]
   },
   inactives: {
     paranoid: false,
@@ -52,12 +33,7 @@ import { Role } from '../role/role.model';
     where: {
       deletedAt: { [$.not]: null }
     },
-    include: [
-      { model: Role },
-      { model: Course },
-      { model: Academic },
-      { model: Experience },
-    ]
+    include: [Role, Course, Academic, Experience, Solicitation]
   }
 }))
 @Table({ paranoid: true, omitNull: false })
@@ -176,10 +152,13 @@ export class User extends Model {
   course: Course;
 
   @HasMany(() => Academic)
-  academic: Academic[]
+  academic: Academic[];
 
   @HasMany(() => Experience)
-  experience: Experience[]
+  experience: Experience[];
+
+  @HasMany(() => Solicitation)
+  solicitation: Solicitation[];
 
   @BeforeSave
   static async hashPass(user: User) {
