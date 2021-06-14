@@ -15,6 +15,7 @@ import { EventModule } from './event/event.module';
 import { ExperienceModule } from './experience/experience.module';
 import { MailModule } from './mail/mail.module';
 import { RoleModule } from './role/role.module';
+import { SolicitationModule } from './solicitation/solicitation.module';
 import { UserModule } from './user/user.module';
 
 @Module({
@@ -51,6 +52,7 @@ import { UserModule } from './user/user.module';
     MailModule,
     AcademicModule,
     ExperienceModule,
+    SolicitationModule,
   ],
   controllers: [],
   providers: [],
