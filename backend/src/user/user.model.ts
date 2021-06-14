@@ -9,13 +9,16 @@ import { Experience } from '../experience/experience.model';
 import { Role } from '../role/role.model';
 import { Solicitation } from '../solicitation/solicitation.model';
 
+@DefaultScope(() => ({
+  include: [Role]
+}))
 @Scopes(() => ({
   admin: {
-    include: [Role, Academic, Experience, Solicitation],
+    include: [Role],
     where: where(col('role.type'), 'Admin')
   },
   aluno: {
-    include: [Role, Course, Academic, Experience, Solicitation],
+    include: [Role, Course, Solicitation],
     where: where(col('role.type'), 'Aluno')
   },
   all: {
@@ -33,8 +36,8 @@ import { Solicitation } from '../solicitation/solicitation.model';
     where: {
       deletedAt: { [$.not]: null }
     },
-    include: [Role, Course, Academic, Experience, Solicitation]
-  }
+    include: [Role, Course, Solicitation]
+  },
 }))
 @Table({ paranoid: true, omitNull: false })
 export class User extends Model {
