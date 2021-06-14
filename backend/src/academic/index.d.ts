@@ -8,4 +8,4 @@ export type CreateAcademic = {
   userId: number;
 };
 
-export type UpdateAcademic = Partial<CreateAcademic>;
+export type UpdateAcademic = Pick<CreateAcademic, 'endDate' | 'finished'>;
