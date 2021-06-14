@@ -8,4 +8,4 @@ export type CreateExperience = {
   userId: number;
 };
 
-export type UpdateExperience = Partial<CreateExperience>;
+export type UpdateExperience = Pick<Partial<CreateExperience>, 'endDate' | 'office'>;
