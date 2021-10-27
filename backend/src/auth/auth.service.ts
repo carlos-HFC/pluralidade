@@ -1,97 +1,122 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { randomBytes } from 'crypto';
-import { isAfter } from 'date-fns';
+import { addHours, isAfter } from 'date-fns';
+import { Sequelize } from 'sequelize-typescript';
 
-import { ILogin, IResetPassword } from '.';
-import { MailService } from '../mail/mail.service';
+import { ForgotPasswordDTO, LoginDTO, ResetPasswordDTO } from './auth.dto';
 import { User } from '../user/user.model';
 import { UserService } from '../user/user.service';
-import { trimObj, validateEmail } from '../utils';
+import { createTokenHEX, trimObj } from '../utils';
+import { CreateUserDTO } from '../user/user.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
     private jwtService: JwtService,
     private userService: UserService,
-    private mailService: MailService,
+    private sequelize: Sequelize
   ) { }
 
-  async login(data: ILogin) {
+  async login(data: LoginDTO) {
     trimObj(data);
-    validateEmail(data.email);
 
-    const { email, password } = data;
+    const user = await this.userService.findByEmail(data.email);
 
-    const user = await this.userService.getByEmail(email);
+    if (!user || !(await user.checkPass(data.password))) throw new HttpException("As credenciais estão incorretas", 400);
 
-    if (!user || !(await user.checkPass(password))) throw new HttpException("As credenciais estão incorretas", 400);
-
-    const token = this.createToken(user);
-
-    return {
-      user: {
-        name: user.name,
-        email,
-      },
-      token
-    };
+    return this.createToken(user);
   }
 
-  async validate(paylod: { email: string; }) {
-    return await this.userService.getByEmail(paylod.email);
+  async validate({ email }: LoginDTO) {
+    return await this.userService.findByEmail(email);
   }
 
-  async register() { }
+  async register(data: CreateUserDTO) {
+    return await this.userService.post(data, true)
+  }
 
-  async forgotPassword(email: string) {
-    const user = await this.userService.getByEmail(email.trim());
+  async forgotPassword({ email }: ForgotPasswordDTO) {
+    const user = await this.userService.findByEmail(email);
 
     if (!user) throw new HttpException("Usuário não encontrado", 404);
 
-    const token = randomBytes(20).toString('hex');
+    const token = createTokenHEX(), now = addHours(new Date(), 1);
 
-    const now = new Date().setHours(new Date().getHours() + 1);
+    const transaction = await this.sequelize.transaction();
 
-    await user.update({
-      resetPasswordToken: token,
-      resetPasswordExpires: now.toString()
-    });
+    try {
+      await user.update({
+        tokenResetPassword: token,
+        tokenResetPasswordExpires: now,
+      }, { transaction });
 
-    await this.mailService.forgotPass(user, token);
+      await transaction.commit();
+    } catch (error) {
+      await transaction.rollback();
+      throw new HttpException(error, 400);
+    }
   }
 
-  async resetPassword(data: IResetPassword) {
+  async resetPassword(data: ResetPasswordDTO) {
     trimObj(data);
 
-    const user = await this.userService.getByEmail(data.email);
-    const now = new Date();
+    const user = await this.userService.findByEmail(data.email);
+
+    if (!user) throw new HttpException("Usuário não encontado", 404);
 
     switch (true) {
-      case !user:
-        throw new HttpException("Usuário não encontado", 404);
-      case data.token !== user.resetPasswordToken:
+      case data.token !== user.tokenResetPassword:
         throw new HttpException("Token inválido", 400);
-      case isAfter(now, Number(user.resetPasswordExpires)):
+      case isAfter(new Date(), user.tokenResetPasswordExpires):
         throw new HttpException("Token expirou", 400);
-      case data.password.length < 6:
-        throw new HttpException("Senha muito curta", 400);
-      case data.password && !data.confirmPassword:
-        throw new HttpException("Confirmação de senha é obrigatória", 400);
-      case data.password !== data.confirmPassword:
-        throw new HttpException("As senhas não correspondem", 400);
+      case await user.checkPass(data.password):
+        throw new HttpException("Nova senha não pode ser igual a senha atual", 400);
       default:
         break;
     }
 
-    await user.update({
-      ...data,
-      resetPasswordToken: null,
-      resetPasswordExpires: null
-    });
+    const transaction = await this.sequelize.transaction();
+
+    try {
+      await user.update({
+        tokenResetPassword: null,
+        tokenResetPasswordExpires: null
+      }, { transaction });
+
+      await transaction.commit();
+    } catch (error) {
+      await transaction.rollback();
+      throw new HttpException(error, 400);
+    }
   }
 
   private createToken(user: User) {
-    return this.jwtService.sign({ id: user.id, email: user.email, role: user.role.type });
+    const { id, name, avatar, email, gender, cep, cpf, birthday, phone, complement, district, city, uf, role } = user;
+
+    const token = this.jwtService.sign({ id, email, role: role.name, cpf, password: user.hash });
+
+    const [address, number] = user.address.split(',').map(address => address.trim());
+
+    return {
+      token,
+      user: {
+        id,
+        name,
+        avatar,
+        email,
+        cpf,
+        birthday,
+        gender,
+        cep,
+        address,
+        number,
+        complement,
+        district,
+        city,
+        uf,
+        phone,
+        role: role.name
+      }
+    };
   }
 }
