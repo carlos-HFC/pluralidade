@@ -1,4 +1,5 @@
 import { HttpException } from '@nestjs/common';
+import { randomBytes } from 'crypto';
 
 export function trimObj(obj: object) {
   for (let key in obj) {
@@ -6,23 +7,13 @@ export function trimObj(obj: object) {
   }
 }
 
-export function convertHour(time: string) {
-  const [hour, minute] = time.split(":").map(Number);
-  return (hour * 60) + minute;
+export function capitalizeFirstLetter(str: string) {
+  trimObj({ str });
+  return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-export function hourTimeString(time: string) {
-  return time.split(":").map(unit => unit.padStart(2, '0')).join(":");
-}
-
-export function emptyFields(data: object) {
-  return Object.values(data).some(item => typeof item === 'string' && !item.trim());
-}
-
-export function validateEmail(email: string) {
-  const regex = /\S+@\S+\.\S+/;
-
-  if (!regex.test(email)) throw new HttpException("E-mail inválido", 400);
+export function createTokenHEX(size: number = 20) {
+  return randomBytes(size).toString('hex');
 }
 
 export function validateCPF(cpf: string) {
@@ -59,8 +50,9 @@ export function validateCPF(cpf: string) {
   if (rest !== Number(cpf.substring(10, 11))) throw new HttpException("CPF inválido", 400);
 }
 
-export function validateCEP(cep: string) {
-  const regex = /[\d]{8}/g;
-
-  if (!regex.test(cep) || cep.length !== 8) throw new HttpException("CEP inválido", 400);
+export function convertBool(value: 'true' | 'false') {
+  return ({
+    'true': true,
+    'false': false,
+  })[value];
 }
