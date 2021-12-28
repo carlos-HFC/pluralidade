@@ -1,13 +1,13 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Req, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Put, Query, Req, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Request } from 'express';
 
-import { ICreateUser, IUpdateUser } from '.';
+import { CreateUserDTO, FilterUserDTO, UpdateUserDTO } from './user.dto';
 import { UserService } from './user.service';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { Role } from '../auth/role.decorator';
-import { RolesGuard } from '../auth/role.guard';
-import multerConfig from '../multer';
+import { RoleDecorator } from '../common/decorators/role.decorator';
+import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
+import { RolesGuard } from '../common/guards/role.guard';
+import { config } from '../config/multer';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('users')
@@ -16,73 +16,34 @@ export class UserController {
     private userService: UserService
   ) { }
 
-  @Role('admin')
+  // @RoleDecorator('admin')
   @Get()
-  async index() {
-    return await this.userService.get();
+  async index(@Query() query?: FilterUserDTO) {
+    return await this.userService.get(query);
   }
 
-  @Role('admin')
-  @Get('all')
-  async all() {
-    return await this.userService.getAll();
-  }
-
-  @Role('admin')
-  @Get('inactives')
-  async inactives() {
-    return await this.userService.getInactives();
-  }
-
-  @Role('admin')
+  @RoleDecorator('admin')
   @Get(':id')
-  async getById(@Param('id') id: number) {
-    return await this.userService.getById(id);
+  async getById(@Param('id') id: number, @Query('inactives') inactives?: 'true' | 'false') {
+    return await this.userService.findById(id, inactives);
   }
 
-  @Role('admin')
-  @Get('inactives/:id')
-  async getInactiveById(@Param('id') id: number) {
-    return await this.userService.getInactiveById(id);
-  }
-
-  @Role('admin')
+  @RoleDecorator('admin')
   @Post()
-  @UseInterceptors(FileInterceptor('avatar', multerConfig))
-  async create(@Body() data: ICreateUser, @UploadedFile() avatar: Express.Multer.File) {
-    return await this.userService.post(data, avatar);
+  async create(@Body() data: CreateUserDTO) {
+    return await this.userService.post(data);
   }
 
-  @Role('admin', 'aluno')
   @Put()
-  @UseInterceptors(FileInterceptor('avatar', multerConfig))
-  async update(@Req() req: Request, @Body() data: IUpdateUser, @UploadedFile() avatar: Express.Multer.File) {
-    return await this.userService.put(req.user, data, avatar);
+  @UseInterceptors(FileInterceptor('media', config))
+  async update(@Req() req: Request, @Body() data: UpdateUserDTO, @UploadedFile() media: Express.Multer.File) {
+    return await this.userService.put(req.user, data, media);
   }
 
-  @Role('admin')
-  @Put('inactives/:id')
-  async reactiveData(@Param('id') id: number) {
-    return await this.userService.reactiveData(id);
-  }
-
-  @Role('admin')
+  @RoleDecorator('admin')
   @HttpCode(204)
   @Delete(':id')
-  async inactiveData(@Param('id') id: number) {
-    return await this.userService.inactiveData(id);
-  }
-
-  @Role('admin')
-  @HttpCode(204)
-  @Delete('delete/:id')
-  async delete(@Param('id') id: number) {
-    return await this.userService.delete(id);
-  }
-
-  @Role('aluno')
-  @Post('/course')
-  async registerCourse(@Req() req: Request, @Body() data: { courseId: number; }) {
-    return await this.userService.registerCourse(req.user, data.courseId);
+  async activeInactive(@Param('id') id: number, @Query('status') status: 'true' | 'false') {
+    return await this.userService.activeInactive(id, status);
   }
 }

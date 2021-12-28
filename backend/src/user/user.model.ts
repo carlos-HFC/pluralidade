@@ -1,46 +1,26 @@
 import { compare, hash } from 'bcrypt';
 import { format, parseISO } from 'date-fns';
-import { Op as $, col, where } from 'sequelize';
-import { BeforeSave, BelongsTo, Column, DataType, DefaultScope, ForeignKey, HasMany, Model, Scopes, Table } from 'sequelize-typescript';
+import { BeforeSave, BelongsTo, Column, DataType, ForeignKey, HasMany, Model, Scopes, Table } from 'sequelize-typescript';
 
+import { CreateUserDTO } from './user.dto';
 import { Academic } from '../academic/academic.model';
 import { Course } from '../course/course.model';
 import { Experience } from '../experience/experience.model';
 import { Role } from '../role/role.model';
 import { Solicitation } from '../solicitation/solicitation.model';
 
-@DefaultScope(() => ({
-  include: [Role]
-}))
 @Scopes(() => ({
-  admin: {
-    include: [Role],
-    where: where(col('role.type'), 'Admin')
-  },
-  aluno: {
-    include: [Role, Course, Solicitation],
-    where: where(col('role.type'), 'Aluno')
-  },
-  all: {
-    paranoid: false,
-    attributes: {
-      exclude: ['hash', 'resetPasswordToken', 'resetPasswordExpires']
-    },
-    include: [Role, Course, Academic, Experience, Solicitation]
-  },
-  inactives: {
-    paranoid: false,
-    attributes: {
-      exclude: ['hash', 'resetPasswordToken', 'resetPasswordExpires']
-    },
-    where: {
-      deletedAt: { [$.not]: null }
-    },
-    include: [Role, Course, Solicitation]
-  },
+  role: {
+    include: [
+      {
+        model: Role,
+        attributes: ['name']
+      }
+    ]
+  }
 }))
-@Table({ paranoid: true, omitNull: false })
-export class User extends Model {
+@Table({ paranoid: true })
+export class User extends Model<User, CreateUserDTO> {
   @Column({
     type: DataType.STRING,
     allowNull: false
@@ -54,6 +34,19 @@ export class User extends Model {
   })
   email: string;
 
+  @Column({
+    type: DataType.BOOLEAN,
+    defaultValue: false,
+    allowNull: false
+  })
+  emailVerified: boolean;
+
+  @Column(DataType.STRING)
+  tokenEmailVerification?: string;
+
+  @Column(DataType.DATE)
+  tokenEmailVerificationExpires?: Date;
+
   @Column(DataType.STRING)
   hash: string;
 
@@ -61,30 +54,42 @@ export class User extends Model {
   password: string;
 
   @Column({
-    type: DataType.STRING,
-    allowNull: false
+    type: DataType.DATEONLY,
+    allowNull: false,
+    set(value: string) {
+      this.setDataValue('birthday', format(parseISO(value), 'yyyy-MM-dd'));
+    }
   })
-  birthday: string;
+  birthday: Date;
 
   @Column(DataType.STRING)
   avatar?: string;
 
   @Column({
-    type: DataType.STRING(11),
+    type: DataType.STRING,
     allowNull: false,
-    unique: true
+    unique: true,
+    set(value: string) {
+      this.setDataValue('cpf', value.replace(/[\s-.]/g, ''));
+    }
   })
   cpf: string;
 
   @Column({
     type: DataType.ENUM('M', 'F', 'O'),
-    allowNull: false
+    allowNull: false,
+    set(value: string) {
+      this.setDataValue('gender', value.toUpperCase());
+    }
   })
   gender: string;
 
   @Column({
-    type: DataType.STRING(8),
+    type: DataType.STRING,
     allowNull: false,
+    set(value: string) {
+      this.setDataValue('cep', value.replace(/[\s-]/g, ''));
+    }
   })
   cep: string;
 
@@ -94,14 +99,14 @@ export class User extends Model {
   })
   address: string;
 
-  @Column(DataType.STRING)
-  number: string;
-
   @Column({
     type: DataType.STRING,
     allowNull: false
   })
   district: string;
+
+  @Column(DataType.STRING)
+  complement?: string;
 
   @Column({
     type: DataType.STRING,
@@ -120,7 +125,10 @@ export class User extends Model {
 
   @Column({
     type: DataType.STRING,
-    allowNull: false
+    allowNull: false,
+    set(value: string) {
+      this.setDataValue('phone', value.replace(/(\+55)?[\s()-]/g, ''));
+    }
   })
   phone: string;
 
@@ -135,10 +143,10 @@ export class User extends Model {
   whichDeficiency?: string;
 
   @Column(DataType.STRING)
-  resetPasswordToken?: string;
+  tokenResetPassword?: string;
 
-  @Column(DataType.STRING)
-  resetPasswordExpires?: string;
+  @Column(DataType.DATE)
+  tokenResetPasswordExpires?: Date;
 
   @ForeignKey(() => Role)
   @Column({ allowNull: false })
@@ -164,13 +172,8 @@ export class User extends Model {
   solicitation: Solicitation[];
 
   @BeforeSave
-  static async hashPass(user: User) {
-    if (user.password) return user.hash = await hash(user.password, 10);
-  }
-
-  @BeforeSave
-  static async setDates(user: User) {
-    return user.birthday = format(parseISO(user.birthday), 'yyyy-MM-dd');
+  static async formatData(user: User) {
+    if (user.password) user.hash = await hash(user.password, 10);
   }
 
   checkPass(password: string) {
