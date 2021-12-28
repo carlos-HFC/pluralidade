@@ -1,27 +1,26 @@
 import { Body, Controller, Param, Post, Put, UseGuards } from '@nestjs/common';
 
-import { CreateAcademic, UpdateAcademic } from '.';
+import { CreateAcademicDTO, UpdateAcademicDTO } from './academic.dto';
 import { AcademicService } from './academic.service';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { Role } from '../auth/role.decorator';
-import { RolesGuard } from '../auth/role.guard';
+import { RoleDecorator } from '../common/decorators/role.decorator';
+import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
+import { RolesGuard } from '../common/guards/role.guard';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
+@RoleDecorator('admin')
 @Controller('academics')
 export class AcademicController {
   constructor(
     private academicService: AcademicService
   ) { }
 
-  @Role('admin')
   @Post()
-  async store(@Body() data: CreateAcademic) {
+  async store(@Body() data: CreateAcademicDTO) {
     return await this.academicService.post(data);
   }
 
-  @Role('admin')
   @Put(':id')
-  async update(@Param('id') id: number, @Body() data: UpdateAcademic) {
+  async update(@Param('id') id: number, @Body() data: UpdateAcademicDTO) {
     return await this.academicService.put(id, data);
   }
 }

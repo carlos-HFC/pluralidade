@@ -1,36 +1,30 @@
-import { format, parseISO } from 'date-fns';
-import { BeforeSave, BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
+import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
 
+import { CreateAcademicDTO } from './academic.dto';
 import { User } from '../user/user.model';
 
 @Table({ paranoid: true })
-export class Academic extends Model {
-  @Column({
-    type: DataType.STRING,
-    allowNull: false
-  })
-  name: string;
-
+export class Academic extends Model<Academic, CreateAcademicDTO> {
   @Column({
     type: DataType.STRING,
     allowNull: false
   })
   institution: string;
 
+  @Column(DataType.STRING)
+  degree: string;
+
+  @Column(DataType.STRING)
+  name: string;
+
   @Column({
-    type: DataType.STRING,
+    type: DataType.STRING(4),
     allowNull: false
   })
   initDate: string;
 
-  @Column(DataType.STRING)
+  @Column(DataType.STRING(4))
   endDate: string;
-
-  @Column({
-    type: DataType.STRING,
-    allowNull: false
-  })
-  grade: string;
 
   @ForeignKey(() => User)
   @Column({ allowNull: false })
@@ -38,15 +32,4 @@ export class Academic extends Model {
 
   @BelongsTo(() => User)
   user: User;
-
-  @BeforeSave
-  static async setDataValues(academic: Academic) {
-    const init = parseISO(academic.initDate);
-    academic.initDate = format(init, 'yyyy-MM-dd');
-
-    if (academic.endDate) {
-      const end = parseISO(academic.endDate);
-      academic.endDate = format(end, 'yyyy-MM-dd');
-    }
-  }
 }
