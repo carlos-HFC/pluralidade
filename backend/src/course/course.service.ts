@@ -1,135 +1,194 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { differenceInBusinessDays, isAfter, isEqual, isValid, parseISO } from 'date-fns';
+import { addBusinessDays, addMonths, differenceInBusinessDays, endOfMonth, format, isAfter, isWeekend, parseISO, setMonth, startOfDay, startOfMonth, startOfToday, subBusinessDays } from 'date-fns';
+import { Op as $ } from 'sequelize';
+import { Sequelize } from 'sequelize-typescript';
 
-import { ICreateCourse, IUpdateCourse } from '.';
+import { CreateCourseDTO, FilterCourseDTO, UpdateCourseDTO } from './course.dto';
 import { Course } from './course.model';
-import { emptyFields, trimObj } from '../utils';
+import { UploadService } from '../config/upload.service';
+import { User } from '../user/user.model';
+import { capitalizeFirstLetter, convertBool, trimObj } from '../utils';
 
 @Injectable()
 export class CourseService {
   constructor(
     @InjectModel(Course)
-    private readonly courseModel: typeof Course
+    private readonly courseModel: typeof Course,
+    private sequelize: Sequelize,
+    private upload: UploadService
   ) { }
 
-  async get() {
-    return await this.courseModel.findAll();
+  async get(query?: FilterCourseDTO) {
+    trimObj(query);
+    const where = {};
+
+    if (query.pcd) Object.assign(where, { pcd: convertBool(query.pcd) });
+    if (query.name) Object.assign(where, { name: { [$.startsWith]: capitalizeFirstLetter(query.name) } });
+    if (query.period) Object.assign(where, { period: query.period.toUpperCase() });
+    if (query.month) {
+      const month = setMonth(startOfToday(), Number(query.month) - 1);
+
+      Object.assign(where, {
+        initDate: {
+          [$.between]: [
+            startOfMonth(month),
+            endOfMonth(month),
+          ]
+        }
+      });
+    }
+
+    return await this.courseModel.findAll({
+      paranoid: !convertBool(query.inactives),
+      where,
+      order: [['initDate', 'ASC']]
+    });
   }
 
-  async getAll() {
-    return await this.courseModel.scope("all").findAll();
-  }
-
-  async getById(id: number) {
-    const course = await this.courseModel.findByPk(id);
+  async findById(id: number, inactives?: 'true' | 'false') {
+    const course = await this.courseModel.findByPk(id, { paranoid: !convertBool(inactives) });
 
     if (!course) throw new HttpException("Curso não encontrado", 404);
 
     return course;
   }
 
-  async post(data: ICreateCourse, image: Express.Multer.File) {
+  async availableDate(period: 'M' | 'T' | 'N', initDate: string, endDate: string) {
+    return await this.courseModel.findOne({
+      where: {
+        period,
+        initDate: { [$.lte]: initDate },
+        endDate: { [$.gte]: endDate },
+      }
+    });
+  }
+
+  async post(data: CreateCourseDTO, media: Express.Multer.File) {
     trimObj(data);
 
-    const { initDate, endDate, pcd, spots } = data;
+    if (!media) throw new HttpException('Imagem é obrigatória', 400);
 
-    data.pcd = Boolean(pcd);
+    const image = this.upload.post(media);
+    Object.assign(data, { image });
 
-    if (Object.values(data).some(item => typeof item === "string" && !item) || !image) throw new HttpException("Há campos vazios", 400);
-
-    const init = parseISO(initDate);
-    const end = parseISO(endDate);
+    const date = parseISO(data.initDate);
 
     switch (true) {
-      case !isValid(init):
-      case !isValid(end):
-        throw new HttpException("Data inválida", 400);
-      case spots > 30:
-      case spots < 10:
-        throw new HttpException("Curso deve ter o mínimo de 10 vagas e o máximo de 30 vagas", 400);
-      case isAfter(init, end):
-      case isEqual(init, end):
-        throw new HttpException("Data inicial do curso não pode ser igual ou após a data final do curso", 400);
-      case differenceInBusinessDays(end, init) + 1 <= 24:
-        throw new HttpException("Curso não tem o número mínimo de dias", 400);
+      case differenceInBusinessDays(date, startOfToday()) < 10:
+        throw new HttpException('Curso não pode iniciar em menos de 10 dias úteis', 400);
+      case isAfter(startOfToday(), date):
+        throw new HttpException('Data passada não permitida', 400);
+      case isWeekend(date):
+        throw new HttpException('Curso não pode iniciar em um fim de semana', 400);
       default:
         break;
     }
 
-    const course = await this.courseModel.create({
-      ...data,
-      image: image.filename
-    });
+    const difference = differenceInBusinessDays(addMonths(date, data.months), date);
+    const endDate = format(addBusinessDays(date, difference), 'yyyy-MM-dd');
 
-    return course;
+    if (await this.availableDate(data.period, endDate, format(date, 'yyyy-MM-dd'))) throw new HttpException('Data do curso indisponível', 400);
+
+    const transaction = await this.sequelize.transaction();
+
+    try {
+      const course = await this.courseModel.create({
+        ...data,
+        endDate
+      }, { transaction });
+
+      await transaction.commit();
+
+      return course;
+    } catch (error) {
+      await transaction.rollback();
+      throw new HttpException(error, 400);
+    }
   }
 
-  async put(id: number, data: IUpdateCourse, image?: Express.Multer.File) {
+  async put(id: number, data: UpdateCourseDTO, media?: Express.Multer.File) {
     trimObj(data);
 
-    const course = await this.getById(id);
+    const course = await this.findById(id);
 
-    const { initDate, endDate, pcd, spots } = data;
+    const date = parseISO(data.initDate || String(course.initDate));
 
-    data.pcd = Boolean(pcd);
-
-    if (emptyFields(data) || image && image === null) throw new HttpException("Há campos vazios", 400);
-
-    const init = parseISO(initDate || course.initDate);
-    const end = parseISO(endDate || course.endDate);
+    if (media) {
+      const image = this.upload.post(media);
+      Object.assign(data, { image });
+    }
 
     switch (true) {
-      case !isValid(init):
-      case !isValid(end):
-        throw new HttpException("Data inválida", 400);
-      case spots > 30:
-      case spots < 10:
-        throw new HttpException("Curso deve ter o mínimo de 10 vagas e o máximo de 30 vagas", 400);
-      case isAfter(init, end):
-      case isEqual(init, end):
-        throw new HttpException("Data inicial do curso não pode ser igual ou após a data final do curso", 400);
-      case differenceInBusinessDays(end, init) + 1 <= 24:
-        throw new HttpException("Curso não tem o número mínimo de dias", 400);
+      case differenceInBusinessDays(date, startOfToday()) < 10:
+        throw new HttpException('Curso não pode iniciar em menos de 10 dias úteis', 400);
+      case isAfter(startOfToday(), date):
+        throw new HttpException('Data passada não permitida', 400);
+      case isWeekend(date):
+        throw new HttpException('Curso não pode iniciar em um fim de semana', 400);
       default:
         break;
     }
 
-    await course.update({
-      ...data,
-      image: image && image.filename
-    });
+    if (data.months) {
+      const difference = differenceInBusinessDays(addMonths(date, data.months), date);
+      const endDate = format(addBusinessDays(date, difference), 'yyyy-MM-dd');
+      Object.assign(data, { endDate });
+
+      if (await this.availableDate(data.period, endDate, format(date, 'yyyy-MM-dd'))) throw new HttpException('Data do curso indisponível', 400);
+    }
+
+    const transaction = await this.sequelize.transaction();
+
+    try {
+      await course.update({ ...data }, { transaction });
+
+      await transaction.commit();
+    } catch (error) {
+      await transaction.rollback();
+      throw new HttpException(error, 400);
+    }
   }
 
-  async inactiveData(id: number) {
-    const course = await this.getById(id);
+  async activeInactive(id: number, status: 'true' | 'false') {
+    const st = convertBool(status);
 
-    await course.destroy();
+    const course = await this.findById(id, 'true');
+
+    if (!st) return await course.destroy();
+    return await course.restore();
   }
 
-  async getInactives() {
-    return await this.courseModel.scope("inactives").findAll();
-  }
+  async registerCourse(user: User, id: number) {
+    const course = await this.findById(id);
 
-  async getInactiveById(id: number) {
-    const course = await this.courseModel.scope("inactives").findByPk(id);
+    const initDate = new Date(course.initDate);
+    const limitDate = startOfDay(subBusinessDays(initDate, 5));
 
-    if (!course) throw new HttpException("Curso não encontrado", 404);
+    switch (true) {
+      case isAfter(startOfToday(), limitDate):
+      case course.spots === 0:
+        throw new HttpException('As inscrições para este curso acabaram', 400);
+      case user.courseId === id:
+        throw new HttpException('Você já está inscrito neste curso', 400);
+      case course.pcd && !user.deficient:
+        throw new HttpException('Este curso é apenas para pessoas com deficiência', 400);
+      default:
+        break;
+    }
 
-    return course;
-  }
+    const spots = course.spots > 0 ? course.spots - 1 : course.spots;
 
-  async reactiveData(id: number) {
-    const course = await this.getInactiveById(id);
+    const transaction = await this.sequelize.transaction();
 
-    await course.restore();
-  }
+    try {
+      await course.update({ spots }, { transaction });
+      await user.update({ courseId: id }, { transaction });
 
-  async delete(id: number) {
-    const course = await this.courseModel.scope("all").findByPk(id);
-
-    if (!course) throw new HttpException("Curso não encontrado", 404);
-
-    await course.destroy({ force: true });
+      await transaction.commit();
+    } catch (error) {
+      await transaction.rollback();
+      throw new HttpException(error, 400);
+    }
   }
 }

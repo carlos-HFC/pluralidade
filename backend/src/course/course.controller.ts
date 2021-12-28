@@ -1,12 +1,13 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Put, Query, Req, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { Request } from 'express';
 
-import { ICreateCourse, IUpdateCourse } from '.';
+import { CreateCourseDTO, FilterCourseDTO, UpdateCourseDTO } from './course.dto';
 import { CourseService } from './course.service';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { RolesGuard } from '../auth/role.guard';
-import { Role } from '../auth/role.decorator';
-import multerConfig from '../multer';
+import { RoleDecorator } from '../common/decorators/role.decorator';
+import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
+import { RolesGuard } from '../common/guards/role.guard';
+import { config } from '../config/multer';
 
 @Controller('courses')
 export class CourseController {
@@ -15,72 +16,43 @@ export class CourseController {
   ) { }
 
   @Get()
-  async index() {
-    return await this.courseService.get();
-  }
-
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Role('admin')
-  @Get('all')
-  async all() {
-    return await this.courseService.getAll();
-  }
-
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Role('admin')
-  @Get('inactives')
-  async inactives() {
-    return await this.courseService.getInactives();
+  async index(@Query() query?: FilterCourseDTO) {
+    return await this.courseService.get(query);
   }
 
   @Get(':id')
-  async getById(@Param('id') id: number) {
-    return await this.courseService.getById(id);
+  async getById(@Param('id') id: number, @Query('inactives') inactives?: 'true' | 'false') {
+    return await this.courseService.findById(id, inactives);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Role('admin')
-  @Get('inactives/:id')
-  async getInactiveById(@Param('id') id: number) {
-    return await this.courseService.getInactiveById(id);
-  }
-
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Role('admin')
+  @RoleDecorator('admin')
   @Post()
-  @UseInterceptors(FileInterceptor('image', multerConfig))
-  async create(@Body() data: ICreateCourse, @UploadedFile() image: Express.Multer.File) {
-    return await this.courseService.post(data, image);
+  @UseInterceptors(FileInterceptor('media', config))
+  async create(@Body() data: CreateCourseDTO, @UploadedFile() media: Express.Multer.File) {
+    return await this.courseService.post(data, media);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Role('admin')
+  @RoleDecorator('admin')
   @Put(':id')
-  @UseInterceptors(FileInterceptor('image', multerConfig))
-  async update(@Param('id') id: number, @Body() data: IUpdateCourse, @UploadedFile() image: Express.Multer.File) {
-    return await this.courseService.put(id, data, image);
+  @UseInterceptors(FileInterceptor('media', config))
+  async update(@Param('id') id: number, @Body() data: UpdateCourseDTO, @UploadedFile() media: Express.Multer.File) {
+    return await this.courseService.put(id, data, media);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Role('admin')
-  @Put('inactives/:id')
-  async reactiveData(@Param('id') id: number) {
-    return await this.courseService.reactiveData(id);
-  }
-
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Role('admin')
+  @RoleDecorator('admin')
   @HttpCode(204)
   @Delete(':id')
-  async inactiveData(@Param('id') id: number) {
-    return await this.courseService.inactiveData(id);
+  async activeInactive(@Param('id') id: number, @Query('status') status: 'true' | 'false') {
+    return await this.courseService.activeInactive(id, status);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Role('admin')
-  @HttpCode(204)
-  @Delete('delete/:id')
-  async delete(@Param('id') id: number) {
-    return await this.courseService.delete(id);
+  @RoleDecorator('aluno')
+  @Patch(':id')
+  async registerCourse(@Param('id') id: number, @Req() req: Request) {
+    return await this.courseService.registerCourse(req.user, id);
   }
 }

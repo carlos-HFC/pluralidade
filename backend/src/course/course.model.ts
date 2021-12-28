@@ -1,21 +1,9 @@
-import { HttpException } from '@nestjs/common';
-import { format, isValid, parseISO, subDays } from 'date-fns';
-import { Op as $ } from 'sequelize';
-import { BeforeSave, Column, DataType, Model, Scopes, Table } from 'sequelize-typescript';
+import { Column, DataType, Model, Table } from 'sequelize-typescript';
 
-@Scopes(() => ({
-  all: {
-    paranoid: false
-  },
-  inactives: {
-    paranoid: false,
-    where: {
-      deletedAt: { [$.not]: null }
-    }
-  }
-}))
+import { CreateCourseDTO } from './course.dto';
+
 @Table({ paranoid: true })
-export class Course extends Model {
+export class Course extends Model<Course, CreateCourseDTO> {
   @Column({
     type: DataType.STRING,
     allowNull: false,
@@ -23,7 +11,7 @@ export class Course extends Model {
   name: string;
 
   @Column({
-    type: DataType.STRING,
+    type: DataType.TEXT,
     allowNull: false
   })
   description: string;
@@ -31,32 +19,29 @@ export class Course extends Model {
   @Column({
     type: DataType.STRING,
     allowNull: false,
-    set(value: string) {
-      this.setDataValue('image', `http://${process.env.DB_HOST}:8000/uploads/${value}`);
-    }
   })
   image: string;
 
   @Column({
-    type: DataType.STRING,
-    allowNull: false
+    type: DataType.ENUM('M', 'T', 'N'),
+    allowNull: false,
+    set(value: string) {
+      this.setDataValue('period', value.toUpperCase());
+    }
   })
-  period: string;
-
-  @Column(DataType.STRING)
-  limitDate: string;
+  period: 'M' | 'T' | 'N';
 
   @Column({
-    type: DataType.STRING,
+    type: DataType.DATEONLY,
     allowNull: false,
   })
-  initDate: string;
+  initDate: Date;
 
   @Column({
-    type: DataType.STRING,
+    type: DataType.DATEONLY,
     allowNull: false
   })
-  endDate: string;
+  endDate: Date;
 
   @Column({
     type: DataType.INTEGER,
@@ -66,23 +51,8 @@ export class Course extends Model {
 
   @Column({
     type: DataType.BOOLEAN,
+    allowNull: false,
     defaultValue: false
   })
   pcd: boolean;
-
-  @Column({
-    type: DataType.BOOLEAN,
-    defaultValue: false
-  })
-  closed: boolean;
-
-  @BeforeSave
-  static async setDataValues(course: Course) {
-    const init = parseISO(course.initDate);
-    const end = parseISO(course.endDate);
-
-    course.limitDate = format(subDays(init, 5), 'yyyy-MM-dd');
-    course.initDate = format(init, 'yyyy-MM-dd');
-    course.endDate = format(end, 'yyyy-MM-dd');
-  }
 }
