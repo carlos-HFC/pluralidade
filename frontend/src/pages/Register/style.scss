@@ -1,0 +1,46 @@
+@use "../../styles/variables.scss" as *;
+
+#signup {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 50px;
+
+  .signup {
+    width: 100%;
+    margin: auto;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    border-radius: 1rem;
+    transition: 1s;
+    max-width: 600px;
+
+    header {
+      display: flex;
+      flex-direction: column;
+
+      h3 {
+        text-align: center;
+        font-weight: bold;
+      }
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+
+      #btn-cep {
+        height: 100%;
+      }
+
+      fieldset {
+        border: 0;
+      }
+    }
+  }
+}
