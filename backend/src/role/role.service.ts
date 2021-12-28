@@ -1,8 +1,8 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Op as $ } from 'sequelize';
 
 import { Role } from './role.model';
+import { capitalizeFirstLetter } from '../utils';
 
 @Injectable()
 export class RoleService {
@@ -11,13 +11,11 @@ export class RoleService {
     private readonly roleModel: typeof Role
   ) { }
 
-  async getAll(type?: string) {
-    if (type) return await this.getByType(type);
-
+  async get() {
     return await this.roleModel.findAll();
   }
 
-  async getById(id: number) {
+  async findById(id: number) {
     const role = await this.roleModel.findByPk(id);
 
     if (!role) throw new HttpException("Função não encontrada", 404);
@@ -25,19 +23,11 @@ export class RoleService {
     return role;
   }
 
-  async getByType(type: string) {
-    if (type.trim().length < 3) throw new HttpException("Tipo não tem caracteres suficientes para efetuar o filtro", 400);
-
-    const role = await this.roleModel.findOne({
+  async findByName(name: string) {
+    return await this.roleModel.findOne({
       where: {
-        type: {
-          [$.startsWith]: type.trim()
-        }
+        name: capitalizeFirstLetter(name).trim()
       }
     });
-
-    if (!role) throw new HttpException("Função não encontrada", 404);
-
-    return role;
   }
 }
