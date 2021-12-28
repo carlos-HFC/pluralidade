@@ -1,140 +1,161 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { isValid, isWeekend, parseISO } from 'date-fns';
+import { addHours, endOfDay, getHours, hoursToMinutes, isAfter, isSunday, parseISO, startOfDay, startOfHour, startOfToday, subHours } from 'date-fns';
+import { Op as $ } from 'sequelize';
+import { Sequelize } from 'sequelize-typescript';
 
-import { ICreateEvent, IUpdateEvent } from '.';
+import { CreateEventDTO, FilterEventDTO, UpdateEventDTO } from './event.dto';
 import { Event } from './event.model';
-import { convertHour, emptyFields, trimObj } from '../utils';
+import { UploadService } from '../config/upload.service';
+import { convertBool, trimObj } from '../utils';
 
 @Injectable()
 export class EventService {
   constructor(
     @InjectModel(Event)
-    private readonly eventModel: typeof Event
+    private readonly eventModel: typeof Event,
+    private sequelize: Sequelize,
+    private upload: UploadService
   ) { }
 
-  async get() {
-    return await this.eventModel.findAll();
+  async get(query?: FilterEventDTO) {
+    trimObj(query);
+    const where = {};
+
+    if (query.date) {
+      const searchDate = parseISO(query.date);
+      if (isAfter(startOfToday(), searchDate)) throw new HttpException('Data passada não permitida', 400);
+
+      Object.assign(where, {
+        date: {
+          [$.between]: [
+            startOfDay(searchDate),
+            endOfDay(searchDate)
+          ]
+        }
+      });
+    }
+
+    return await this.eventModel.findAll({
+      paranoid: !convertBool(query.inactives),
+      order: [['date', 'ASC']],
+      where,
+    });
   }
 
-  async getAll() {
-    return await this.eventModel.scope("all").findAll();
-  }
-
-  async getById(id: number) {
-    const event = await this.eventModel.findByPk(id);
+  async findById(id: number, inactives?: 'true' | 'false') {
+    const event = await this.eventModel.findByPk(id, { paranoid: !convertBool(inactives) });
 
     if (!event) throw new HttpException("Evento não encontrado", 404);
 
     return event;
   }
 
-  async post(data: ICreateEvent, image: Express.Multer.File) {
+  async availableDate(date: Date) {
+    return await this.eventModel.findOne({
+      where: {
+        date: {
+          [$.between]: [
+            subHours(startOfHour(date), 1),
+            addHours(startOfHour(date), 1),
+          ]
+        }
+      }
+    });
+  }
+
+  async post(data: CreateEventDTO, media: Express.Multer.File) {
     trimObj(data);
 
-    if (emptyFields(data) || !image) throw new HttpException("Há campos vazios", 400);
+    if (!media) throw new HttpException('Imagem é obrigatória', 400);
 
-    const { initHour, endHour } = data;
+    const image = this.upload.post(media);
+    Object.assign(data, { image });
 
     const date = parseISO(data.date);
-    const init = convertHour(initHour);
-    const end = convertHour(endHour);
+
+    const minutes = hoursToMinutes(getHours(date));
 
     switch (true) {
-      case !isValid(date):
-        throw new HttpException("Data inválida", 400);
-      case isWeekend(date):
-        throw new HttpException("Evento não pode ocorrer aos fins de semana", 400);
-      case init >= end:
-        throw new HttpException("Hora inicial não pode ser igual após a hora final", 400);
-      case (end - init) < 30:
-        throw new HttpException("Evento não tem a duração mínima de 30 minutos", 400);
-      case init < 480:
-      case init > 1170:
-        throw new HttpException("Evento não pode iniciar antes de 08:00 ou após as 19:30", 400);
-      case end < 510:
-      case end > 1200:
-        throw new HttpException("Evento não pode finalizar antes de 08:30 ou após as 20:00", 400);
+      case isAfter(new Date(), date):
+        throw new HttpException('Data passada não permitida', 400);
+      case isSunday(date):
+        throw new HttpException('Eventos não podem ser realizados aos domingos', 400);
+      case minutes < 480:
+      case minutes > 1080:
+        throw new HttpException('Horário de início do evento deve ocorrer entre 8h e 18h', 400);
       default:
         break;
     }
 
-    const event = await this.eventModel.create({
-      ...data,
-      image: image.filename
-    });
+    if (await this.availableDate(date)) throw new HttpException('Data de evento indisponível', 400);
 
-    return event;
+    const transaction = await this.sequelize.transaction();
+
+    try {
+      const event = await this.eventModel.create({
+        ...data,
+        date: String(startOfHour(date))
+      }, { transaction });
+
+      await transaction.commit();
+
+      return event;
+    } catch (error) {
+      await transaction.rollback();
+      throw new HttpException(error, 400);
+    }
   }
 
-  async put(id: number, data: IUpdateEvent, image: Express.Multer.File) {
-    const event = await this.getById(id);
-
+  async put(id: number, data: UpdateEventDTO, media?: Express.Multer.File) {
     trimObj(data);
 
-    const { initHour, endHour } = data;
+    const event = await this.findById(id);
 
-    if (emptyFields(data) || image && !image) throw new HttpException("Há campos vazios", 400);
+    const date = parseISO(data.date || String(event.date));
 
-    const init = convertHour(initHour || event.initHour);
-    const end = convertHour(endHour || event.endHour);
+    const minutes = hoursToMinutes(getHours(date));
 
-    if (data.date) {
-      const date = parseISO(data?.date);
-      if (!isValid(date)) throw new HttpException("Data inválida", 400);
-      if (isWeekend(date)) throw new HttpException("Evento não pode ocorrer aos fins de semana", 400);
+    if (media) {
+      const image = this.upload.post(media);
+      Object.assign(data, { image });
     }
 
     switch (true) {
-      case init >= end:
-        throw new HttpException("Hora inicial não pode ser igual após a hora final", 400);
-      case (end - init) < 30:
-        throw new HttpException("Evento não tem a duração mínima de 30 minutos", 400);
-      case init < 480:
-      case init > 1170:
-        throw new HttpException("Evento não pode iniciar antes de 08:00 ou após as 19:30", 400);
-      case end < 510:
-      case end > 1200:
-        throw new HttpException("Evento não pode finalizar antes de 08:30 ou após as 20:00", 400);
+      case isAfter(new Date(), date):
+        throw new HttpException('Data passada não permitida', 400);
+      case isSunday(date):
+        throw new HttpException('Eventos não podem ser realizados aos domingos', 400);
+      case minutes < 480:
+      case minutes > 1080:
+        throw new HttpException('Horário de início do evento deve ocorrer entre 8h e 18h', 400);
       default:
         break;
     }
 
-    await event.update({
-      ...data,
-      image: image && image.filename
-    });
+    if (await this.availableDate(date)) throw new HttpException('Data de evento indisponível', 400);
+
+    const transaction = await this.sequelize.transaction();
+
+    try {
+      await event.update({
+        ...data,
+        date: startOfHour(date)
+      }, { transaction });
+
+      await transaction.commit();
+    } catch (error) {
+      await transaction.rollback();
+      throw new HttpException(error, 400);
+    }
   }
 
-  async inactiveData(id: number) {
-    const event = await this.getById(id);
+  async activeInactive(id: number, status: 'true' | 'false') {
+    const st = convertBool(status);
 
-    await event.destroy();
-  }
+    const event = await this.findById(id, 'true');
 
-  async getInactives() {
-    return await this.eventModel.scope("inactives").findAll();
-  }
-
-  async getInactiveById(id: number) {
-    const event = await this.eventModel.scope("inactives").findByPk(id);
-
-    if (!event) throw new HttpException("Evento não encontardo", 404);
-
-    return event;
-  }
-
-  async reactiveData(id: number) {
-    const event = await this.getInactiveById(id);
-
-    await event.restore();
-  }
-
-  async delete(id: number) {
-    const event = await this.eventModel.scope("all").findByPk(id);
-
-    if (!event) throw new HttpException("Evento não encontrado", 404);
-
-    await event.destroy({ force: true });
+    if (!st) return await event.destroy();
+    return await event.restore();
   }
 }
