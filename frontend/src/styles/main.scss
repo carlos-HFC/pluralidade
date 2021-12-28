@@ -1,0 +1,36 @@
+@use "./variables.scss" as *;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  line-height: 1.5;
+}
+
+canvas {
+  display: none;
+}
+
+body {
+  font-size: 1rem;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+::-webkit-scrollbar {
+  width: 0.5rem;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 0.5rem;
+  border: 0.5px solid #eee;
+}
+
+::-webkit-scrollbar-track-piece {
+  background: #eee;
+  box-shadow: 0 0 1.5px $black;
+}
