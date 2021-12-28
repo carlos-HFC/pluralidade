@@ -1,13 +1,24 @@
-import { getTime } from 'date-fns';
-import { BeforeSave, BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
+import { BelongsTo, Column, DataType, ForeignKey, Model, Scopes, Table } from 'sequelize-typescript';
 
+import { CreateSolicitationDTO } from './solicitation.dto';
 import { User } from '../user/user.model';
 
+@Scopes(() => ({
+  user: {
+    include: [
+      {
+        model: User,
+        attributes: ['name', 'email']
+      }
+    ]
+  }
+}))
 @Table({ paranoid: true })
-export class Solicitation extends Model {
+export class Solicitation extends Model<Solicitation, CreateSolicitationDTO> {
   @Column({
     type: DataType.BIGINT,
-    unique: true
+    unique: true,
+    allowNull: false
   })
   protocol: number;
 
@@ -17,30 +28,10 @@ export class Solicitation extends Model {
   })
   description: string;
 
-  @Column({
-    type: DataType.STRING,
-    allowNull: false
-  })
-  openedAt: string;
-
-  @Column(DataType.STRING)
-  closedAt: string;
-
-  @Column({
-    type: DataType.BOOLEAN,
-    defaultValue: false
-  })
-  done: boolean;
-
   @ForeignKey(() => User)
   @Column({ allowNull: false })
   userId: number;
 
   @BelongsTo(() => User)
   user: User;
-
-  @BeforeSave
-  static async setProtocol(solicitation: Solicitation) {
-    solicitation.protocol = getTime(new Date());
-  }
 }

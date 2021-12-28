@@ -1,33 +1,30 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { format } from 'date-fns';
+import { getTime } from 'date-fns';
+import { Sequelize } from 'sequelize-typescript';
 
-import { CreateSolicitation } from '.';
+import { CreateSolicitationDTO } from './solicitation.dto';
 import { Solicitation } from './solicitation.model';
+import { MailService } from '../mail/mail.service';
 import { User } from '../user/user.model';
-import { UserService } from '../user/user.service';
-import { trimObj } from '../utils';
+import { convertBool, trimObj } from '../utils';
 
 @Injectable()
 export class SolicitationService {
   constructor(
     @InjectModel(Solicitation)
     private readonly solicitationModel: typeof Solicitation,
-    private readonly userService: UserService
+    private mailService: MailService,
+    private sequelize: Sequelize,
   ) { }
 
-  async get() {
-    return await this.solicitationModel.findAll({
-      include: [
-        {
-          model: User,
-          attributes: ['name', 'email']
-        },
-      ]
-    });
+  async get(includeUsers?: 'true' | 'false') {
+    const include = convertBool(includeUsers);
+
+    return await this.solicitationModel.scope(include && 'user').findAll();
   }
 
-  async getById(id: number) {
+  async findById(id: number) {
     const solicitation = await this.solicitationModel.findByPk(id);
 
     if (!solicitation) throw new HttpException("Solicitação não encontrada", 404);
@@ -35,44 +32,28 @@ export class SolicitationService {
     return solicitation;
   }
 
-  async getByUser(userId: number) {
-    await this.userService.getById(userId);
-
-    return await this.solicitationModel.findAll({
-      where: { userId },
-      include: [
-        {
-          model: User,
-          attributes: ['name', 'email']
-        },
-      ]
-    });
-  }
-
-  async post(user: User, data: CreateSolicitation) {
-    const openedAt = format(new Date(), 'yyyy-MM-dd');
-
+  async post(user: User, data: CreateSolicitationDTO) {
     trimObj(data);
 
-    if (!data.description) throw new HttpException("Descrição é obrigatória", 400);
+    const protocol = getTime(new Date());
 
-    const solicitation = await this.solicitationModel.create({
-      ...data,
-      openedAt,
-      userId: 1
-    });
+    const transaction = await this.sequelize.transaction();
 
-    return solicitation;
-  }
+    try {
+      const solicitation = await this.solicitationModel.create({
+        ...data,
+        userId: user.id,
+        protocol
+      }, { transaction });
 
-  async put(id: number) {
-    const solicitation = await this.getById(id);
+      await transaction.commit();
 
-    const closedAt = format(new Date(), 'yyyy-MM-dd');
+      // await this.mailService.storeSolicitation(user, protocol);
 
-    await solicitation.update({
-      done: true,
-      closedAt
-    });
+      return solicitation;
+    } catch (error) {
+      await transaction.rollback();
+      throw new HttpException(error, 400);
+    }
   }
 }
