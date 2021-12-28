@@ -1,27 +1,26 @@
 import { Body, Controller, Param, Post, Put, UseGuards } from '@nestjs/common';
 
-import { CreateExperience, UpdateExperience } from '.';
+import { CreateExperienceDTO, UpdateExperienceDTO } from './experience.dto';
 import { ExperienceService } from './experience.service';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { Role } from '../auth/role.decorator';
-import { RolesGuard } from '../auth/role.guard';
+import { RoleDecorator } from '../common/decorators/role.decorator';
+import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
+import { RolesGuard } from '../common/guards/role.guard';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
+@RoleDecorator('admin')
 @Controller('experiences')
 export class ExperienceController {
   constructor(
     private xpService: ExperienceService
   ) { }
 
-  @Role('admin')
   @Post()
-  async store(@Body() data: CreateExperience) {
+  async store(@Body() data: CreateExperienceDTO) {
     return await this.xpService.post(data);
   }
 
-  @Role('admin')
   @Put(':id')
-  async update(@Param('id') id: number, @Body() data: UpdateExperience) {
+  async update(@Param('id') id: number, @Body() data: UpdateExperienceDTO) {
     return await this.xpService.put(id, data);
   }
 }

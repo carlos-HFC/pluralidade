@@ -1,10 +1,10 @@
-import { format, parseISO } from 'date-fns';
-import { BeforeSave, BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
+import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
 
+import { CreateExperienceDTO } from './experience.dto';
 import { User } from '../user/user.model';
 
 @Table({ paranoid: true })
-export class Experience extends Model {
+export class Experience extends Model<Experience, CreateExperienceDTO> {
   @Column({
     type: DataType.STRING,
     allowNull: false
@@ -16,12 +16,6 @@ export class Experience extends Model {
     allowNull: false
   })
   office: string;
-
-  @Column({
-    type: DataType.BOOLEAN,
-    defaultValue: false
-  })
-  volunteer: boolean;
 
   @Column({
     type: DataType.STRING,
@@ -38,15 +32,4 @@ export class Experience extends Model {
 
   @BelongsTo(() => User)
   user: User;
-
-  @BeforeSave
-  static async setDataValues(xp: Experience) {
-    const init = parseISO(xp.initDate);
-    xp.initDate = format(init, 'yyyy-MM-dd');
-
-    if (xp.endDate) {
-      const end = parseISO(xp.endDate);
-      xp.endDate = format(end, 'yyyy-MM-dd');
-    }
-  }
 }
