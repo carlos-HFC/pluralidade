@@ -20,11 +20,11 @@ const Heading = styled.h1`
   padding: 10px;
 `;
 
-interface TitlePageProps {
+interface TitleProps {
   title: ReactNode;
 }
 
-export function TitlePage({ title }: TitlePageProps) {
+export function Title({ title }: TitleProps) {
   return (
     <Wrapper>
       <Heading>{title}</Heading>
