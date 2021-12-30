@@ -3,10 +3,11 @@ import { Modal } from 'react-bootstrap';
 import { MdClose } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 
-import { Hamb, HeaderStyle, Menu, MenuList } from './style';
 import { Login } from '..';
 
 import logo from '../../assets/icon.png';
+
+import { Hamb, HeaderWrapper, Menu, MenuList } from './style';
 
 export const Header = () => {
   const [openMenu, setOpenMenu] = useState(false);
@@ -14,8 +15,7 @@ export const Header = () => {
 
   return (
     <>
-      <HeaderStyle />
-      <header className="header" id="menu">
+      <HeaderWrapper id="menu">
         <div className="container">
           <div className="brand" title="Pluralidade">
             <Link to="/">
@@ -34,10 +34,10 @@ export const Header = () => {
               </div>
               <div className="list">
                 <Link onClick={() => setOpenMenu(false)} to="/" title="Home" className="link">Home</Link>
-                <Link onClick={() => setOpenMenu(false)} to="" title="Cursos" className="link">Cursos</Link>
-                <Link onClick={() => setOpenMenu(false)} to="" title="Eventos" className="link">Eventos</Link>
+                <Link onClick={() => setOpenMenu(false)} to="/courses" title="Cursos" className="link">Cursos</Link>
+                <Link onClick={() => setOpenMenu(false)} to="/events" title="Eventos" className="link">Eventos</Link>
                 <Link onClick={() => setOpenMenu(false)} to="/aboutus" title="Sobre Nós" className="link">Sobre Nós</Link>
-                <Link onClick={() => setOpenMenu(false)} to="" title="Contato" className="link">Contato</Link>
+                <Link onClick={() => setOpenMenu(false)} to="/contact" title="Contato" className="link">Contato</Link>
                 <span onClick={() => setOpenLogin(true)} title="Login" className="link">
                   Login
                 </span>
@@ -45,7 +45,7 @@ export const Header = () => {
             </MenuList>
           </Menu>
         </div>
-      </header>
+      </HeaderWrapper>
       <Modal contentClassName="login" centered show={openLogin} onHide={() => setOpenLogin(false)}>
         <div className="d-flex justify-content-end">
           <MdClose onClick={() => setOpenLogin(false)} cursor="pointer" size={24} />

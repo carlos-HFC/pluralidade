@@ -1,5 +1,5 @@
 import { transparentize } from 'polished';
-import styled, { createGlobalStyle } from 'styled-components';
+import styled from 'styled-components';
 
 export const Menu = styled.div`
   gap: 5px;
@@ -38,90 +38,83 @@ export const Hamb = styled.span`
   box-shadow: 0 2px 5px ${transparentize(.6, '#000')};
 `;
 
-export const HeaderStyle = createGlobalStyle`
-  .header {
-    padding: calc(1rem + 50px) 0 1rem;
+export const HeaderWrapper = styled.header`
+  padding: calc(1rem + 50px) 0 1rem;
+  background: ${props => props.theme.header};
 
-    .container {
+  .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .brand {
+      width: 60px;
+      height: 60px;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
 
-      .brand {
-        width: 60px;
-        height: 60px;
-        display: flex;
-
-        img {
-          width: 100%;
-          height: 100%;
-          object-fit: contain;
-        }
-      }
-
-      .hamb {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-        cursor: pointer;
-
-        @media (min-width: 768px) {
-          display: none;
-        }
-      }
-
-      .close {
-        display: flex;
-        justify-content: flex-end;
-
-        @media (min-width: 768px) {
-          display: none;
-        }
-      }
-
-      .list {
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-        align-items: center;
-        justify-content: center;
+      img {
         width: 100%;
         height: 100%;
+        object-fit: contain;
+      }
+    }
 
-        @media (min-width: 768px) {
-          flex-direction: row;
+    .hamb {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+
+      @media (min-width: 768px) {
+        display: none;
+      }
+    }
+
+    .close {
+      display: flex;
+      justify-content: flex-end;
+
+      @media (min-width: 768px) {
+        display: none;
+      }
+    }
+
+    .list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+
+      @media (min-width: 768px) {
+        flex-direction: row;
+      }
+
+      .link {
+        color: #fff;
+        text-decoration: none;
+        cursor: pointer;
+        font-weight: bold;
+
+        &::after {
+          content: "";
+          width: 0;
+          background: #fff;
+          height: 2px;
+          display: block;
+          transition: width 0.25s;
         }
 
-        .link {
-          color: #fff;
-          text-decoration: none;
-          cursor: pointer;
-          font-weight: bold;
-
-          &::after {
-            content: "";
-            width: 0;
-            background: #fff;
-            height: 2px;
-            display: block;
-            transition: width 0.25s;
-          }
-
-          @media (hover: hover) {
-            &:hover {
-              &::after {
-                width: 100%;
-              }
+        @media (hover: hover) {
+          &:hover {
+            &::after {
+              width: 100%;
             }
           }
         }
       }
     }
-  }
-
-  .login {
-    padding: 40px;
-    border-radius: 1rem !important;
-    width: 100% !important;
   }
 `;

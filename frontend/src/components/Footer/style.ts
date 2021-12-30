@@ -1,4 +1,4 @@
-import { createGlobalStyle, css, keyframes } from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 
 const pulse = keyframes`
   0% {
@@ -14,68 +14,43 @@ const pulse = keyframes`
 
 const socials = ['facebook', 'twitter', 'instagram'];
 
-export const FooterStyle = createGlobalStyle`
-  .footer {
-    margin-top: auto;
-    padding: 2rem;
+export const FooterWrapper = styled.footer`
+  margin-top: auto;
+  padding: 2rem;
+  background: ${props => props.theme.footer};
 
-    .container {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      justify-content: center;
-      align-items: center;
-      padding: 2rem 0;
+  .container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 0;
 
-      &:last-child {
-        border-top: 1px solid #cfcfcf;
-      }
-
-      @media (min-width: 768px) {
-        padding: 2rem;
-        flex-direction: row;
-      }
+    &:last-child {
+      border-top: 1px solid #cfcfcf;
     }
 
-    .copy {
-      display: flex;
-      justify-content: center;
-      width: 100%;
-      gap: 1rem;
-      align-items: center;
-      text-align: center;
+    @media (min-width: 768px) {
+      padding: 2rem;
+      flex-direction: row;
+    }
+  }
 
-      span svg {
+  .copy {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    gap: 1rem;
+    align-items: center;
+    text-align: center;
+
+    span {
+      color: ${props => props.theme.text};
+
+      svg {
         animation: 1.5s ${pulse} infinite;
         margin: 0 5px;
-      }
-    }
-
-    &__cols {
-      padding: 1rem 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      gap: 1rem;
-
-      @media (min-width: 768px) {
-        padding: 0;
-      }
-
-      &.social {
-        font-size: 1.25rem;
-
-        a {
-          cursor: pointer;
-          line-height: 0;
-          padding: 1rem;
-          border-radius: 1rem;
-        }
-      }
-
-      img {
-        width: 140px;
       }
     }
   }
@@ -84,6 +59,10 @@ export const FooterStyle = createGlobalStyle`
     .${social} {
       position: relative;
       transition: transform 0.5s;
+      cursor: pointer;
+      line-height: 0;
+      padding: 1rem;
+      border-radius: 1rem;
 
       span {
         transition: opacity 0.5s, transform 0.75s;
@@ -97,6 +76,7 @@ export const FooterStyle = createGlobalStyle`
         height: 100%;
         transform: translateY(-40%);
         opacity: 0;
+        color: ${props => props.theme.text};
       }
 
       @media (hover: hover) {
@@ -117,4 +97,21 @@ export const FooterStyle = createGlobalStyle`
       }
     }
   `)};
+`;
+
+export const FooterCols = styled.div`
+  padding: 1rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  gap: 1rem;
+
+  @media (min-width: 768px) {
+    padding: 0;
+  }
+
+  img {
+    width: 140px;
+  }
 `;
