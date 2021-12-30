@@ -1,13 +1,12 @@
-@use "../../styles/variables.scss" as *;
+import styled from "styled-components";
 
-#login {
+export const Wrapper = styled.div`
   width: 100%;
   margin: auto;
   display: flex;
   flex-direction: column;
   gap: 30px;
   border-radius: 1rem;
-  transition: 1s;
 
   @media (min-width: 500px) {
     padding: 2rem;
@@ -30,6 +29,7 @@
 
     fieldset {
       border: 0;
+      background: ${props => props.theme.login.floating};
     }
   }
 
@@ -43,4 +43,4 @@
       font-weight: bold;
     }
   }
-}
+`;

@@ -1,22 +1,26 @@
-@use "../../styles/variables.scss" as *;
+import styled from "styled-components";
 
-#signup {
+export const SignUp = styled.section`
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 50px;
+  background: ${props => props.theme.login.background};
+
+  h3, h6, a, svg {
+    color: ${props => props.theme.text}
+  }
 
   .signup {
     width: 100%;
-    margin: auto;
-    padding: 2rem;
     display: flex;
-    flex-direction: column;
+    padding: 2rem;
+    margin: auto;
     gap: 30px;
+    flex-direction: column;
     border-radius: 1rem;
-    transition: 1s;
     max-width: 600px;
 
     header {
@@ -40,7 +44,8 @@
 
       fieldset {
         border: 0;
+        background: ${props => props.theme.login.floating};
       }
     }
   }
-}
+`;

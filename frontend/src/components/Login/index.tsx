@@ -3,7 +3,7 @@ import { Link, useHistory } from 'react-router-dom';
 
 import { Button, InputBlock } from '../../components';
 
-import './style.min.css';
+import { Wrapper } from './style';
 
 const initialStateLogin = {
   email: "",
@@ -20,7 +20,7 @@ export function Login() {
   }
 
   return (
-    <div id="login">
+    <Wrapper>
       <header>
         <h3>Login</h3>
       </header>
@@ -41,6 +41,6 @@ export function Login() {
         <span>Não tem conta?</span>
         <Link to="/register">Cadastre-se</Link>
       </footer>
-    </div>
+    </Wrapper>
   );
 }

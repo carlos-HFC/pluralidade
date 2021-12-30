@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom';
 import { Button, InputBlock, RadioButton, Select, Textarea } from '../../components';
 import { birthdayMask, cepMask, cpfMask, phoneMask } from '../../mask';
 
-import './style.min.css';
+import { SignUp } from './style';
 
 const initialStateRegister = {
   name: "",
@@ -62,7 +62,7 @@ export function Register() {
   }
 
   return (
-    <section id="signup">
+    <SignUp>
       <div className="signup">
         <header>
           <div>
@@ -167,6 +167,6 @@ export function Register() {
           </Button>
         </form>
       </div>
-    </section>
+    </SignUp>
   );
 }
