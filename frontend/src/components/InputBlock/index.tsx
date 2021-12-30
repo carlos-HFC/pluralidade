@@ -17,7 +17,6 @@ const Floating = styled.fieldset`
   position: relative;
   height: 4rem;
   transition: 0.3s;
-  background: ${props => props.theme.login.floating};
 `;
 
 const Button = styled.button.attrs({ type: 'button' })`
@@ -54,7 +53,7 @@ const Input = styled.input<InputBlockProps>`
   background: transparent;
   border: 0;
   padding: 0 1rem;
-  height: inherit;
+  height: 3.85rem;
   appearance: none;
   color: ${props => props.theme.text};
   font-size: 1rem;
@@ -65,10 +64,11 @@ const Input = styled.input<InputBlockProps>`
   width: 100%;
   transition: box-shadow .3s linear, background-color .3s linear;
 
-  &:disabled, &.disabled {
-    background: ${props => props.theme.title === 'light' ? transparentize(.75, COLORS.gray) : '#555'};
+  &:is(:disabled, .disabled) {
+    background-color: ${props => props.theme.title === 'light' ? transparentize(.75, COLORS.gray) : '#555'};
     cursor: not-allowed;
     color: #fff;
+    height: inherit;
     
     &::placeholder {
       color: #fff;

@@ -23,7 +23,7 @@ export const Prev = styled.div`
   align-items: center;
   position: absolute;
   left: 0;
-  background-image: linear-gradient(to right, #000, transparent);
+  background-image: linear-gradient(to right, #222, transparent);
 
   button {
     border: 0;
@@ -51,7 +51,7 @@ export const Next = styled.div`
   align-items: center;
   position: absolute;
   right: 0;
-  background-image: linear-gradient(to left, #000, transparent);
+  background-image: linear-gradient(to left, #222, transparent);
   justify-content: flex-end;
 
   button {

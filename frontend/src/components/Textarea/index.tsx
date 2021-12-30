@@ -15,7 +15,6 @@ const Floating = styled.fieldset`
   position: relative;
   height: 8rem;
   transition: 0.3s;
-  background: ${props => props.theme.login.floating};
 `;
 
 const Label = styled.label`
@@ -32,7 +31,7 @@ const TextareaWrapper = styled.textarea<TextareaProps>`
   background: transparent;
   border: 0;
   padding: 0 1rem;
-  height: inherit;
+  height: 7.85rem;
   appearance: none;
   color: ${props => props.theme.text};
   font-size: 1rem;
@@ -44,10 +43,11 @@ const TextareaWrapper = styled.textarea<TextareaProps>`
   resize: none;
   transition: box-shadow .3s linear, background-color .3s linear;
 
-  &:disabled, &.disabled {
-    background: ${props => props.theme.title === 'light' ? transparentize(.75, COLORS.gray) : '#555'};
+  &:is(:disabled, .disabled) {
+    background-color: ${props => props.theme.title === 'light' ? transparentize(.75, COLORS.gray) : '#555'};
     cursor: not-allowed;
     color: #fff;
+    height: inherit;
     
     &::placeholder {
       color: #fff;

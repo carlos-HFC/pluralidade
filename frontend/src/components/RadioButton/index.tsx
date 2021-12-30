@@ -18,6 +18,7 @@ const Fieldset = styled.fieldset`
   position: relative;
   gap: .75rem;
   line-height: 1.5;
+  background: transparent !important;
 `;
 
 const Input = styled.input<Pick<RadioButtonProps, 'type'>>`

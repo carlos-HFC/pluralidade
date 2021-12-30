@@ -11,7 +11,7 @@ const colors = {
   success: COLORS.green,
   error: COLORS.red,
   dark: COLORS.black,
-  light: lighten(.55, COLORS.gray),
+  light: lighten(.65, COLORS.gray),
   white: COLORS.white
 };
 
