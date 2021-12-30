@@ -31,17 +31,40 @@ export const HomeContainer = styled.section<{ type: 'courses' | 'aboutus' | 'eve
 
   ${props => props.type === 'courses' && css`
     .cards {
-      display: grid;
-      grid-template-rows: auto;
+      display: flex;
+      width: 100%;
       gap: 2rem;
+      flex-wrap: wrap;
+      flex-direction: column;
 
       @media (min-width: 768px) and (max-width: 1199.9px) {
-        grid-template-columns: repeat(2, 1fr);
+        flex-direction: row;
+
+        .card {
+          min-width: calc(50% - 2rem);
+        }
       }
 
       @media (min-width: 1200px) {
-        grid-template-columns: repeat(3, 1fr);
+        flex-direction: row;
         gap: 3rem;
+      }
+
+      .card {
+        @media (hover: hover) {
+          &:hover {
+            &:nth-child(even) {
+              background: ${props => props.theme.card.bgHoverSecondary} !important;
+            }
+            &:nth-child(odd) {
+              background: ${props => props.theme.card.bgHoverPrimary} !important;
+            }
+
+            h3, p, a {
+              color: ${COLORS.white};
+            }
+          }
+        }
       }
     }
   `}
@@ -75,6 +98,21 @@ export const HomeContainer = styled.section<{ type: 'courses' | 'aboutus' | 'eve
 
       .card {
         background: ${props => props.theme.card.backgroundEvents};
+
+        @media (hover: hover) {
+          &:hover {
+            &:nth-child(odd) {
+              background: ${props => props.theme.card.bgHoverSecondary} !important;
+            }
+            &:nth-child(even) {
+              background: ${props => props.theme.card.bgHoverPrimary} !important;
+            }
+
+            h3, p, a {
+              color: ${COLORS.white};
+            }
+          }
+        }
       }
     }
   `}

@@ -40,18 +40,9 @@ export function Home() {
             <Card img={img} link="ler mais" title="Teste">
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam debitis quae facilis officia sunt neque tempora quidem harum earum fugiat nesciunt maxime velit, suscipit sed, totam ad odio repellat natus.
             </Card>
-            <Card img={img} link="ler mais" title="Teste">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam debiti
-            </Card>
-            <Card img={img} link="ler mais" title="Teste">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam debitis quae facilis officia sunt neque tempora quidem harum earum fugiat nesciunt maxime velit, suscipit sed, totam ad odio repellat natus.
-            </Card>
-            <Card img={img} link="/" title="Teste">
-              fdafdsafda fugiat nesciunt maxime velit, suscipit sed, totam ad odio repellat natus.
-            </Card>
           </div>
           <footer>
-            <Button variant="primary">Ver mais Cursos</Button>
+            <Button variant="primary" onClick={() => navigateToPage('/courses')}>Ver mais Cursos</Button>
           </footer>
         </div>
       </HomeContainer>
@@ -73,7 +64,7 @@ export function Home() {
             </Card>
           </div>
           <footer>
-            <Button variant="white">Ver mais Eventos</Button>
+            <Button variant="white" onClick={() => navigateToPage('/events')}>Ver mais Eventos</Button>
           </footer>
         </div>
       </HomeContainer>
