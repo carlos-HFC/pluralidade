@@ -3,7 +3,7 @@ import { Route, Switch, useLocation } from 'react-router-dom';
 import { DefaultTheme, ThemeProvider } from 'styled-components';
 
 import * as C from '../components';
-import { AboutUs, Home, Register } from '../pages';
+import * as P from '../pages';
 
 import { GlobalStyle } from '../styles';
 import { light, dark } from '../styles/theme';
@@ -25,9 +25,12 @@ export function Routes() {
       {pathname !== '/register' && <C.Header />}
       <main id="main">
         <Switch>
-          <Route exact path="/" component={Home} />
-          <Route exact path="/register" component={Register} />
-          <Route exact path="/aboutus" component={AboutUs} />
+          <Route exact path="/" component={P.Home} />
+          <Route exact path="/register" component={P.Register} />
+          <Route exact path="/aboutus" component={P.AboutUs} />
+          <Route exact path="/contact" component={P.Contact} />
+          <Route exact path="/courses" component={P.Courses} />
+          <Route exact path="/events" component={P.Events} />
         </Switch>
       </main>
       {pathname !== '/register' && <Footer />}
