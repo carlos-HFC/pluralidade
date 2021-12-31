@@ -29,6 +29,14 @@ export const HomeContainer = styled.section<{ type: 'courses' | 'aboutus' | 'eve
     padding-top: 5rem;
   }
 
+  &:nth-child(odd) {
+    background: ${props => props.theme.login.background};
+
+    * {
+      color: ${COLORS.white};
+    }
+  }
+
   ${props => props.type === 'courses' && css`
     .cards {
       display: flex;

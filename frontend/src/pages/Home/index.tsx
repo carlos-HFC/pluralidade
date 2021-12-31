@@ -2,8 +2,8 @@ import { lazy, Suspense } from "react";
 import { useHistory } from "react-router-dom";
 
 import { Button, Card } from '../../components';
+import { usePluri } from "../../context";
 
-import img from '../../assets/img1.jpg';
 import img8 from '../../assets/img8.jpg';
 import img9 from '../../assets/img9.jpg';
 
@@ -12,6 +12,8 @@ import { HomeContainer } from './style';
 const Carousel = lazy(() => import('../../components/Carousel').then(({ Carousel }) => ({ default: Carousel })));
 
 export function Home() {
+  const { courses, events } = usePluri();
+
   const { push } = useHistory();
 
   function navigateToPage(page: string) {
@@ -25,49 +27,45 @@ export function Home() {
         <Carousel />
       </Suspense>
 
-      <HomeContainer type="courses">
-        <div className="container">
-          <header>
-            <h2>Cursos</h2>
-          </header>
-          <div className="cards">
-            <Card img={img} link="ler mais" title="Teste">
-              Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos, e vem sendo utilizado desde o século XVI, quando um impressor desconhecido pegou uma bandeja de tipos e os embaralhou para fazer um livro de modelos de tipos.
-            </Card>
-            <Card img={img} link="ler mais" title="Teste">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam debitis quae facilis officia sunt neque tempora quidem harum earum fugiat nesciunt maxime velit, suscipit sed, totam ad odio repellat natus.
-            </Card>
-            <Card img={img} link="ler mais" title="Teste">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam debitis quae facilis officia sunt neque tempora quidem harum earum fugiat nesciunt maxime velit, suscipit sed, totam ad odio repellat natus.
-            </Card>
+      {courses.length > 0 && (
+        <HomeContainer type="courses">
+          <div className="container">
+            <header>
+              <h2>Cursos</h2>
+            </header>
+            <div className="cards">
+              {courses.slice(0, 3).map(course => (
+                <Card key={course.id} img={course.image} link="ler mais" title={course.name}>
+                  {course.description.slice(0, 100)}
+                </Card>
+              ))}
+            </div>
+            <footer>
+              <Button variant="primary" onClick={() => navigateToPage('/courses')}>Ver mais Cursos</Button>
+            </footer>
           </div>
-          <footer>
-            <Button variant="primary" onClick={() => navigateToPage('/courses')}>Ver mais Cursos</Button>
-          </footer>
-        </div>
-      </HomeContainer>
+        </HomeContainer>
+      )}
 
-      <HomeContainer type="events">
-        <div className="container">
-          <header>
-            <h2>Eventos</h2>
-          </header>
-          <div className="cards">
-            <Card img={img} link="ler mais" title="Teste">
-              Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos, e vem sendo utilizado desde o século XVI, quando um impressor desconhecido pegou uma bandeja de tipos e os embaralhou para fazer um livro de modelos de tipos.
-            </Card>
-            <Card img={img} link="ler mais" title="Teste">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam debitis quae facilis officia sunt neque tempora quidem harum earum fugiat nesciunt maxime velit, suscipit sed, totam ad odio repellat natus.
-            </Card>
-            <Card img={img} link="ler mais" title="Teste">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam debitis quae facilis officia sunt neque tempora quidem harum earum fugiat nesciunt maxime velit, suscipit sed, totam ad odio repellat natus.
-            </Card>
+      {events.length > 0 && (
+        <HomeContainer type="events">
+          <div className="container">
+            <header>
+              <h2>Eventos</h2>
+            </header>
+            <div className="cards">
+              {events.slice(0, 3).map(event => (
+                <Card key={event.id} img={event.image} link="ler mais" title={event.title}>
+                  {event.description.slice(0, 100)}
+                </Card>
+              ))}
+            </div>
+            <footer>
+              <Button variant="white" onClick={() => navigateToPage('/events')}>Ver mais Eventos</Button>
+            </footer>
           </div>
-          <footer>
-            <Button variant="white" onClick={() => navigateToPage('/events')}>Ver mais Eventos</Button>
-          </footer>
-        </div>
-      </HomeContainer>
+        </HomeContainer>
+      )}
 
       <HomeContainer type="aboutus">
         <div className="container">
