@@ -4,7 +4,7 @@ import { BsArrowLeft } from 'react-icons/bs';
 import { useHistory } from 'react-router-dom';
 
 import { Button, InputBlock, RadioButton, Select, Textarea } from '../../components';
-import { birthdayMask, cepMask, cpfMask, phoneMask } from '../../mask';
+import { birthdayMask, cepMask, cpfMask, phoneMask } from '../../utils/mask';
 
 import { SignUp } from './style';
 
