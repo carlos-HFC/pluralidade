@@ -33,3 +33,29 @@ declare module 'styled-components' {
     titlePage: string;
   }
 }
+
+export interface Courses {
+  id: number;
+  name: string;
+  description: string;
+  image: string;
+  initDate: string;
+  endDate: string;
+  pcd: boolean;
+  spots: number;
+  period: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt: Date | null;
+}
+
+export interface Events {
+  id: number;
+  title: string;
+  description: string;
+  image: string;
+  date: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt: Date | null;
+}
