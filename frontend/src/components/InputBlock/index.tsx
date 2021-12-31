@@ -33,6 +33,7 @@ const Button = styled.button.attrs({ type: 'button' })`
   line-height: 1;
   outline: none;
   background: ${props => props.theme.login.button};
+  height: inherit;
 
   &:hover {
     filter: brightness(0.9);
