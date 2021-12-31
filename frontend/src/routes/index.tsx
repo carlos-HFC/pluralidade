@@ -1,5 +1,6 @@
 import { memo, useState } from 'react';
 import { Route, Switch, useLocation } from 'react-router-dom';
+import { ToastContainer } from "react-toastify";
 import { DefaultTheme, ThemeProvider } from 'styled-components';
 
 import * as C from '../components';
@@ -19,6 +20,7 @@ export function Routes() {
 
   return (
     <ThemeProvider theme={theme}>
+      <ToastContainer theme={theme.title === 'dark' ? 'dark' : 'colored'} />
       <GlobalStyle />
       {/* {pathname !== '/register' && <Accessibility handleTheme={handleTheme} />} */}
       <C.Accessibility handleTheme={handleTheme} />
