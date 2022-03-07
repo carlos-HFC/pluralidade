@@ -1,4 +1,4 @@
-import { OmitType, PartialType } from '@nestjs/mapped-types';
+import { PartialType } from '@nestjs/mapped-types';
 import { Transform } from 'class-transformer';
 import { IsDateString, IsEmail, IsEnum, IsNotEmpty, IsOptional, IsPhoneNumber, IsPostalCode, MinLength, ValidateIf } from 'class-validator';
 
@@ -67,7 +67,14 @@ export class CreateUserDTO {
   whichDeficiency?: string;
 
   roleId: number;
+
   password: string;
+
+  emailVerifieid: boolean;
+  
+  tokenEmailVerification: string;
+
+  tokenEmailVerificationExpires: Date;
 }
 
 export class UpdateUserDTO extends PartialType(CreateUserDTO) {
@@ -88,7 +95,7 @@ export class UpdateUserDTO extends PartialType(CreateUserDTO) {
 export class FilterUserDTO {
   @IsEnum(['true', 'false'], { message: 'Inclusão de inativos inválida' })
   @IsOptional()
-  @Transform(({ value }) => value.trim())
+  @Transform(({ value }) => value.trim().toLowerCase())
   inactives?: 'true' | 'false';
 
   @IsEnum(['Admin', 'Aluno'], { message: 'Função de usuário inválida' })

@@ -7,7 +7,6 @@ import { Academic } from '../academic/academic.model';
 import { Course } from '../course/course.model';
 import { Experience } from '../experience/experience.model';
 import { Role } from '../role/role.model';
-import { Solicitation } from '../solicitation/solicitation.model';
 
 @Scopes(() => ({
   role: {
@@ -52,6 +51,12 @@ export class User extends Model<User, CreateUserDTO> {
 
   @Column(DataType.VIRTUAL)
   password: string;
+
+  @Column(DataType.STRING)
+  tokenResetPassword?: string;
+
+  @Column(DataType.DATE)
+  tokenResetPasswordExpires?: Date;
 
   @Column({
     type: DataType.DATEONLY,
@@ -142,12 +147,6 @@ export class User extends Model<User, CreateUserDTO> {
   @Column(DataType.STRING)
   whichDeficiency?: string;
 
-  @Column(DataType.STRING)
-  tokenResetPassword?: string;
-
-  @Column(DataType.DATE)
-  tokenResetPasswordExpires?: Date;
-
   @ForeignKey(() => Role)
   @Column({ allowNull: false })
   roleId: number;
@@ -167,9 +166,6 @@ export class User extends Model<User, CreateUserDTO> {
 
   @HasMany(() => Experience)
   experience: Experience[];
-
-  @HasMany(() => Solicitation)
-  solicitation: Solicitation[];
 
   @BeforeSave
   static async formatData(user: User) {

@@ -1,6 +1,6 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { differenceInCalendarYears, parseISO, startOfToday } from 'date-fns';
+import { addHours } from 'date-fns';
 import { Sequelize } from 'sequelize-typescript';
 
 import { CreateUserDTO, FilterUserDTO, UpdateUserDTO } from './user.dto';
@@ -38,7 +38,7 @@ export class UserService {
     const user = await this.userModel.findByPk(id, {
       paranoid: !convertBool(inactives),
       attributes: {
-        exclude: ['hash', 'emailVerified', 'tokenEmailVerification', 'tokenEmailVerificationExpires', 'tokenResetPassword', 'lastPassword', 'tokenResetPasswordExpires']
+        exclude: ['hash', 'emailVerified', 'tokenEmailVerification', 'tokenEmailVerificationExpires', 'tokenResetPassword', 'tokenResetPasswordExpires']
       }
     });
 
@@ -68,15 +68,9 @@ export class UserService {
   async post(data: CreateUserDTO, isAdmin?: boolean) {
     trimObj(data);
 
-    const age = differenceInCalendarYears(startOfToday(), parseISO(data.birthday));
-
-    if (age < 16 || age > 30) throw new HttpException("Você não tem idade suficiente para cadastrar-se", 400);
-
     const { id: roleId } = await this.roleService.findByName(isAdmin ? 'Admin' : 'Aluno');
 
-    if (await this.findByEmail(data.email) || await this.findByCPF(data.cpf)) throw new HttpException("Usuário já existe", 400);
-
-    const password = createTokenHEX(5);
+    if (await this.findByEmail(data.email) || await this.findByCPF(data.cpf)) throw new HttpException("Usuário já cadastrado", 400);
 
     const transaction = await this.sequelize.transaction();
 
@@ -84,12 +78,15 @@ export class UserService {
       const user = await this.userModel.create({
         ...data,
         roleId,
-        password
+        password: createTokenHEX(5),
+        tokenEmailVerification: createTokenHEX(),
+        tokenEmailVerificationExpires: addHours(new Date(), 1),
+        emailVerifieid: false
       }, { transaction });
 
       await transaction.commit();
 
-      // await this.mailService.storeUser(user);
+      await this.mailService.newUser(user);
 
       return user;
     } catch (error) {
@@ -101,22 +98,23 @@ export class UserService {
   async put(user: User, data: UpdateUserDTO, media?: Express.Multer.File) {
     trimObj(data);
 
-    if (data.birthday) {
-      const age = differenceInCalendarYears(startOfToday(), parseISO(data.birthday));
-      if (age < 16 || age > 30) throw new HttpException("Você não tem idade suficiente para cadastrar-se", 400);
-    }
-
     if (media) {
       const avatar = this.uploadService.post(media);
       Object.assign(data, { avatar });
     }
 
     if (data.cpf && data.cpf !== user.cpf) {
-      if (await this.findByCPF(data.cpf)) throw new HttpException("Usuário já existe", 400);
+      if (await this.findByCPF(data.cpf)) throw new HttpException("Usuário já cadastrado", 400);
     }
 
     if (data.email && data.email !== user.email) {
-      if (await this.findByEmail(data.email)) throw new HttpException("Usuário já existe", 400);
+      if (await this.findByEmail(data.email)) throw new HttpException("Usuário já cadastrado", 400);
+
+      Object.assign(data, {
+        emailVerified: false,
+        tokenEmailVerification: createTokenHEX(),
+        tokenEmailVerificationExpires: addHours(new Date(), 1)
+      });
     }
 
     if (data.oldPassword) {
@@ -138,6 +136,8 @@ export class UserService {
       await user.update({ ...data }, { transaction });
 
       await transaction.commit();
+
+      if (data.email !== user.email) await this.mailService.updateEmail(user);
     } catch (error) {
       await transaction.rollback();
       throw new HttpException(error, 400);

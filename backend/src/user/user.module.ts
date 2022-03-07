@@ -7,7 +7,6 @@ import { User } from './user.model';
 import { SeedUser } from './user.seed';
 import { UserService } from './user.service';
 import { UploadService } from '../config/upload.service';
-import { CourseModule } from '../course/course.module';
 import { MailModule } from '../mail/mail.module';
 import { RoleModule } from '../role/role.module';
 
@@ -17,7 +16,6 @@ import { RoleModule } from '../role/role.module';
     SequelizeModule.forFeature([User]),
     RoleModule,
     MailModule,
-    // CourseModule
   ],
   controllers: [UserController],
   providers: [UserService, UploadService],

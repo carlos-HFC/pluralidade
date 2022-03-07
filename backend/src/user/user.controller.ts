@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Put, Query, Req, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Query, Req, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Request } from 'express';
 
@@ -16,7 +16,7 @@ export class UserController {
     private userService: UserService
   ) { }
 
-  // @RoleDecorator('admin')
+  @RoleDecorator('admin')
   @Get()
   async index(@Query() query?: FilterUserDTO) {
     return await this.userService.get(query);
