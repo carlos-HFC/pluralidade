@@ -1,13 +1,11 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { getTime } from 'date-fns';
 import { Sequelize } from 'sequelize-typescript';
 
 import { CreateSolicitationDTO } from './solicitation.dto';
 import { Solicitation } from './solicitation.model';
 import { MailService } from '../mail/mail.service';
-import { User } from '../user/user.model';
-import { convertBool, trimObj } from '../utils';
+import { trimObj } from '../utils';
 
 @Injectable()
 export class SolicitationService {
@@ -18,10 +16,8 @@ export class SolicitationService {
     private sequelize: Sequelize,
   ) { }
 
-  async get(includeUsers?: 'true' | 'false') {
-    const include = convertBool(includeUsers);
-
-    return await this.solicitationModel.scope(include && 'user').findAll();
+  async get() {
+    return await this.solicitationModel.findAll();
   }
 
   async findById(id: number) {
@@ -32,23 +28,23 @@ export class SolicitationService {
     return solicitation;
   }
 
-  async post(user: User, data: CreateSolicitationDTO) {
-    trimObj(data);
+  async readSolicitation(id: number) {
+    const solicitation = await this.findById(id);
 
-    const protocol = getTime(new Date());
+    await solicitation.update({ read: true });
+  }
+
+  async post(data: CreateSolicitationDTO) {
+    trimObj(data);
 
     const transaction = await this.sequelize.transaction();
 
     try {
-      const solicitation = await this.solicitationModel.create({
-        ...data,
-        userId: user.id,
-        protocol
-      }, { transaction });
+      const solicitation = await this.solicitationModel.create({ ...data }, { transaction });
 
       await transaction.commit();
 
-      // await this.mailService.storeSolicitation(user, protocol);
+      await this.mailService.sendSolicitation(solicitation);
 
       return solicitation;
     } catch (error) {

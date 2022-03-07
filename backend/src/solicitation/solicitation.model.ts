@@ -1,26 +1,20 @@
-import { BelongsTo, Column, DataType, ForeignKey, Model, Scopes, Table } from 'sequelize-typescript';
+import { Column, DataType, Model, Table } from 'sequelize-typescript';
 
 import { CreateSolicitationDTO } from './solicitation.dto';
-import { User } from '../user/user.model';
 
-@Scopes(() => ({
-  user: {
-    include: [
-      {
-        model: User,
-        attributes: ['name', 'email']
-      }
-    ]
-  }
-}))
 @Table({ paranoid: true })
 export class Solicitation extends Model<Solicitation, CreateSolicitationDTO> {
   @Column({
-    type: DataType.BIGINT,
-    unique: true,
+    type: DataType.STRING,
     allowNull: false
   })
-  protocol: number;
+  name: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false
+  })
+  email: string;
 
   @Column({
     type: DataType.STRING,
@@ -28,10 +22,10 @@ export class Solicitation extends Model<Solicitation, CreateSolicitationDTO> {
   })
   description: string;
 
-  @ForeignKey(() => User)
-  @Column({ allowNull: false })
-  userId: number;
-
-  @BelongsTo(() => User)
-  user: User;
+  @Column({
+    type: DataType.BOOLEAN,
+    allowNull: false,
+    defaultValue: false,
+  })
+  read: boolean;
 }

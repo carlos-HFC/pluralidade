@@ -1,5 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query, Req, UseGuards } from '@nestjs/common';
-import { Request } from 'express';
+import { Body, Controller, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 
 import { CreateSolicitationDTO } from './solicitation.dto';
 import { SolicitationService } from './solicitation.service';
@@ -7,27 +6,35 @@ import { RoleDecorator } from '../common/decorators/role.decorator';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../common/guards/role.guard';
 
-@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('solicitations')
 export class SolicitationController {
   constructor(
     private solicitationService: SolicitationService
   ) { }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @RoleDecorator('admin')
   @Get()
-  async index(@Query('includeUsers') includeUsers?: 'true' | 'false') {
-    return await this.solicitationService.get(includeUsers);
+  async index() {
+    return await this.solicitationService.get();
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @RoleDecorator('admin')
   @Get(':id')
   async byId(@Param('id') id: number) {
     return await this.solicitationService.findById(id);
   }
 
-  @RoleDecorator('aluno')
   @Post()
-  async create(@Body() data: CreateSolicitationDTO, @Req() req: Request) {
-    return await this.solicitationService.post(req.user, data);
+  async create(@Body() data: CreateSolicitationDTO) {
+    return await this.solicitationService.post(data);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @RoleDecorator('admin')
+  @Patch()
+  async read(@Param('id') id: number) {
+    return await this.solicitationService.readSolicitation(id);
   }
 }
