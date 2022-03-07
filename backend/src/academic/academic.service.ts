@@ -29,9 +29,9 @@ export class AcademicService {
     trimObj(data);
 
     const init = Number(data.initDate);
-    const year = getYear(new Date());
+    const currentYear = getYear(new Date());
 
-    if (isAfter(init, year)) throw new HttpException('Data de início não pode ser após a data atual', 400);
+    if (isAfter(init, currentYear)) throw new HttpException('Data de início não pode ser após a data atual', 400);
 
     if (data.endDate) {
       const end = Number(data.endDate);
@@ -39,7 +39,7 @@ export class AcademicService {
       switch (true) {
         case isAfter(init, end):
           throw new HttpException('Data de início não pode ser após a data de conclusão', 400);
-        case isAfter(end, year):
+        case isAfter(end, currentYear):
           throw new HttpException('Data de conclusão não pode ser após a data atual', 400);
         default:
           break;
@@ -69,14 +69,14 @@ export class AcademicService {
 
     const init = Number(data.initDate || academic.initDate);
     const end = Number(data.endDate || academic.endDate);
-    const year = getYear(new Date())
+    const currentYear = getYear(new Date());
 
     switch (true) {
-      case isAfter(init, year):
+      case isAfter(init, currentYear):
         throw new HttpException('Data de início não pode ser após a data atual', 400);
       case isAfter(init, end):
         throw new HttpException('Data de início não pode ser após a data de conclusão', 400);
-      case isAfter(end, year):
+      case isAfter(end, currentYear):
         throw new HttpException('Data de conclusão não pode ser após a data atual', 400);
       default:
         break;

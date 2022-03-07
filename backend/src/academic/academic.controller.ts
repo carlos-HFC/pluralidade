@@ -2,12 +2,9 @@ import { Body, Controller, Param, Post, Put, UseGuards } from '@nestjs/common';
 
 import { CreateAcademicDTO, UpdateAcademicDTO } from './academic.dto';
 import { AcademicService } from './academic.service';
-import { RoleDecorator } from '../common/decorators/role.decorator';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
-import { RolesGuard } from '../common/guards/role.guard';
 
-@UseGuards(JwtAuthGuard, RolesGuard)
-@RoleDecorator('admin')
+@UseGuards(JwtAuthGuard)
 @Controller('academics')
 export class AcademicController {
   constructor(
