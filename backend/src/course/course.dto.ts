@@ -7,6 +7,10 @@ export class CreateCourseDTO {
   @Transform(({ value }) => value.trim())
   name: string;
 
+  @IsNotEmpty({ message: 'Descrição curta é obrigatória' })
+  @Transform(({ value }) => value.trim())
+  shortDescription: string;
+
   @IsNotEmpty({ message: 'Descrição é obrigatória' })
   @Transform(({ value }) => value.trim())
   description: string;
@@ -44,7 +48,7 @@ export class CreateCourseDTO {
 export class UpdateCourseDTO extends PartialType(CreateCourseDTO) { }
 
 export class FilterCourseDTO {
-  @IsEnum(['true', 'false'], { message: 'Inlcusão de inativos inválida' })
+  @IsEnum(['true', 'false'], { message: 'Inclusão de inativos inválida' })
   @IsOptional()
   @Transform(({ value }) => value.trim().toLowerCase())
   inactives?: 'true' | 'false';
@@ -59,7 +63,7 @@ export class FilterCourseDTO {
   @Transform(({ value }) => Number(value.trim()))
   month?: string;
 
-  @IsEnum(['M', 'T', 'N'], { message: 'Período inválido' })
+  @IsEnum(['M', 'T', 'N'], { message: 'Busca por período inválida' })
   @IsOptional()
   @Transform(({ value }) => value.trim().toUpperCase())
   period?: 'M' | 'T' | 'N';

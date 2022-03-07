@@ -7,14 +7,16 @@ import { Sequelize } from 'sequelize-typescript';
 import { CreateCourseDTO, FilterCourseDTO, UpdateCourseDTO } from './course.dto';
 import { Course } from './course.model';
 import { UploadService } from '../config/upload.service';
+import { MailService } from '../mail/mail.service';
 import { User } from '../user/user.model';
-import { capitalizeFirstLetter, convertBool, trimObj } from '../utils';
+import { convertBool, trimObj } from '../utils';
 
 @Injectable()
 export class CourseService {
   constructor(
     @InjectModel(Course)
     private readonly courseModel: typeof Course,
+    private mailService: MailService,
     private sequelize: Sequelize,
     private upload: UploadService
   ) { }
@@ -24,7 +26,7 @@ export class CourseService {
     const where = {};
 
     if (query.pcd) Object.assign(where, { pcd: convertBool(query.pcd) });
-    if (query.name) Object.assign(where, { name: { [$.startsWith]: capitalizeFirstLetter(query.name) } });
+    if (query.name) Object.assign(where, { name: { [$.substring]: query.name } });
     if (query.period) Object.assign(where, { period: query.period.toUpperCase() });
     if (query.month) {
       const month = setMonth(startOfToday(), Number(query.month) - 1);
@@ -55,7 +57,7 @@ export class CourseService {
   }
 
   async availableDate(period: 'M' | 'T' | 'N', initDate: string, endDate: string) {
-    return await this.courseModel.findOne({
+    return await this.courseModel.findAndCountAll({
       where: {
         period,
         initDate: { [$.lte]: initDate },
@@ -67,7 +69,7 @@ export class CourseService {
   async post(data: CreateCourseDTO, media: Express.Multer.File) {
     trimObj(data);
 
-    if (!media) throw new HttpException('Imagem é obrigatória', 400);
+    if (!media) throw new HttpException('A imagem é obrigatória', 400);
 
     const image = this.upload.post(media);
     Object.assign(data, { image });
@@ -87,8 +89,9 @@ export class CourseService {
 
     const difference = differenceInBusinessDays(addMonths(date, data.months), date);
     const endDate = format(addBusinessDays(date, difference), 'yyyy-MM-dd');
+    const checkAvailability = await this.availableDate(data.period, endDate, format(date, 'yyyy-MM-dd'));
 
-    if (await this.availableDate(data.period, endDate, format(date, 'yyyy-MM-dd'))) throw new HttpException('Data do curso indisponível', 400);
+    if (checkAvailability.count > 2) throw new HttpException('Data do curso indisponível', 400);
 
     const transaction = await this.sequelize.transaction();
 
@@ -135,7 +138,9 @@ export class CourseService {
       const endDate = format(addBusinessDays(date, difference), 'yyyy-MM-dd');
       Object.assign(data, { endDate });
 
-      if (await this.availableDate(data.period, endDate, format(date, 'yyyy-MM-dd'))) throw new HttpException('Data do curso indisponível', 400);
+      const checkAvailability = await this.availableDate(data.period, endDate, format(date, 'yyyy-MM-dd'));
+
+      if (checkAvailability.count > 2) throw new HttpException('Data do curso indisponível', 400);
     }
 
     const transaction = await this.sequelize.transaction();
@@ -172,7 +177,7 @@ export class CourseService {
       case user.courseId === id:
         throw new HttpException('Você já está inscrito neste curso', 400);
       case course.pcd && !user.deficient:
-        throw new HttpException('Este curso é apenas para pessoas com deficiência', 400);
+        throw new HttpException('Este curso é destinado apenas para pessoas com deficiência', 400);
       default:
         break;
     }
@@ -186,6 +191,8 @@ export class CourseService {
       await user.update({ courseId: id }, { transaction });
 
       await transaction.commit();
+
+      await this.mailService.registerCourse(user, course);
     } catch (error) {
       await transaction.rollback();
       throw new HttpException(error, 400);

@@ -14,6 +14,12 @@ export class Course extends Model<Course, CreateCourseDTO> {
     type: DataType.TEXT,
     allowNull: false
   })
+  shortDescription: string;
+
+  @Column({
+    type: DataType.TEXT,
+    allowNull: false
+  })
   description: string;
 
   @Column({
@@ -26,7 +32,7 @@ export class Course extends Model<Course, CreateCourseDTO> {
     type: DataType.ENUM('M', 'T', 'N'),
     allowNull: false,
     set(value: string) {
-      this.setDataValue('period', value.toUpperCase());
+      this.setDataValue('period', value.trim().toUpperCase());
     }
   })
   period: 'M' | 'T' | 'N';

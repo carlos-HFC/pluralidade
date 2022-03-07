@@ -5,12 +5,14 @@ import { CourseController } from './course.controller';
 import { Course } from './course.model';
 import { CourseService } from './course.service';
 import { UploadService } from '../config/upload.service';
-import { UserModule } from 'src/user/user.module';
+import { MailModule } from "../mail/mail.module";
+import { UserModule } from '../user/user.module';
 
 @Module({
   imports: [
     SequelizeModule.forFeature([Course]),
-    UserModule
+    UserModule,
+    MailModule
   ],
   controllers: [CourseController],
   providers: [CourseService, UploadService],
