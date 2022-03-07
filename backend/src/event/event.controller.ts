@@ -19,6 +19,13 @@ export class EventController {
     return await this.eventService.get(query);
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @RoleDecorator('admin')
+  @Get('/available')
+  async available(@Query() { date }: FilterEventDTO) {
+    return await this.eventService.available(date);
+  }
+
   @Get(':id')
   async getById(@Param('id') id: number, @Query('inactives') inactives?: 'true' | 'false') {
     return await this.eventService.findById(id, inactives);

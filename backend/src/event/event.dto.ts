@@ -7,6 +7,10 @@ export class CreateEventDTO {
   @Transform(({ value }) => value.trim())
   title: string;
 
+  @IsNotEmpty({ message: 'Descrição curta é obrigatória' })
+  @Transform(({ value }) => value.trim())
+  shortDescription: string;
+
   @IsNotEmpty({ message: 'Descrição é obrigatória' })
   @Transform(({ value }) => value.trim())
   description: string;

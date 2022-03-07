@@ -1,4 +1,4 @@
-import { format } from 'date-fns';
+import { isBefore } from 'date-fns';
 import { Column, DataType, Model, Table } from 'sequelize-typescript';
 
 import { CreateEventDTO } from './event.dto';
@@ -15,6 +15,12 @@ export class Event extends Model<Event, CreateEventDTO> {
     type: DataType.TEXT,
     allowNull: false
   })
+  shortDescription: string;
+
+  @Column({
+    type: DataType.TEXT,
+    allowNull: false
+  })
   description: string;
 
   @Column({
@@ -26,9 +32,17 @@ export class Event extends Model<Event, CreateEventDTO> {
   @Column({
     type: DataType.DATE,
     allowNull: false,
-    get(this: Event) {
-      return format(new Date(this.getDataValue('date')), "dd-MM-yyyy', as' HH'h'");
-    }
+    // get(this: Event) {
+    //   return format(new Date(this.getDataValue('date')), "dd-MM-yyyy', as' HH'h'");
+    // }
   })
   date: Date;
+
+  @Column({
+    type: DataType.VIRTUAL,
+    get(this: Event) {
+      return isBefore(this.date, new Date());
+    }
+  })
+  past: boolean;
 }

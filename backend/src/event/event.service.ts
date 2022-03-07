@@ -1,6 +1,6 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { addHours, endOfDay, getHours, hoursToMinutes, isAfter, isSunday, parseISO, startOfDay, startOfHour, startOfToday, subHours } from 'date-fns';
+import { endOfDay, format, isAfter, isBefore, isValid, isWeekend, parseISO, setHours, setMinutes, setSeconds, startOfDay, startOfHour, startOfToday } from 'date-fns';
 import { Op as $ } from 'sequelize';
 import { Sequelize } from 'sequelize-typescript';
 
@@ -43,6 +43,58 @@ export class EventService {
     });
   }
 
+  async available(date: string) {
+    const schedule = [
+      '09:00',
+      '10:00',
+      '11:00',
+      '12:00',
+      '13:00',
+      '14:00',
+      '15:00',
+      '16:00',
+      '17:00',
+      '18:00',
+    ];
+
+    const searchDate = parseISO(date), today = startOfToday();
+
+    switch (true) {
+      case !date:
+        throw new HttpException('Data é obrigatória', 400);
+      case !isValid(searchDate):
+        throw new HttpException('Data inválida', 400);
+      case isBefore(searchDate, today):
+        throw new HttpException('Impossível agendar em uma data passada', 400);
+      default:
+        break;
+    }
+
+    const events = await this.eventModel.findAll({
+      where: {
+        date: {
+          [$.between]: [
+            startOfDay(searchDate),
+            endOfDay(searchDate),
+          ]
+        }
+      }
+    });
+
+    const available = schedule.map(time => {
+      const [hour, minute] = time.split(':').map(Number);
+      const value = setSeconds(setMinutes(setHours(searchDate, hour), minute), 0);
+
+      return {
+        time,
+        value: format(value, "yyyy-MM-dd'T'HH:mm:ssxxx"),
+        available: isAfter(value, new Date()) && !events.find(event => format(event.date, "HH:mm") === time)
+      };
+    });
+
+    return available;
+  }
+
   async findById(id: number, inactives?: 'true' | 'false') {
     const event = await this.eventModel.findByPk(id, { paranoid: !convertBool(inactives) });
 
@@ -53,14 +105,7 @@ export class EventService {
 
   async availableDate(date: Date) {
     return await this.eventModel.findOne({
-      where: {
-        date: {
-          [$.between]: [
-            subHours(startOfHour(date), 1),
-            addHours(startOfHour(date), 1),
-          ]
-        }
-      }
+      where: { date }
     });
   }
 
@@ -72,18 +117,13 @@ export class EventService {
     const image = this.upload.post(media);
     Object.assign(data, { image });
 
-    const date = parseISO(data.date);
-
-    const minutes = hoursToMinutes(getHours(date));
+    const date = startOfHour(parseISO(data.date));
 
     switch (true) {
       case isAfter(new Date(), date):
         throw new HttpException('Data passada não permitida', 400);
-      case isSunday(date):
-        throw new HttpException('Eventos não podem ser realizados aos domingos', 400);
-      case minutes < 480:
-      case minutes > 1080:
-        throw new HttpException('Horário de início do evento deve ocorrer entre 8h e 18h', 400);
+      case isWeekend(date):
+        throw new HttpException('Eventos não podem ser realizados aos fins de semana', 400);
       default:
         break;
     }
@@ -95,7 +135,7 @@ export class EventService {
     try {
       const event = await this.eventModel.create({
         ...data,
-        date: String(startOfHour(date))
+        date: String(date)
       }, { transaction });
 
       await transaction.commit();
@@ -112,23 +152,18 @@ export class EventService {
 
     const event = await this.findById(id);
 
-    const date = parseISO(data.date || String(event.date));
-
-    const minutes = hoursToMinutes(getHours(date));
-
     if (media) {
       const image = this.upload.post(media);
       Object.assign(data, { image });
     }
 
+    const date = startOfHour(parseISO(data.date || String(event.date)));
+
     switch (true) {
       case isAfter(new Date(), date):
         throw new HttpException('Data passada não permitida', 400);
-      case isSunday(date):
-        throw new HttpException('Eventos não podem ser realizados aos domingos', 400);
-      case minutes < 480:
-      case minutes > 1080:
-        throw new HttpException('Horário de início do evento deve ocorrer entre 8h e 18h', 400);
+      case isWeekend(date):
+        throw new HttpException('Eventos não podem ser realizados aos fins de semana', 400);
       default:
         break;
     }
@@ -140,7 +175,7 @@ export class EventService {
     try {
       await event.update({
         ...data,
-        date: startOfHour(date)
+        date: String(date)
       }, { transaction });
 
       await transaction.commit();
