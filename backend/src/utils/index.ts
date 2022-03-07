@@ -19,6 +19,8 @@ export function createTokenHEX(size: number = 20) {
 export function validateCPF(cpf: string) {
   let sum = 0, rest = 0;
 
+  cpf = cpf.replace(/[\s-.]/g, '').trim()
+
   switch (true) {
     case cpf === '00000000000':
     case cpf === '11111111111':
