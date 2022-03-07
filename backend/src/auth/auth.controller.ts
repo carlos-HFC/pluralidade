@@ -1,6 +1,6 @@
 import { Body, Controller, HttpCode, Post } from '@nestjs/common';
 
-import { ForgotPasswordDTO, LoginDTO, ResetPasswordDTO } from './auth.dto';
+import { ForgotPasswordDTO, LoginDTO, ResetPasswordDTO, VerifyRegisterDTO } from './auth.dto';
 import { AuthService } from './auth.service';
 import { CreateUserDTO } from '../user/user.dto';
 
@@ -20,6 +20,12 @@ export class AuthController {
   @HttpCode(200)
   async register(@Body() data: CreateUserDTO) {
     return await this.authService.register(data);
+  }
+
+  @Post('verify')
+  @HttpCode(200)
+  async verify(@Body() data: VerifyRegisterDTO) {
+    return await this.authService.verifyRegister(data);
   }
 
   @Post('forgot')

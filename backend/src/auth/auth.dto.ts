@@ -37,3 +37,14 @@ export class ResetPasswordDTO {
   @Transform(({ value }) => value.trim())
   confirmPassword: string;
 }
+
+export class VerifyRegisterDTO {
+  @IsNotEmpty({ message: 'Token é obrigatório' })
+  @Transform(({ value }) => value.trim())
+  token: string;
+
+  @IsEmail({}, { message: 'E-mail inválido' })
+  @IsNotEmpty({ message: 'E-mail é obrigatório' })
+  @Transform(({ value }) => value.trim())
+  email: string;
+}
