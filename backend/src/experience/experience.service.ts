@@ -29,7 +29,6 @@ export class ExperienceService {
     trimObj(data);
 
     const [initMonth, initYear] = data.initDate.split('/');
-
     const init = setYear(setMonth(startOfToday(), Number(initMonth) - 1), Number(initYear));
 
     switch (true) {
@@ -43,8 +42,8 @@ export class ExperienceService {
 
     if (data.endDate) {
       const [endMonth, endYear] = data.endDate.split('/');
-
       const end = setYear(setMonth(startOfToday(), Number(endMonth) - 1), Number(endYear));
+
       switch (true) {
         case !isValid(end):
           throw new HttpException("Data de término inválida", 400);
@@ -79,7 +78,6 @@ export class ExperienceService {
     const experience = await this.findById(id);
 
     const [initMonth, initYear] = (data.initDate || experience.initDate).split('/');
-
     const init = setYear(setMonth(startOfToday(), Number(initMonth) - 1), Number(initYear));
 
     switch (true) {
@@ -93,7 +91,6 @@ export class ExperienceService {
 
     if (data.endDate || experience.endDate) {
       const [endMonth, endYear] = (data?.endDate || experience?.endDate).split('/');
-
       const end = setYear(setMonth(startOfToday(), Number(endMonth) - 1), Number(endYear));
 
       switch (true) {

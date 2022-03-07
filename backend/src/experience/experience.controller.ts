@@ -2,12 +2,9 @@ import { Body, Controller, Param, Post, Put, UseGuards } from '@nestjs/common';
 
 import { CreateExperienceDTO, UpdateExperienceDTO } from './experience.dto';
 import { ExperienceService } from './experience.service';
-import { RoleDecorator } from '../common/decorators/role.decorator';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
-import { RolesGuard } from '../common/guards/role.guard';
 
-@UseGuards(JwtAuthGuard, RolesGuard)
-@RoleDecorator('admin')
+@UseGuards(JwtAuthGuard)
 @Controller('experiences')
 export class ExperienceController {
   constructor(
