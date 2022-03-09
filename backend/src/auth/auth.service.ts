@@ -29,9 +29,9 @@ export class AuthService {
     switch (true) {
       case !user:
       case !(await user.checkPass(data.password)):
-        throw new HttpException('As credenciais estão incorretas', 404);
+        throw new HttpException('As credenciais estão incorretas', 400);
       case !user.emailVerified:
-        throw new HttpException('E-mail não verificado', 404);
+        throw new HttpException('E-mail não verificado', 400);
       default:
         break;
     }
@@ -74,7 +74,7 @@ export class AuthService {
 
       await this.mailService.updateEmail(user);
 
-      throw new HttpException('O seu token expirou, mas te enviamos um novo token', 400);
+      throw new HttpException('O seu token expirou, mas não se preocupe, logo te enviaremos um novo token', 400);
     }
 
     try {
