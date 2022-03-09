@@ -5,6 +5,7 @@ import { Sequelize } from 'sequelize-typescript';
 
 import { ForgotPasswordDTO, LoginDTO, ResetPasswordDTO, VerifyRegisterDTO } from './auth.dto';
 import { MailService } from '../mail/mail.service';
+import { TokenService } from '../token/token.service';
 import { CreateUserDTO } from '../user/user.dto';
 import { User } from '../user/user.model';
 import { UserService } from '../user/user.service';
@@ -15,6 +16,7 @@ export class AuthService {
   constructor(
     private jwtService: JwtService,
     private mailService: MailService,
+    private tokenService: TokenService,
     private userService: UserService,
     private sequelize: Sequelize
   ) { }
@@ -67,19 +69,19 @@ export class AuthService {
       await this.userService.put(user, {
         tokenEmailVerification: token,
         tokenEmailVerificationExpires: now,
-        emailVerifieid: false
+        emailVerified: false
       });
 
       await this.mailService.updateEmail(user);
 
-      throw new HttpException('O token expirou', 400);
+      throw new HttpException('O seu token expirou, mas te enviamos um novo token', 400);
     }
 
     try {
       await this.userService.put(user, {
         tokenEmailVerification: null,
         tokenEmailVerificationExpires: null,
-        emailVerifieid: true
+        emailVerified: true
       });
     } catch (error) {
       throw new HttpException(error, 400);
@@ -133,7 +135,8 @@ export class AuthService {
     try {
       await user.update({
         tokenResetPassword: null,
-        tokenResetPasswordExpires: null
+        tokenResetPasswordExpires: null,
+        password: data.password
       }, { transaction });
 
       await transaction.commit();
@@ -143,10 +146,12 @@ export class AuthService {
     }
   }
 
-  private createToken(user: User) {
+  async createToken(user: User) {
     const { id, name, avatar, email, cpf, role } = user;
 
     const token = this.jwtService.sign({ id, email, role: role.name, cpf, password: user.hash });
+
+    await this.tokenService.post({ token, userId: id });
 
     return {
       token,

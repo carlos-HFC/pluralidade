@@ -6,6 +6,7 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { MailModule } from '../mail/mail.module';
+import { TokenModule } from '../token/token.module';
 import { UserModule } from '../user/user.module';
 
 @Module({
@@ -18,7 +19,8 @@ import { UserModule } from '../user/user.module';
         expiresIn: process.env.JWT_EXPIRES
       }
     }),
-    MailModule
+    MailModule,
+    TokenModule
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],
