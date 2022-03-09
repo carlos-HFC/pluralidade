@@ -11,7 +11,7 @@ export class Academic extends Model<Academic, CreateAcademicDTO> {
   })
   institution: string;
 
-  @Column(DataType.STRING)
+  @Column(DataType.STRING(100))
   degree: string;
 
   @Column(DataType.STRING)
@@ -21,10 +21,10 @@ export class Academic extends Model<Academic, CreateAcademicDTO> {
     type: DataType.STRING(4),
     allowNull: false
   })
-  initDate: string;
+  initYear: string;
 
   @Column(DataType.STRING(4))
-  endDate: string;
+  endYear: string;
 
   @ForeignKey(() => User)
   @Column({ allowNull: false })

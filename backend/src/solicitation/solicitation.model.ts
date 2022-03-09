@@ -5,19 +5,19 @@ import { CreateSolicitationDTO } from './solicitation.dto';
 @Table({ paranoid: true })
 export class Solicitation extends Model<Solicitation, CreateSolicitationDTO> {
   @Column({
-    type: DataType.STRING,
+    type: DataType.STRING(50),
     allowNull: false
   })
   name: string;
 
   @Column({
-    type: DataType.STRING,
+    type: DataType.STRING(100),
     allowNull: false
   })
   email: string;
 
   @Column({
-    type: DataType.STRING,
+    type: DataType.TEXT,
     allowNull: false
   })
   description: string;

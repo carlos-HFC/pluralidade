@@ -12,18 +12,18 @@ export class Experience extends Model<Experience, CreateExperienceDTO> {
   company: string;
 
   @Column({
-    type: DataType.STRING,
+    type: DataType.STRING(75),
     allowNull: false
   })
   office: string;
 
   @Column({
-    type: DataType.STRING,
+    type: DataType.STRING(7),
     allowNull: false
   })
   initDate: string;
 
-  @Column(DataType.STRING)
+  @Column(DataType.STRING(7))
   endDate: string;
 
   @ForeignKey(() => User)

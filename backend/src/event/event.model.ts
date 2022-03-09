@@ -6,13 +6,13 @@ import { CreateEventDTO } from './event.dto';
 @Table({ paranoid: true })
 export class Event extends Model<Event, CreateEventDTO> {
   @Column({
-    type: DataType.STRING,
+    type: DataType.STRING(100),
     allowNull: false
   })
   title: string;
 
   @Column({
-    type: DataType.TEXT,
+    type: DataType.STRING,
     allowNull: false
   })
   shortDescription: string;
@@ -31,10 +31,7 @@ export class Event extends Model<Event, CreateEventDTO> {
 
   @Column({
     type: DataType.DATE,
-    allowNull: false,
-    // get(this: Event) {
-    //   return format(new Date(this.getDataValue('date')), "dd-MM-yyyy', as' HH'h'");
-    // }
+    allowNull: false
   })
   date: Date;
 

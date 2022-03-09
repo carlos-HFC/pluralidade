@@ -5,13 +5,13 @@ import { CreateCourseDTO } from './course.dto';
 @Table({ paranoid: true })
 export class Course extends Model<Course, CreateCourseDTO> {
   @Column({
-    type: DataType.STRING,
+    type: DataType.STRING(100),
     allowNull: false,
   })
   name: string;
 
   @Column({
-    type: DataType.TEXT,
+    type: DataType.STRING,
     allowNull: false
   })
   shortDescription: string;
@@ -38,16 +38,16 @@ export class Course extends Model<Course, CreateCourseDTO> {
   period: 'M' | 'T' | 'N';
 
   @Column({
-    type: DataType.DATEONLY,
+    type: DataType.STRING(10),
     allowNull: false,
   })
-  initDate: Date;
+  initDate: string;
 
   @Column({
-    type: DataType.DATEONLY,
+    type: DataType.STRING(10),
     allowNull: false
   })
-  endDate: Date;
+  endDate: String;
 
   @Column({
     type: DataType.INTEGER,

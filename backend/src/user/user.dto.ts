@@ -70,8 +70,8 @@ export class CreateUserDTO {
 
   password: string;
 
-  emailVerifieid: boolean;
-  
+  emailVerified: boolean;
+
   tokenEmailVerification: string;
 
   tokenEmailVerificationExpires: Date;

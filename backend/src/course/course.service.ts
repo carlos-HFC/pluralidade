@@ -44,7 +44,7 @@ export class CourseService {
     return await this.courseModel.findAll({
       paranoid: !convertBool(query.inactives),
       where,
-      order: [['initDate', 'ASC']]
+      order: [['initDate', 'ASC'], ['endDate', 'ASC']]
     });
   }
 
@@ -77,8 +77,8 @@ export class CourseService {
     const date = parseISO(data.initDate);
 
     switch (true) {
-      case differenceInBusinessDays(date, startOfToday()) < 10:
-        throw new HttpException('Curso não pode iniciar em menos de 10 dias úteis', 400);
+      case differenceInBusinessDays(date, startOfToday()) < 5:
+        throw new HttpException('Curso não pode iniciar em menos de 5 dias úteis', 400);
       case isAfter(startOfToday(), date):
         throw new HttpException('Data passada não permitida', 400);
       case isWeekend(date):
@@ -123,8 +123,8 @@ export class CourseService {
     }
 
     switch (true) {
-      case differenceInBusinessDays(date, startOfToday()) < 10:
-        throw new HttpException('Curso não pode iniciar em menos de 10 dias úteis', 400);
+      case differenceInBusinessDays(date, startOfToday()) < 5:
+        throw new HttpException('Curso não pode iniciar em menos de 5 dias úteis', 400);
       case isAfter(startOfToday(), date):
         throw new HttpException('Data passada não permitida', 400);
       case isWeekend(date):
@@ -138,9 +138,11 @@ export class CourseService {
       const endDate = format(addBusinessDays(date, difference), 'yyyy-MM-dd');
       Object.assign(data, { endDate });
 
-      const checkAvailability = await this.availableDate(data.period, endDate, format(date, 'yyyy-MM-dd'));
+      const checkAvailability = await this.availableDate((data.period || course.period), endDate, format(date, 'yyyy-MM-dd'));
 
-      if (checkAvailability.count > 2) throw new HttpException('Data do curso indisponível', 400);
+      const filteredCourses = checkAvailability.rows.filter(row => row.id !== course.id);
+
+      if (filteredCourses.length > 2) throw new HttpException('Data do curso indisponível', 400);
     }
 
     const transaction = await this.sequelize.transaction();
@@ -192,7 +194,7 @@ export class CourseService {
 
       await transaction.commit();
 
-      await this.mailService.registerCourse(user, course);
+    return  await this.mailService.registerCourse(user, course);
     } catch (error) {
       await transaction.rollback();
       throw new HttpException(error, 400);

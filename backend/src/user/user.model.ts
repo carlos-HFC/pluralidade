@@ -21,13 +21,13 @@ import { Role } from '../role/role.model';
 @Table({ paranoid: true })
 export class User extends Model<User, CreateUserDTO> {
   @Column({
-    type: DataType.STRING,
+    type: DataType.STRING(100),
     allowNull: false
   })
   name: string;
 
   @Column({
-    type: DataType.STRING,
+    type: DataType.STRING(100),
     allowNull: false,
     unique: true
   })
@@ -40,7 +40,7 @@ export class User extends Model<User, CreateUserDTO> {
   })
   emailVerified: boolean;
 
-  @Column(DataType.STRING)
+  @Column(DataType.STRING(50))
   tokenEmailVerification?: string;
 
   @Column(DataType.DATE)
@@ -52,7 +52,7 @@ export class User extends Model<User, CreateUserDTO> {
   @Column(DataType.VIRTUAL)
   password: string;
 
-  @Column(DataType.STRING)
+  @Column(DataType.STRING(50))
   tokenResetPassword?: string;
 
   @Column(DataType.DATE)
@@ -71,7 +71,7 @@ export class User extends Model<User, CreateUserDTO> {
   avatar?: string;
 
   @Column({
-    type: DataType.STRING,
+    type: DataType.STRING(11),
     allowNull: false,
     unique: true,
     set(value: string) {
@@ -90,7 +90,7 @@ export class User extends Model<User, CreateUserDTO> {
   gender: string;
 
   @Column({
-    type: DataType.STRING,
+    type: DataType.STRING(8),
     allowNull: false,
     set(value: string) {
       this.setDataValue('cep', value.replace(/[\s-]/g, ''));
@@ -105,16 +105,16 @@ export class User extends Model<User, CreateUserDTO> {
   address: string;
 
   @Column({
-    type: DataType.STRING,
+    type: DataType.STRING(70),
     allowNull: false
   })
   district: string;
 
-  @Column(DataType.STRING)
+  @Column(DataType.STRING(100))
   complement?: string;
 
   @Column({
-    type: DataType.STRING,
+    type: DataType.STRING(70),
     allowNull: false
   })
   city: string;
@@ -129,7 +129,7 @@ export class User extends Model<User, CreateUserDTO> {
   uf: string;
 
   @Column({
-    type: DataType.STRING,
+    type: DataType.STRING(11),
     allowNull: false,
     set(value: string) {
       this.setDataValue('phone', value.replace(/(\+55)?[\s()-]/g, ''));

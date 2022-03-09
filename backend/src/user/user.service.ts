@@ -35,7 +35,7 @@ export class UserService {
   }
 
   async findById(id: number, inactives?: 'true' | 'false') {
-    const user = await this.userModel.findByPk(id, {
+    const user = await this.userModel.scope('role').findByPk(id, {
       paranoid: !convertBool(inactives),
       attributes: {
         exclude: ['hash', 'emailVerified', 'tokenEmailVerification', 'tokenEmailVerificationExpires', 'tokenResetPassword', 'tokenResetPasswordExpires']
@@ -81,7 +81,7 @@ export class UserService {
         password: createTokenHEX(5),
         tokenEmailVerification: createTokenHEX(),
         tokenEmailVerificationExpires: addHours(new Date(), 1),
-        emailVerifieid: false
+        emailVerified: false
       }, { transaction });
 
       await transaction.commit();
@@ -115,6 +115,8 @@ export class UserService {
         tokenEmailVerification: createTokenHEX(),
         tokenEmailVerificationExpires: addHours(new Date(), 1)
       });
+
+      await this.mailService.updateEmail(user, true);
     }
 
     if (data.oldPassword) {
@@ -136,8 +138,6 @@ export class UserService {
       await user.update({ ...data }, { transaction });
 
       await transaction.commit();
-
-      if (data.email !== user.email) await this.mailService.updateEmail(user);
     } catch (error) {
       await transaction.rollback();
       throw new HttpException(error, 400);

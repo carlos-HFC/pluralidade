@@ -28,13 +28,13 @@ export class AcademicService {
   async post(data: CreateAcademicDTO) {
     trimObj(data);
 
-    const init = Number(data.initDate);
+    const init = Number(data.initYear);
     const currentYear = getYear(new Date());
 
     if (isAfter(init, currentYear)) throw new HttpException('Data de início não pode ser após a data atual', 400);
 
-    if (data.endDate) {
-      const end = Number(data.endDate);
+    if (data.endYear) {
+      const end = Number(data.endYear);
 
       switch (true) {
         case isAfter(init, end):
@@ -67,8 +67,8 @@ export class AcademicService {
 
     const academic = await this.findById(id);
 
-    const init = Number(data.initDate || academic.initDate);
-    const end = Number(data.endDate || academic.endDate);
+    const init = Number(data.initYear || academic.initYear);
+    const end = Number(data.endYear || academic.endYear);
     const currentYear = getYear(new Date());
 
     switch (true) {

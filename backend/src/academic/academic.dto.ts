@@ -1,6 +1,6 @@
 import { OmitType, PartialType } from '@nestjs/mapped-types';
 import { Transform } from 'class-transformer';
-import { IsNotEmpty, IsOptional, Length, Max } from 'class-validator';
+import { IsNotEmpty, IsOptional, Length } from 'class-validator';
 
 export class CreateAcademicDTO {
   @IsNotEmpty({ message: 'Instituição é obrigatória' })
@@ -18,12 +18,12 @@ export class CreateAcademicDTO {
   @Length(4, 4, { message: 'Data de início inválida' })
   @IsNotEmpty({ message: 'Data de início é obrigatória' })
   @Transform(({ value }) => value.trim())
-  initDate: string;
+  initYear: string;
 
   @IsOptional()
   @Length(4, 4, { message: 'Data de conclusão inválida' })
   @Transform(({ value }) => value.trim())
-  endDate?: string;
+  endYear?: string;
 
   @IsNotEmpty({ message: 'Usuário é obrigatório' })
   userId: number;
