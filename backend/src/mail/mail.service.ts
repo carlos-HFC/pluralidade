@@ -1,6 +1,6 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectSendGrid, SendGridService } from '@ntegral/nestjs-sendgrid';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
 import { Course } from '../course/course.model';
@@ -29,7 +29,8 @@ export class MailService {
             dynamicTemplateData: {
               subject: "Bem-vindo(a) ao Instituto Pluralidade!!",
               name: user.name,
-              link: `http://localhost:3000/verifyRegister?token=${user.tokenEmailVerification}&email=${user.email}`
+              link: `http://localhost:3000/verifyRegister?token=${user.tokenEmailVerification}&email=${user.email}`,
+              password: user.password
             },
           },
         ],
@@ -39,10 +40,10 @@ export class MailService {
     }
   }
 
-  async updateEmail(user: User) {
+  async updateEmail(user: User, changeEmail?: boolean) {
     const envelope = {
       from: "NoReply <chfcchfc@hotmail.com>",
-      templateId: "",
+      templateId: "d-b51510a489fd4535bc948c818a4abad6",
     };
 
     try {
@@ -54,7 +55,8 @@ export class MailService {
             dynamicTemplateData: {
               subject: "Confirmação de e-mail",
               name: user.name,
-              link: `http://localhost:3000/verifyRegister?token=${user.tokenEmailVerification}&email=${user.email}`
+              link: `http://localhost:3000/verifyRegister?token=${user.tokenEmailVerification}&email=${user.email}`,
+              changeEmail
             },
           },
         ],
@@ -132,9 +134,9 @@ export class MailService {
         initHour: '18:00',
         endHour: '21:00',
       },
-    }
+    };
 
-    const initDate = format(course.initDate, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
+    const date = format(parseISO(course.initDate), "dd 'de' MMMM", { locale: ptBR });
 
     try {
       await this.client.send({
@@ -146,8 +148,7 @@ export class MailService {
               subject: `Inscrição no curso ${course.name} efetuada com sucesso!!`,
               name: user.name,
               courseName: course.name,
-              initDate,
-              period: course.period,
+              date,
               initHour: hour[course.period].initHour,
               endHour: hour[course.period].endHour
             },
