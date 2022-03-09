@@ -4,8 +4,8 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { TokenController } from './token.controller';
 import { Token } from './token.model';
 import { TokenService } from './token.service';
+import { AuthModule } from '../auth/auth.module';
 import { UserModule } from '../user/user.module';
-import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports: [

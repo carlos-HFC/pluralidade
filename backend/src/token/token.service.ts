@@ -1,11 +1,11 @@
 import { forwardRef, HttpException, Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Sequelize } from 'sequelize-typescript';
-import { AuthService } from 'src/auth/auth.service';
-import { UserService } from 'src/user/user.service';
-import { CreateTokenDTO, RefreshTokenDTO } from './token.dto';
 
+import { CreateTokenDTO, RefreshTokenDTO } from './token.dto';
 import { Token } from './token.model';
+import { AuthService } from '../auth/auth.service';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class TokenService {
