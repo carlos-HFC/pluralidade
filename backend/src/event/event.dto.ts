@@ -35,4 +35,9 @@ export class FilterEventDTO {
   @IsOptional()
   @Transform(({ value }) => value.trim())
   date?: string;
+
+  @IsEnum(['true', 'false'], { message: 'Inclusão de eventos passados inválida' })
+  @IsOptional()
+  @Transform(({ value }) => value.trim().toLowerCase())
+  past?: 'true' | 'false';
 }

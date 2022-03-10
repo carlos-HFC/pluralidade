@@ -22,6 +22,7 @@ export class EventService {
     trimObj(query);
     const where = {};
 
+    if (!convertBool(query.past)) Object.assign(where, { date: { [$.gte]: startOfHour(new Date()) } });
     if (query.date) {
       const searchDate = parseISO(query.date);
       if (isAfter(startOfToday(), searchDate)) throw new HttpException('Data passada não permitida', 400);
