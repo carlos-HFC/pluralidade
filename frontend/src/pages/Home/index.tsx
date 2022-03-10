@@ -2,7 +2,7 @@ import { lazy, Suspense } from "react";
 import { useHistory } from "react-router-dom";
 
 import { Button, Card } from '../../components';
-import { usePluri } from "../../context";
+import { usePluralidade } from "../../context";
 
 import img8 from '../../assets/img8.jpg';
 import img9 from '../../assets/img9.jpg';
@@ -12,7 +12,7 @@ import { HomeContainer } from './style';
 const Carousel = lazy(() => import('../../components/Carousel').then(({ Carousel }) => ({ default: Carousel })));
 
 export function Home() {
-  const { courses, events } = usePluri();
+  const { courses, events } = usePluralidade();
 
   const { push } = useHistory();
 
@@ -27,7 +27,7 @@ export function Home() {
         <Carousel />
       </Suspense>
 
-      {courses.length > 0 && (
+      {courses?.length > 0 && (
         <HomeContainer type="courses">
           <div className="container">
             <header>
@@ -36,7 +36,8 @@ export function Home() {
             <div className="cards">
               {courses.slice(0, 3).map(course => (
                 <Card key={course.id} img={course.image} link="ler mais" title={course.name}>
-                  {course.description.slice(0, 100)}
+                  {course.shortDescription}
+                  fdasf jdçklajkflçdajk fpwjeqip fjwiepwqj fiwepqj
                 </Card>
               ))}
             </div>
@@ -47,7 +48,7 @@ export function Home() {
         </HomeContainer>
       )}
 
-      {events.length > 0 && (
+      {events?.length > 0 && (
         <HomeContainer type="events">
           <div className="container">
             <header>
@@ -56,7 +57,7 @@ export function Home() {
             <div className="cards">
               {events.slice(0, 3).map(event => (
                 <Card key={event.id} img={event.image} link="ler mais" title={event.title}>
-                  {event.description.slice(0, 100)}
+                  {event.shortDescription}
                 </Card>
               ))}
             </div>
@@ -67,7 +68,7 @@ export function Home() {
         </HomeContainer>
       )}
 
-      <HomeContainer type="aboutus">
+      {/* <HomeContainer type="aboutus">
         <div className="container">
           <header>
             <h2>Sobre Nós</h2>
@@ -91,7 +92,7 @@ export function Home() {
             </Button>
           </footer>
         </div>
-      </HomeContainer>
+      </HomeContainer> */}
     </>
   );
 }

@@ -5,32 +5,41 @@ import styled from "styled-components";
 interface CardProps {
   img: string;
   title: string;
-  link?: string;
+  link: string;
   children: ReactNode;
 }
 
-const CardWrapper = styled.div`
+const CardWrapper = styled.article`
   display: flex;
   flex-direction: column;
   flex: 1;
-  padding: 3rem;
-  gap: 1.5rem;
+  gap: .5rem;
   border-radius: 0.25rem;
-  border: 1px solid rgba(0,0,0,.1) !important;
-  background: ${props => props.theme.card.backgroundPrimary};
+  /* border: 1px solid rgba(0,0,0,.1) !important; */
+  border: solid;
+  /* background: ${props => props.theme.card.backgroundPrimary}; */
 
   @media (hover: hover) {
     &:hover {
       img {
-        transform: scale(1.05) rotate(1.5deg);
+        transform: scale(1.05);
       }
     }
+  }
+
+  a {
+    text-decoration: none;
   }
 `;
 
 const Image = styled.div`
-  height: 150px;
+  height: 12.5rem;
+  overflow: hidden;
 
+  @media (min-width: 992px) {
+    height: 15rem;
+  }
+  
   img {
     width: 100%;
     height: 100%;
@@ -41,37 +50,44 @@ const Image = styled.div`
 
 const Body = styled.div`
   flex: 1;
-  text-align: justify;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: .25rem;
+
+  @media (min-width: 992px) {
+    padding: 1rem 1.5rem;
+    gap: .5rem;
+  }
 
   h3 {
-    padding-bottom: 1rem;
+    font-size: 1.25rem;
   }
 
   p {
-    line-height: 1.8;
+    font-size: 1rem;
+    margin: 0;
+    flex: 1;
   }
-`;
 
-const Footer = styled.div`
-  display: flex;
-  font-weight: bold;
+  a {
+    font-weight: bold;
+    font-size: 1rem;
+  }
 `;
 
 export function Card({ children, title, img, link }: CardProps) {
   return (
-    <CardWrapper className="card">
-      <Image>
-        <img src={img} alt={title} title={title} loading="lazy" />
-      </Image>
-      <Body>
-        <h3 title={title}>{title}</h3>
-        <p>{children}</p>
-      </Body>
-      {link &&
-        <Footer>
-          <Link to={link} title="Ver mais">Ver mais</Link>
-        </Footer>
-      }
+    <CardWrapper>
+      <Link to={link}>
+        <Image>
+          <img src={img} alt={title} title={title} loading="lazy" draggable="false" />
+        </Image>
+        <Body>
+          <h3 title={title}>{title}</h3>
+          <p>{children}</p>
+        </Body>
+      </Link>
     </CardWrapper>
   );
 }

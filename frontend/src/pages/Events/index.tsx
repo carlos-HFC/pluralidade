@@ -1,10 +1,10 @@
 import { Card, Title } from '../../components';
-import { usePluri } from "../../context";
+import { usePluralidade } from "../../context";
 
 import { EventsContainer, EventsGrid } from "./style";
 
 export function Events() {
-  const { events } = usePluri();
+  const { events } = usePluralidade();
 
   return (
     <>

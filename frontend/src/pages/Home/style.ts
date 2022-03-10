@@ -32,8 +32,10 @@ export const HomeContainer = styled.section<{ type: 'courses' | 'aboutus' | 'eve
   &:nth-child(odd) {
     background: ${props => props.theme.login.background};
 
-    * {
-      color: ${COLORS.white};
+    header {
+      h2 {
+        color: ${COLORS.white};
+      }
     }
   }
 
@@ -41,21 +43,21 @@ export const HomeContainer = styled.section<{ type: 'courses' | 'aboutus' | 'eve
     .cards {
       display: flex;
       width: 100%;
-      gap: 2rem;
+      gap: 1rem;
       flex-wrap: wrap;
       flex-direction: column;
 
-      @media (min-width: 768px) and (max-width: 1199.9px) {
+      @media (min-width: 1200px) {
+        flex-direction: row;
+        gap: 2rem;
+      }
+
+      /* @media (min-width: 768px) and (max-width: 1199.9px) {
         flex-direction: row;
 
         .card {
           min-width: calc(50% - 2rem);
         }
-      }
-
-      @media (min-width: 1200px) {
-        flex-direction: row;
-        gap: 3rem;
       }
 
       .card {
@@ -73,11 +75,11 @@ export const HomeContainer = styled.section<{ type: 'courses' | 'aboutus' | 'eve
             }
           }
         }
-      }
+      } */
     }
   `}
 
-  ${props => props.type === 'events' && css`
+  /* ${props => props.type === 'events' && css`
     background: ${props => props.theme.login.background};
 
     h2 {
@@ -123,9 +125,9 @@ export const HomeContainer = styled.section<{ type: 'courses' | 'aboutus' | 'eve
         }
       }
     }
-  `}
+  `}*/
 
-  ${props => props.type === 'aboutus' && css`
+  /*${props => props.type === 'aboutus' && css`
     .aboutus {
       display: flex;
       flex-direction: column;
@@ -173,5 +175,5 @@ export const HomeContainer = styled.section<{ type: 'courses' | 'aboutus' | 'eve
         }
       }
     }
-  `}
+  `} */
 `;
