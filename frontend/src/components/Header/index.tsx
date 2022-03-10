@@ -13,6 +13,29 @@ export const Header = () => {
   const [openMenu, setOpenMenu] = useState(false);
   const [openLogin, setOpenLogin] = useState(false);
 
+  const menuItems = [
+    {
+      title: "Home",
+      link: "/"
+    },
+    {
+      title: "Cursos",
+      link: "/courses"
+    },
+    {
+      title: "Eventos",
+      link: "/events"
+    },
+    {
+      title: "Sobre Nós",
+      link: "/aboutus"
+    },
+    {
+      title: "Contato",
+      link: "/contact"
+    },
+  ];
+
   return (
     <>
       <HeaderWrapper id="menu">
@@ -33,11 +56,11 @@ export const Header = () => {
                 <MdClose cursor="pointer" color="white" size={24} onClick={() => setOpenMenu(false)} />
               </div>
               <div className="list">
-                <Link onClick={() => setOpenMenu(false)} to="/" title="Home" className="link">Home</Link>
-                <Link onClick={() => setOpenMenu(false)} to="/courses" title="Cursos" className="link">Cursos</Link>
-                <Link onClick={() => setOpenMenu(false)} to="/events" title="Eventos" className="link">Eventos</Link>
-                <Link onClick={() => setOpenMenu(false)} to="/aboutus" title="Sobre Nós" className="link">Sobre Nós</Link>
-                <Link onClick={() => setOpenMenu(false)} to="/contact" title="Contato" className="link">Contato</Link>
+                {menuItems.map((item, i) => (
+                  <Link key={i} onClick={() => setOpenMenu(false)} to={item.link} title={item.title} className="link">
+                    {item.title}
+                  </Link>
+                ))}
                 <span onClick={() => setOpenLogin(true)} title="Login" className="link">
                   Login
                 </span>
