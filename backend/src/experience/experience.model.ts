@@ -6,7 +6,7 @@ import { User } from '../user/user.model';
 @Table({ paranoid: true })
 export class Experience extends Model<Experience, CreateExperienceDTO> {
   @Column({
-    type: DataType.STRING,
+    type: DataType.STRING(100),
     allowNull: false
   })
   company: string;

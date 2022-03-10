@@ -6,7 +6,7 @@ import { User } from '../user/user.model';
 @Table({ paranoid: true })
 export class Academic extends Model<Academic, CreateAcademicDTO> {
   @Column({
-    type: DataType.STRING,
+    type: DataType.STRING(150),
     allowNull: false
   })
   institution: string;
@@ -14,7 +14,7 @@ export class Academic extends Model<Academic, CreateAcademicDTO> {
   @Column(DataType.STRING(100))
   degree: string;
 
-  @Column(DataType.STRING)
+  @Column(DataType.STRING(75))
   name: string;
 
   @Column({

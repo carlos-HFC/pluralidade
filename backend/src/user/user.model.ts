@@ -110,7 +110,7 @@ export class User extends Model<User, CreateUserDTO> {
   })
   district: string;
 
-  @Column(DataType.STRING(100))
+  @Column(DataType.STRING(50))
   complement?: string;
 
   @Column({
