@@ -37,6 +37,7 @@ declare module 'styled-components' {
 export interface Courses {
   id: number;
   name: string;
+  shortDescription: string;
   description: string;
   image: string;
   initDate: string;
@@ -52,9 +53,10 @@ export interface Courses {
 export interface Events {
   id: number;
   title: string;
+  shortDescription: string;
   description: string;
   image: string;
-  date: string;
+  date: Date;
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date | null;
