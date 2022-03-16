@@ -1,14 +1,20 @@
 import { lighten } from "polished";
 import styled from "styled-components";
 
-export const ContactContainer = styled.section`
+import { FONTS } from "../../styles/variables";
+
+export const ContactContainer = styled.section.attrs({ className: "container" })`
   display: flex;
   flex-direction: column;
-  padding: 150px 0;
+  padding: 100px .75rem;
+
+  @media (min-width: 992px) {
+    padding: 150px 0;
+  }
 
   iframe {
     width: 100%;
-    height: 215px;
+    height: 200px;
     border: 0;
     padding-bottom: 3rem;
 
@@ -21,7 +27,7 @@ export const ContactContainer = styled.section`
 export const ContactData = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1rem;
 
   input, textarea {
     background: ${props => props.theme.card.backgroundPrimary};
@@ -37,11 +43,21 @@ export const ContactInfo = styled.div`
     flex-direction: column;
     gap: .5rem;
 
-    span {
+    span, a {
       color: ${props => props.theme.text};
+      font-family: ${FONTS.secondary};
+      text-decoration: none;
       
       &:last-child {
         color: ${props => lighten(.5, props.theme.text)};
+      }
+    }
+
+    a {
+      @media (hover: hover) {
+        &:hover {
+          text-decoration: underline;
+        }
       }
     }
     
