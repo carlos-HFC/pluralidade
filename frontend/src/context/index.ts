@@ -1,2 +1,2 @@
 export * from './Loader';
-export * from './Pluralidade';
+export * from './Plurality';

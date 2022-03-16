@@ -1,5 +1,7 @@
 import styled, { css, keyframes } from "styled-components";
 
+import { FONTS } from "../../styles/variables";
+
 const pulse = keyframes`
   0% {
     transform: scale(1);
@@ -44,6 +46,8 @@ export const FooterWrapper = styled.footer`
     gap: 1rem;
     align-items: center;
     text-align: center;
+    font-family: ${FONTS.primary};
+    font-size: .8rem;
 
     span {
       color: ${props => props.theme.text};
@@ -55,7 +59,7 @@ export const FooterWrapper = styled.footer`
     }
   }
 
-  ${() => socials.map(social => css`
+  ${props => socials.map(social => css`
     .${social} {
       position: relative;
       transition: transform 0.5s;
@@ -76,7 +80,8 @@ export const FooterWrapper = styled.footer`
         height: 100%;
         transform: translateY(-40%);
         opacity: 0;
-        color: ${props => props.theme.text};
+        color: ${props.theme.text};
+        font-family: ${FONTS.primary};
       }
 
       @media (hover: hover) {
@@ -97,6 +102,18 @@ export const FooterWrapper = styled.footer`
       }
     }
   `)};
+
+  .facebook {
+    background: ${props => props.theme.socials.facebook};
+  }
+  
+  .twitter {
+    background: ${props => props.theme.socials.twitter};
+  }
+  
+  .instagram {
+    background: ${props => props.theme.socials.instagram};
+  }
 `;
 
 export const FooterCols = styled.div`
@@ -113,5 +130,6 @@ export const FooterCols = styled.div`
 
   img {
     width: 140px;
+    height: 100%
   }
 `;

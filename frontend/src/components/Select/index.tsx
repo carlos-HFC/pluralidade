@@ -2,7 +2,7 @@ import { lighten, transparentize } from 'polished';
 import { forwardRef, SelectHTMLAttributes } from 'react';
 import styled from 'styled-components';
 
-import { COLORS } from '../../styles/variables';
+import { COLORS, FONTS } from '../../styles/variables';
 
 interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   label: string;
@@ -19,13 +19,13 @@ const Floating = styled.fieldset`
 `;
 
 const Label = styled.label`
-  color: ${COLORS.black};
   font-size: 1rem;
   padding: 1.1rem 1rem;
   pointer-events: none;
   position: absolute;
   transition: .3s;
   color: ${props => props.theme.text};
+  font-family: ${FONTS.secondary};
 `;
 
 const SelectWrapper = styled.select<SelectProps>`
@@ -42,21 +42,18 @@ const SelectWrapper = styled.select<SelectProps>`
   position: relative;
   width: 100%;
   transition: box-shadow .3s linear, background-color .3s linear;
+  font-family: ${FONTS.secondary};
 
   option {
     background: ${props => props.theme.login.floating};
+    font-family: ${FONTS.secondary};
   }
 
-  &:disabled, &.disabled {
-    background: ${props => props.theme.title === 'light' ? transparentize(.75, COLORS.gray) : '#555'};
+  &:is(:disabled, .disabled) {
+    background-color: ${props => props.theme.name === 'light' ? transparentize(.75, COLORS.gray) : '#555'};
     cursor: not-allowed;
-    color: #fff;
     
-    &::placeholder {
-      color: #fff;
-    }
-    
-    & ~ ${Label} {
+    &, &::placeholder, & ~ ${Label} {
       color: #fff;
     }
   }

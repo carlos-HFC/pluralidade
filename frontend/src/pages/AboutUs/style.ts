@@ -1,7 +1,7 @@
 import { lighten } from "polished";
 import styled, { css } from "styled-components";
 
-import { COLORS } from '../../styles/variables';
+import { COLORS, FONTS } from '../../styles/variables';
 
 export const AboutUsContainer = styled.section.attrs({ className: "container" })`
   padding: 150px 2rem !important;
@@ -20,6 +20,7 @@ export const AboutUsDiv = styled.div`
     position: relative;
     padding-left: 25px;
     color: ${props => props.theme.text};
+    font-family: ${FONTS.primary};
 
     &::before {
       content: "";
@@ -40,6 +41,9 @@ export const AboutUsDiv = styled.div`
   p, strong {
     text-align: justify;
     color: ${props => props.theme.text};
+    font-family: ${FONTS.secondary};
+    margin: 0;
+    font-size: 1rem;
   }
 `;
 
@@ -47,7 +51,7 @@ export const AboutUsFigure = styled.figure<{ side: 'right' | 'left'; }>`
   min-width: 50px;
   max-width: 350px;
   width: 50%;
-  padding-bottom: 15px;
+  padding-bottom: .8rem;
   margin: 0;
   
   @media (min-width: 768px) {
@@ -56,12 +60,12 @@ export const AboutUsFigure = styled.figure<{ side: 'right' | 'left'; }>`
   
   ${props => props.side === 'left' && css`
     float: left;
-    padding-right: 15px;
+    padding-right: .8rem;
   `}
 
   ${props => props.side === 'right' && css`
     float: right;
-    padding-left: 15px;
+    padding-left: .8rem;
   `}
 
   img {
@@ -73,7 +77,8 @@ export const AboutUsFigure = styled.figure<{ side: 'right' | 'left'; }>`
   figcaption {
     text-align: center;
     color: ${props => lighten(.3, props.theme.text)};
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     padding-top: .5rem;
+    font-family: ${FONTS.secondary};
   }
 `;

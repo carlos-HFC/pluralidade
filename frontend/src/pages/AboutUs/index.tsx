@@ -15,10 +15,10 @@ export function AboutUs() {
           <h3>Como tudo começou?</h3>
           <AboutUsFigure side="right">
             <img loading="lazy" src={ceo} alt="Fundador do Instituto Pluralidade" title="Fundador do Instituto Pluralidade" />
-            <figcaption>Arthur Benjamin Victor Martins</figcaption>
+            <figcaption>Arthur Benjamin Martins</figcaption>
           </AboutUsFigure>
           <p>
-            O Instituto foi fundado no dia 23 de agosto de 2018, pelo empresário Arthur Benjamin Victor Martins. Arthur, vem de uma família pobre onde era o mais velho de quatro irmãos, e seu irmão mais novo Mateus é deficiente visual. Vendo a dificuldade de seu irmão e sua mãe no dia a dia, resolveu terminar seus estudos no ensino médio e em seguida entrou no ensino superior, cursando Gestão de Negócios. No terceiro semestre de curso começou a fazer estágio em uma empresa de grande nome e foi conseguindo se promover, até realizar o sonho de ter a sua própria empresa.
+            O Instituto foi fundado no dia 23 de agosto de 2018, pelo empresário Arthur Benjamin Martins. Arthur, vem de uma família pobre onde era o mais velho de quatro irmãos, e seu irmão mais novo Mateus é deficiente visual. Vendo a dificuldade de seu irmão e sua mãe no dia a dia, resolveu terminar seus estudos no ensino médio e em seguida entrou no ensino superior, cursando Gestão de Negócios. No terceiro semestre de curso começou a fazer estágio em uma empresa de grande nome e foi conseguindo se promover, até realizar o sonho de ter a sua própria empresa.
           </p>
           <p>
             Em sua empresa adaptou lugares para portadores de necessidades, inclusive para seu irmão. Com esses diferenciais conseguiu alguns patrocínios e decidiu fundar o Instituto.

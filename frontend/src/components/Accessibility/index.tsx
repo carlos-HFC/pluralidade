@@ -1,28 +1,24 @@
-import { useContext } from 'react';
-import { ThemeContext } from 'styled-components';
+import { useTheme } from 'styled-components';
 
-import { AccessibilityStyle } from './style';
+import * as S from './style';
 
 type AccessibilityProps = {
   handleTheme(): void;
 };
 
 export function Accessibility({ handleTheme }: AccessibilityProps) {
-  const { title } = useContext(ThemeContext);
+  const { name } = useTheme();
 
   return (
-    <>
-      <AccessibilityStyle />
-      <div className="accessibility">
-        <div className="container">
-          <a href="#menu" title="Menu">Menu</a>
-          <a href="#main" title="Conteúdo">Conteúdo</a>
-          <label className="switch" title="Mudar tema">
-            <input type="checkbox" className="switch__check" onClick={handleTheme} defaultChecked={title === 'dark'} />
-            <span className="switch__slider" />
-          </label>
-        </div>
-      </div>
-    </>
+    <S.AccessibilityWrapper>
+      <S.Container>
+        <S.Link href="#menu" title="Menu">Menu</S.Link>
+        <S.Link href="#main" title="Conteúdo">Conteúdo</S.Link>
+        <S.Switch title="Mudar tema">
+          <input type="checkbox" onClick={handleTheme} defaultChecked={name === 'dark'} />
+          <span />
+        </S.Switch>
+      </S.Container>
+    </S.AccessibilityWrapper>
   );
 }

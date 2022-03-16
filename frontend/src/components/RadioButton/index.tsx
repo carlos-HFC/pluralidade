@@ -1,8 +1,8 @@
 import { lighten } from 'polished';
 import { InputHTMLAttributes } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
-import { COLORS } from '../../styles/variables';
+import { COLORS, FONTS } from '../../styles/variables';
 
 interface RadioButtonProps extends InputHTMLAttributes<HTMLInputElement> {
   type: 'radio' | 'checkbox';
@@ -22,7 +22,6 @@ const Fieldset = styled.fieldset`
 `;
 
 const Input = styled.input<Pick<RadioButtonProps, 'type'>>`
-  border: 1px solid ${props => props.theme.title === 'light' ? COLORS.purpleLight : lighten(.25, COLORS.black)};
   background: transparent;
   appearance: none;
   height: 1rem;
@@ -34,15 +33,27 @@ const Input = styled.input<Pick<RadioButtonProps, 'type'>>`
   outline: none;
   transition: background-color .3s;
   ${props => props.type === 'radio' ? 'border-radius: 50%;' : 'border-radius: .25rem;'}
+  ${props => props.theme.name === 'light'
+    ? css`
+      border: 1px solid ${COLORS.purpleLight};
 
-  &:checked {
-    background: ${props => props.theme.title === 'light' ? COLORS.purpleLight : lighten(.25, COLORS.black)};
+      &:checked {
+        background: ${COLORS.purpleLight}
+      }
+    `: css`
+      border: 1px solid ${lighten(.25, COLORS.black)};
+
+      &:checked {
+        background: ${lighten(.25, COLORS.black)}
+      }
+    `
   }
 `;
 
 const Label = styled.label`
   display: flex;
   color: ${props => props.theme.text};
+  font-family: ${FONTS.secondary};
 `;
 
 export const RadioButton = (props: RadioButtonProps) => {

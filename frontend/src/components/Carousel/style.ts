@@ -1,15 +1,15 @@
 import { transparentize } from 'polished';
 import styled from "styled-components";
 
-import { COLORS } from "../../styles/variables";
-
-export const Slider = styled.div`
+export const Slider = styled.section`
   width: 100%;
   height: 350px;
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
+  user-select: none;
+
   @media (min-width: 768px) {
     height: 700px;
   }
@@ -36,6 +36,7 @@ export const Prev = styled.div`
     svg {
       color: rgba(255, 255, 255, 0.2);
       font-size: 4rem;
+
       @media (min-width: 768px) {
         font-size: 8rem;
       }
@@ -86,7 +87,6 @@ export const Image = styled.div<{ active?: boolean; }>`
   position: absolute;
   opacity: 0;
   transition: opacity 1.5s;
-
   ${props => props.active && 'opacity: 1;'}
 
   img {
@@ -121,10 +121,10 @@ export const Dot = styled.span<{ active?: boolean; }>`
   width: 40px;
   height: 3px;
   transition: background-color 0.3s;
+  ${props => props.active && `background: ${props.theme.carousel.dots};`}
+
   @media (min-width: 768px) {
     height: 4px;
     width: 80px;
   }
-
-  ${props => props.active && `background: ${COLORS.purple};`}
 `;

@@ -1,6 +1,8 @@
 import { transparentize } from 'polished';
 import styled from 'styled-components';
 
+import { FONTS } from '../../styles/variables';
+
 export const Menu = styled.div`
   gap: 5px;
   display: flex;
@@ -9,20 +11,20 @@ export const Menu = styled.div`
 export const MenuList = styled.div<{ active: boolean; }>`
   display: flex;
   flex-direction: column;
-  transition: transform 1s;
+  transition: transform 1s, background .3s;
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   justify-content: center;
-  padding: calc(3rem + 50px) 3rem 3rem;
+  padding: calc(2rem + 50px) 1.5rem 2rem;
   z-index: 2;
   background: ${props => props.theme.header};
 
   ${props => props.active ? 'transform: translate(0);' : 'transform: translateY(-100%);'}
 
-  @media (min-width: 768px) {
+  @media (min-width: 992px) {
     flex-direction: row;
     transform: translate(0);
     position: relative;
@@ -65,7 +67,7 @@ export const HeaderWrapper = styled.header`
       gap: 5px;
       cursor: pointer;
 
-      @media (min-width: 768px) {
+      @media (min-width: 992px) {
         display: none;
       }
     }
@@ -74,7 +76,7 @@ export const HeaderWrapper = styled.header`
       display: flex;
       justify-content: flex-end;
 
-      @media (min-width: 768px) {
+      @media (min-width: 992px) {
         display: none;
       }
     }
@@ -88,7 +90,7 @@ export const HeaderWrapper = styled.header`
       width: 100%;
       height: 100%;
 
-      @media (min-width: 768px) {
+      @media (min-width: 992px) {
         flex-direction: row;
       }
 
@@ -97,6 +99,7 @@ export const HeaderWrapper = styled.header`
         text-decoration: none;
         cursor: pointer;
         font-weight: bold;
+        font-family: ${FONTS.primary};
 
         &::after {
           content: "";

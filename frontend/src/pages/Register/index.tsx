@@ -1,14 +1,14 @@
 import axios from 'axios';
 import { ChangeEvent, useRef, useState } from 'react';
 import { BsArrowLeft } from 'react-icons/bs';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { Button, InputBlock, RadioButton, Select, Textarea } from '../../components';
 import { birthdayMask, cepMask, cpfMask, phoneMask } from '../../utils/mask';
 
 import { SignUp } from './style';
 
-const initialStateRegister = {
+const INITIAL_STATE_REGISTER = {
   name: "",
   email: "",
   birthday: "",
@@ -26,12 +26,12 @@ const initialStateRegister = {
 };
 
 export function Register() {
-  const { push } = useHistory();
+  const navigate = useNavigate();
 
   const addressRef = useRef<HTMLInputElement>(null);
   const districtRef = useRef<HTMLInputElement>(null);
 
-  const [register, setRegister] = useState(initialStateRegister);
+  const [register, setRegister] = useState(INITIAL_STATE_REGISTER);
 
   async function searchCep() {
     if (!register.cep) return;
@@ -54,7 +54,7 @@ export function Register() {
         : districtRef.current?.setAttribute('disabled', 'false');
     } catch (error) {
       console.log(error);
-    } finally { }
+    } finally {}
   }
 
   function handleChangeRegister(e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) {
@@ -66,7 +66,7 @@ export function Register() {
       <div className="signup">
         <header>
           <div>
-            <BsArrowLeft size={24} cursor="pointer" onClick={() => push('/')} />
+            <BsArrowLeft size={24} cursor="pointer" onClick={() => navigate('/')} />
           </div>
           <div>
             <h3>Cadastre-se</h3>

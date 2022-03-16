@@ -2,11 +2,12 @@ import 'styled-components';
 
 declare module 'styled-components' {
   export interface DefaultTheme {
+    name: string;
     background: string;
     text: string;
+    pageTitle: string;
     header: string;
     footer: string;
-    title: string;
     login: {
       background: string;
       floating: string;
@@ -21,16 +22,17 @@ declare module 'styled-components' {
       light: string;
     };
     card: {
-      backgroundEvents: string;
       backgroundPrimary: string;
-      bgHoverPrimary: string;
       backgroundSecondary: string;
-      bgHoverSecondary: string;
     };
-    facebook: string;
-    twitter: string;
-    instagram: string;
-    titlePage: string;
+    socials: {
+      facebook: string;
+      twitter: string;
+      instagram: string;
+    };
+    carousel: {
+      dots: string;
+    };
   }
 }
 

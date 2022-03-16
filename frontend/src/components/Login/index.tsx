@@ -9,16 +9,15 @@ import { Alert } from '../../utils';
 
 import { Wrapper } from './style';
 
-const initialStateLogin = {
+const INITIAL_STATE_LOGIN = {
   email: "",
   password: "",
 };
 
 export function Login() {
-  // const { push } = useHistory();
   const { handleLoader } = useLoader();
 
-  const [login, setLogin] = useState(initialStateLogin);
+  const [login, setLogin] = useState(INITIAL_STATE_LOGIN);
 
   function handleChangeLogin(e: ChangeEvent<HTMLInputElement>) {
     setLogin({ ...login, [e.target.name]: e.target.value });
@@ -54,7 +53,7 @@ export function Login() {
         <InputBlock type="email" label="E-mail" title="Insira seu e-mail" id="emailLogin"
           name="email" value={login.email} onChange={handleChangeLogin}
         />
-        <InputBlock password label="Senha" title="Insira sua senha" id="passwordLogin"
+        <InputBlock password label="Senha" title="Insira sua senha" id="passwordLogin" autoComplete="off"
           name="password" value={login.password} onChange={handleChangeLogin}
         />
         <Button variant="primary" type="submit">

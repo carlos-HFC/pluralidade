@@ -5,7 +5,7 @@ import { COLORS } from "../../styles/variables";
 export const CourseContainer = styled.section.attrs({ className: 'container' })`
   display: flex;
   flex-direction: column;
-  padding: 150px 0;
+  padding: 150px 1rem;
 `;
 
 export const CoursesGrid = styled.div`
@@ -22,7 +22,7 @@ export const CoursesGrid = styled.div`
     gap: 3rem;
   }
 
-  .card {
+  article {
     background: ${props => props.theme.card.backgroundPrimary};
     transition: .3s;
 
@@ -32,8 +32,6 @@ export const CoursesGrid = styled.div`
 
     @media (hover: hover) {
       &:hover {
-        background: ${props => props.theme.card.bgHoverPrimary};
-
         h3, a, p {
           color: ${COLORS.white};
         }

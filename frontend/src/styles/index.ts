@@ -53,20 +53,8 @@ export const GlobalStyle = createGlobalStyle`
     width: 100% !important;
     background: ${props => props.theme.login.background};
 
-    h3, a, svg {
-      color: ${props => props.theme.text}
+    svg {
+      color: ${props => props.theme.text};
     }
-  }
-  
-  .facebook {
-    background: ${props => props.theme.facebook};
-  }
-  
-  .twitter {
-    background: ${props => props.theme.twitter};
-  }
-  
-  .instagram {
-    background: ${props => props.theme.instagram};
   }
 `;

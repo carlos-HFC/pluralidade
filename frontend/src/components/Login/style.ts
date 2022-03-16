@@ -1,5 +1,7 @@
 import styled from "styled-components";
 
+import { FONTS } from "../../styles/variables";
+
 export const Wrapper = styled.div`
   width: 100%;
   margin: auto;
@@ -19,6 +21,9 @@ export const Wrapper = styled.div`
     h3 {
       text-align: center;
       font-weight: bold;
+      color: ${props => props.theme.text};
+      font-family: ${FONTS.primary};
+      margin: 0;
     }
   }
 
@@ -38,6 +43,11 @@ export const Wrapper = styled.div`
     justify-content: center;
     align-items: center;
     gap: 0.5rem;
+
+    span, a {
+      color: ${props => props.theme.text};
+      font-family: ${FONTS.secondary};
+    }
 
     a {
       font-weight: bold;

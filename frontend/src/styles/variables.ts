@@ -16,3 +16,8 @@ export const COLORS = {
   twitter: '#61c5ec',
   instagram: '#8a3ab9',
 }
+
+export const FONTS = {
+  primary: 'Sen, sans-serif',
+  secondary: 'Roboto, sans-serif'
+}

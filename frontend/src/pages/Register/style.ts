@@ -1,5 +1,7 @@
 import styled from "styled-components";
 
+import { FONTS } from "../../styles/variables";
+
 export const SignUp = styled.section`
   min-height: 100vh;
   display: flex;
@@ -9,8 +11,14 @@ export const SignUp = styled.section`
   padding: 50px;
   background: ${props => props.theme.login.background};
 
-  h3, h6, a, svg {
-    color: ${props => props.theme.text}
+  header {
+    h3 {
+      font-family: ${FONTS.primary};
+    }
+  }
+
+  h3, h6, svg {
+    color: ${props => props.theme.text};
   }
 
   .signup {
@@ -37,6 +45,10 @@ export const SignUp = styled.section`
       display: flex;
       flex-direction: column;
       gap: 30px;
+
+      h6 {
+        font-family: ${FONTS.secondary};
+      }
 
       #btn-cep {
         height: 100%;

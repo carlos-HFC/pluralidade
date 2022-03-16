@@ -1,14 +1,10 @@
 import styled, { css } from "styled-components";
 
-import { COLORS } from '../../styles/variables';
+import { COLORS, FONTS } from '../../styles/variables';
 
 export const HomeContainer = styled.section<{ type: 'courses' | 'aboutus' | 'events'; }>`
   width: 100%;
   padding: 100px 0;
-
-  * {
-    color: ${props => props.theme.text};
-  }
 
   @media (min-width: 768px) {
     padding: 150px 0;
@@ -23,6 +19,14 @@ export const HomeContainer = styled.section<{ type: 'courses' | 'aboutus' | 'eve
 
   header {
     padding-bottom: 5rem;
+
+    h2 {
+      color: ${props => props.theme.text};
+      margin: 0;
+      font-family: ${FONTS.primary};
+      font-size: 2rem;
+      font-weight: bold;
+    }
   }
 
   footer {
@@ -39,7 +43,7 @@ export const HomeContainer = styled.section<{ type: 'courses' | 'aboutus' | 'eve
     }
   }
 
-  ${props => props.type === 'courses' && css`
+  ${props => props.type === 'courses' && css`  
     .cards {
       display: flex;
       width: 100%;
@@ -52,39 +56,18 @@ export const HomeContainer = styled.section<{ type: 'courses' | 'aboutus' | 'eve
         gap: 2rem;
       }
 
-      /* @media (min-width: 768px) and (max-width: 1199.9px) {
+      @media (min-width: 768px) and (max-width: 1199.9px) {
         flex-direction: row;
-
-        .card {
-          min-width: calc(50% - 2rem);
-        }
       }
 
-      .card {
-        @media (hover: hover) {
-          &:hover {
-            &:nth-child(even) {
-              background: ${props => props.theme.card.bgHoverSecondary} !important;
-            }
-            &:nth-child(odd) {
-              background: ${props => props.theme.card.bgHoverPrimary} !important;
-            }
-
-            h3, p, a {
-              color: ${COLORS.white};
-            }
-          }
-        }
-      } */
+      article {
+        background: ${props => props.theme.card.backgroundPrimary};
+      }
     }
   `}
 
-  /* ${props => props.type === 'events' && css`
+  ${props => props.type === 'events' && css`
     background: ${props => props.theme.login.background};
-
-    h2 {
-      color: ${COLORS.white};
-    }
 
     .cards {
       display: flex;
@@ -95,10 +78,6 @@ export const HomeContainer = styled.section<{ type: 'courses' | 'aboutus' | 'eve
 
       @media (min-width: 768px) and (max-width: 1199.9px) {
         flex-direction: row;
-
-        .card {
-          min-width: calc(50% - 2rem);
-        }
       }
 
       @media (min-width: 1200px) {
@@ -106,26 +85,11 @@ export const HomeContainer = styled.section<{ type: 'courses' | 'aboutus' | 'eve
         gap: 3rem;
       }
 
-      .card {
-        background: ${props => props.theme.card.backgroundEvents};
-
-        @media (hover: hover) {
-          &:hover {
-            &:nth-child(odd) {
-              background: ${props => props.theme.card.bgHoverSecondary} !important;
-            }
-            &:nth-child(even) {
-              background: ${props => props.theme.card.bgHoverPrimary} !important;
-            }
-
-            h3, p, a {
-              color: ${COLORS.white};
-            }
-          }
-        }
+      article {
+        background: ${props => props.theme.card.backgroundSecondary};
       }
     }
-  `}*/
+  `}
 
   /*${props => props.type === 'aboutus' && css`
     .aboutus {

@@ -2,7 +2,7 @@ import { lighten, transparentize } from 'polished';
 import { forwardRef, TextareaHTMLAttributes } from 'react';
 import styled from 'styled-components';
 
-import { COLORS } from '../../styles/variables';
+import { COLORS, FONTS } from '../../styles/variables';
 
 interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   label: string;
@@ -18,13 +18,13 @@ const Floating = styled.fieldset`
 `;
 
 const Label = styled.label`
-  color: ${COLORS.black};
   font-size: 1rem;
   padding: 1.2rem 1rem;
   pointer-events: none;
   position: absolute;
   transition: .3s;
   color: ${props => props.theme.text};
+  font-family: ${FONTS.secondary};
 `;
 
 const TextareaWrapper = styled.textarea<TextareaProps>`
@@ -42,18 +42,14 @@ const TextareaWrapper = styled.textarea<TextareaProps>`
   width: 100%;
   resize: none;
   transition: box-shadow .3s linear, background-color .3s linear;
+  font-family: ${FONTS.secondary};
 
   &:is(:disabled, .disabled) {
-    background-color: ${props => props.theme.title === 'light' ? transparentize(.75, COLORS.gray) : '#555'};
+    background-color: ${props => props.theme.name === 'light' ? transparentize(.75, COLORS.gray) : '#555'};
     cursor: not-allowed;
-    color: #fff;
     height: inherit;
     
-    &::placeholder {
-      color: #fff;
-    }
-    
-    & ~ ${Label} {
+    &, &::placeholder, & ~ ${Label} {
       color: #fff;
     }
   }

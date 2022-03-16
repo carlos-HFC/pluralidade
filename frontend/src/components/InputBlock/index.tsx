@@ -3,7 +3,7 @@ import { forwardRef, InputHTMLAttributes, useState } from 'react';
 import { BsEye, BsEyeSlash } from 'react-icons/bs';
 import styled, { css } from 'styled-components';
 
-import { COLORS } from '../../styles/variables';
+import { COLORS, FONTS } from '../../styles/variables';
 
 interface InputBlockProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
@@ -41,13 +41,13 @@ const Button = styled.button.attrs({ type: 'button' })`
 `;
 
 const Label = styled.label`
-  color: ${COLORS.black};
   font-size: 1rem;
   padding: 1.2rem 1rem;
   pointer-events: none;
   position: absolute;
   transition: .3s;
   color: ${props => props.theme.text};
+  font-family: ${FONTS.secondary};
 `;
 
 const Input = styled.input<InputBlockProps>`
@@ -64,18 +64,14 @@ const Input = styled.input<InputBlockProps>`
   position: relative;
   width: 100%;
   transition: box-shadow .3s linear, background-color .3s linear;
+  font-family: ${FONTS.secondary};
 
   &:is(:disabled, .disabled) {
-    background-color: ${props => props.theme.title === 'light' ? transparentize(.75, COLORS.gray) : '#555'};
+    background-color: ${props => props.theme.name === 'light' ? transparentize(.75, COLORS.gray) : '#555'};
     cursor: not-allowed;
-    color: #fff;
     height: inherit;
-    
-    &::placeholder {
-      color: #fff;
-    }
-    
-    & ~ ${Label} {
+
+    &, &::placeholder, & ~ ${Label} {
       color: #fff;
     }
   }
@@ -84,12 +80,10 @@ const Input = styled.input<InputBlockProps>`
     display: none;
   }
 
-  ${props => props.password &&
-    css`
-      border-bottom-right-radius: 0;
-      border-top-right-radius: 0;
-    `
-  }
+  ${props => props.password && css`
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+  `}
 
   &::placeholder {
     opacity: 0;
@@ -105,12 +99,10 @@ const Input = styled.input<InputBlockProps>`
     outline: none;
     border-radius: 0.5rem;
 
-    ${props => props.password &&
-    css`
-        border-bottom-right-radius: 0;
-        border-top-right-radius: 0;
-      `
-  }
+    ${props => props.password && css`
+      border-bottom-right-radius: 0;
+      border-top-right-radius: 0;
+    `}
 
     & ~ ${Label} {
       opacity: 0.85;

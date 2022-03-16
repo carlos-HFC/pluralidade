@@ -1,8 +1,11 @@
+import { format, parseISO } from "date-fns";
+import { ptBR } from "date-fns/locale";
 import { lazy, Suspense } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-import { Button, Card } from '../../components';
-import { usePluralidade } from "../../context";
+import { Button, CardCourse, CardEvent } from '../../components';
+import { usePlurality } from "../../context";
+import { Loader, LoaderContainer } from "../../context/Loader/style";
 
 import img8 from '../../assets/img8.jpg';
 import img9 from '../../assets/img9.jpg';
@@ -12,18 +15,18 @@ import { HomeContainer } from './style';
 const Carousel = lazy(() => import('../../components/Carousel').then(({ Carousel }) => ({ default: Carousel })));
 
 export function Home() {
-  const { courses, events } = usePluralidade();
+  const { courses, events } = usePlurality();
 
-  const { push } = useHistory();
+  const navigate = useNavigate();
 
   function navigateToPage(page: string) {
     window.scroll({ top: 0, behavior: 'auto' });
-    return push(page);
+    return navigate(page);
   }
 
   return (
     <>
-      <Suspense fallback={<div>Loading</div>}>
+      <Suspense fallback={<LoaderContainer><Loader /></LoaderContainer>}>
         <Carousel />
       </Suspense>
 
@@ -35,10 +38,9 @@ export function Home() {
             </header>
             <div className="cards">
               {courses.slice(0, 3).map(course => (
-                <Card key={course.id} img={course.image} link="ler mais" title={course.name}>
+                <CardCourse key={course.id} img={course.image} link={`/courses/${course.id}`} title={course.name}>
                   {course.shortDescription}
-                  fdasf jdçklajkflçdajk fpwjeqip fjwiepwqj fiwepqj
-                </Card>
+                </CardCourse>
               ))}
             </div>
             <footer>
@@ -55,10 +57,10 @@ export function Home() {
               <h2>Eventos</h2>
             </header>
             <div className="cards">
-              {events.slice(0, 3).map(event => (
-                <Card key={event.id} img={event.image} link="ler mais" title={event.title}>
+              {events.slice(0, 2).map(event => (
+                <CardEvent key={event.id} img={event.image} link={`/events/${event.id}`} title={event.title} date={format(parseISO(String(event.date)), "dd MMMM", { locale: ptBR })}>
                   {event.shortDescription}
-                </Card>
+                </CardEvent>
               ))}
             </div>
             <footer>
@@ -75,7 +77,7 @@ export function Home() {
           </header>
           <div className="aboutus">
             <div className="description">
-              Oferecemos aos nossos alunos a oportunidade de desenvolverem suas competências e habilidades promovendo suas atuações no mundo, levando em consideração suas necessidades individuais, sociais e emocionais.
+              Oferecemos aos nossos alunos a oportunidade de desenvolverem suas competências e habilidades, promovendo suas atuações no mundo, levando em consideração suas necessidades individuais, sociais e emocionais.
             </div>
             <div className="images">
               <figure>

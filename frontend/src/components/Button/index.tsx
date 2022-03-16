@@ -2,7 +2,7 @@ import { lighten, transparentize } from 'polished';
 import { ButtonHTMLAttributes } from 'react';
 import styled, { css } from 'styled-components';
 
-import { COLORS } from '../../styles/variables';
+import { COLORS, FONTS } from '../../styles/variables';
 
 const colors = {
   primary: COLORS.purpleLight,
@@ -24,6 +24,7 @@ export const Button = styled.button.attrs({ className: 'btn' }) <ButtonProps>`
   border-radius: .5rem;
   font-size: 1rem;
   padding: .75rem;
+  font-family: ${FONTS.secondary};
 
   &:hover {
     filter: brightness(.9);
@@ -35,7 +36,7 @@ export const Button = styled.button.attrs({ className: 'btn' }) <ButtonProps>`
     opacity: .6;
   }
 
-  ${props => props.theme.title === 'light'
+  ${props => props.theme.name === 'light'
     ? props.variant
       ? css`
         background: ${colors[props.variant]};
