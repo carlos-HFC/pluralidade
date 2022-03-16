@@ -1,20 +1,36 @@
-import { Card, Title } from '../../components';
-import { usePluralidade } from "../../context";
+import { format, parseISO } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import { Title } from '../../components';
+import { usePlurality } from "../../context";
 
-import { EventsContainer, EventsGrid } from "./style";
+import { Event, EventsContainer, EventsGrid } from "./style";
 
 export function Events() {
-  const { events } = usePluralidade();
+  const { events } = usePlurality();
 
   return (
     <>
       <Title title="Eventos" />
       <EventsContainer>
         <EventsGrid>
-          {events.map(event => (
-            <Card title={event.title} img={event.image} key={event.id} link="/">
-              {event.description}
-            </Card>
+          {events?.map(event => (
+            <Event key={event.id}>
+              <figure>
+                <img src={event.image} alt={event.title} loading="lazy" draggable="false" />
+              </figure>
+              <div>
+                <div className="date">
+                  <span className="date__number">
+                    {format(parseISO(String(event.date)), "dd", { locale: ptBR })}
+                  </span>
+                  <span className="date__month">
+                    {format(parseISO(String(event.date)), "MMM", { locale: ptBR })}
+                  </span>
+                </div>
+                <h3>{event.title}</h3>
+                <p>{event.shortDescription}</p>
+              </div>
+            </Event>
           ))}
         </EventsGrid>
       </EventsContainer>
