@@ -19,17 +19,23 @@ export class CourseService {
     private mailService: MailService,
     private sequelize: Sequelize,
     private upload: UploadService
-  ) { }
+  ) {}
 
   async get(query?: FilterCourseDTO) {
     trimObj(query);
-    const where = {};
+    const where = {
+      initDate: {
+        [$.gte]: startOfToday()
+      }
+    };
 
     if (query.pcd) Object.assign(where, { pcd: convertBool(query.pcd) });
     if (query.name) Object.assign(where, { name: { [$.substring]: query.name } });
     if (query.period) Object.assign(where, { period: query.period.toUpperCase() });
     if (query.month) {
       const month = setMonth(startOfToday(), Number(query.month) - 1);
+
+      if (isAfter(startOfToday(), month)) throw new HttpException("Você não pode filtrar por um mês que já passou", 400);
 
       Object.assign(where, {
         initDate: {
@@ -194,7 +200,7 @@ export class CourseService {
 
       await transaction.commit();
 
-    return  await this.mailService.registerCourse(user, course);
+      return await this.mailService.registerCourse(user, course);
     } catch (error) {
       await transaction.rollback();
       throw new HttpException(error, 400);

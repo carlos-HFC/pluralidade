@@ -1,6 +1,6 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { endOfDay, format, isAfter, isBefore, isValid, isWeekend, parseISO, setHours, setMinutes, setSeconds, startOfDay, startOfHour, startOfToday } from 'date-fns';
+import { endOfDay, format, isAfter, isBefore, isEqual, isValid, isWeekend, parseISO, setHours, setMinutes, setSeconds, startOfDay, startOfHour, startOfToday } from 'date-fns';
 import { Op as $ } from 'sequelize';
 import { Sequelize } from 'sequelize-typescript';
 
@@ -16,7 +16,7 @@ export class EventService {
     private readonly eventModel: typeof Event,
     private sequelize: Sequelize,
     private upload: UploadService
-  ) { }
+  ) {}
 
   async get(query?: FilterEventDTO) {
     trimObj(query);
@@ -67,6 +67,8 @@ export class EventService {
         throw new HttpException('Data inválida', 400);
       case isBefore(searchDate, today):
         throw new HttpException('Impossível agendar em uma data passada', 400);
+      case isEqual(searchDate, today):
+        throw new HttpException('Não se pode agendar na data atual', 400);
       default:
         break;
     }
@@ -123,6 +125,8 @@ export class EventService {
     switch (true) {
       case isAfter(new Date(), date):
         throw new HttpException('Data passada não permitida', 400);
+      case isEqual(startOfToday(), startOfDay(date)):
+        throw new HttpException('Data atual não permitida', 400);
       case isWeekend(date):
         throw new HttpException('Eventos não podem ser realizados aos fins de semana', 400);
       default:
@@ -163,6 +167,8 @@ export class EventService {
     switch (true) {
       case isAfter(new Date(), date):
         throw new HttpException('Data passada não permitida', 400);
+      case isEqual(startOfToday(), startOfDay(date)):
+        throw new HttpException('Data atual não permitida', 400);
       case isWeekend(date):
         throw new HttpException('Eventos não podem ser realizados aos fins de semana', 400);
       default:
