@@ -11,7 +11,36 @@ import Img7 from '../../assets/img7.jpg';
 
 import * as S from './style';
 
-const images = [Img1, Img2, Img3, Img4, Img5, Img6, Img7].sort(() => Math.random() - .5);
+const images = [
+  {
+    img: Img1,
+    alt: "Aula de matemática da classe",
+  },
+  {
+    img: Img2,
+    alt: "Mulher mostrando algo em seu notebook para demais pessoas",
+  },
+  {
+    img: Img3,
+    alt: "Professor explicando conteúdo com um slide",
+  },
+  {
+    img: Img4,
+    alt: "Auditório cheio com um slide sobre jogos",
+  },
+  {
+    img: Img5,
+    alt: "Roda de conversas conduzida por uma professora",
+  },
+  {
+    img: Img6,
+    alt: "Pessoas em seus notebooks digitando",
+  },
+  {
+    img: Img7,
+    alt: "Professor explicando conteúdo em uma sala de aula",
+  },
+].sort(() => Math.random() - .5);
 
 export function Carousel() {
   const [index, setIndex] = useState(0);
@@ -35,24 +64,26 @@ export function Carousel() {
   }
 
   return (
-    <S.Slider>
+    <S.Slider aria-label="Show institute's images" aria-roledescription="carousel">
       <S.Prev>
-        <button onClick={() => handleChangeImage('prev')} title="Imagem anterior">
+        <button onClick={() => handleChangeImage('prev')} aria-label="Previous Slide" aria-controls="carousel-items">
           <BsChevronCompactLeft />
         </button>
       </S.Prev>
-      <S.Images>
+      <S.Images id="carousel-items" aria-live="off">
         {images.map((image, i) => (
-          <S.Image key={i} title={`Imagem do carrossel #${i + 1}`} active={i === index}>
-            <img src={image} alt={`Carousel banner ${i + 1}`} loading="lazy" />
+          <S.Image key={i} role="group" aria-roledescription="slide" active={i === index} aria-label={`Image ${i + 1} of ${images.length}`}>
+            <img src={image.img} alt={image.alt} loading="lazy" draggable="false" />
           </S.Image>
         ))}
       </S.Images>
       <S.Dots>
-        {images.map((_, i) => <S.Dot key={i} title={`Dot #${i + 1}`} active={i === index} onClick={() => setIndex(i)} />)}
+        {images.map((_, i) => (
+          <S.Dot key={i} role="tablist" active={i === index} onClick={() => setIndex(i)} aria-current={i === index && "true"} aria-label={`Slide ${i + 1}`} />
+        ))}
       </S.Dots>
       <S.Next>
-        <button onClick={() => handleChangeImage('next')} title="Imagem seguinte">
+        <button onClick={() => handleChangeImage('next')} aria-label="Next Slide" aria-controls="carousel-items">
           <BsChevronCompactRight />
         </button>
       </S.Next>
