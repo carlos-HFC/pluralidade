@@ -36,7 +36,11 @@ export const ContactData = styled.div`
 
 export const ContactInfo = styled.div`
   display: flex;
-  gap: 1rem;
+  gap: .75rem;
+
+  @media (min-width: 992px) {
+    gap: 1rem;
+  }
 
   div {
     display: flex;
@@ -47,6 +51,11 @@ export const ContactInfo = styled.div`
       color: ${props => props.theme.text};
       font-family: ${FONTS.secondary};
       text-decoration: none;
+      font-size: .9rem;
+      
+      @media (min-width: 992px) {
+        font-size: 1rem;
+      }
       
       &:last-child {
         color: ${props => lighten(.5, props.theme.text)};

@@ -68,7 +68,7 @@ const Image = styled.div`
     bottom: 0;
     background: ${props => props.theme.header};
     padding: .5rem;
-    max-width: 3.5rem;
+    width: 3.5rem;
     text-align: center;
     font-weight: bold;
   }
@@ -79,7 +79,7 @@ const Body = styled.div`
   padding: 1rem;
   display: flex;
   flex-direction: column;
-  gap: .5rem;
+  gap: .75rem;
   border: 1px solid rgba(0,0,0,.1);
   border-top: 0;
   border-bottom-left-radius: .25rem;

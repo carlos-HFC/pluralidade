@@ -49,7 +49,7 @@ export function Contact() {
     <>
       <Title title="Contate-nos" />
       <ContactContainer>
-        <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d7314.096862684385!2d-46.639497!3d-23.566704!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce59a33f9666e3%3A0xda9e218caa168b75!2sR.%20Maestro%20Cardim%20-%20Bela%20Vista%2C%20S%C3%A3o%20Paulo%20-%20SP!5e0!3m2!1spt-BR!2sbr!4v1640707688869!5m2!1spt-BR!2sbr" title="Mapa com a localização do Instituto Pluralidade" loading="lazy" />
+        <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d7314.096862684385!2d-46.639497!3d-23.566704!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce59a33f9666e3%3A0xda9e218caa168b75!2sR.%20Maestro%20Cardim%20-%20Bela%20Vista%2C%20S%C3%A3o%20Paulo%20-%20SP!5e0!3m2!1spt-BR!2sbr!4v1640707688869!5m2!1spt-BR!2sbr" loading="lazy" />
 
         <div className="row gap-5 gap-lg-0">
           <ContactData as="form" className="col-lg-8 col-12" onSubmit={sendMessage} noValidate autoComplete="off">
@@ -72,7 +72,7 @@ export function Contact() {
               Enviar
             </Button>
           </ContactData>
-          <ContactData className="col-lg-4 col-12">
+          <ContactData className="col-lg-4 col-12" as="address">
             <ContactInfo>
               <div>
                 <BsHouse />

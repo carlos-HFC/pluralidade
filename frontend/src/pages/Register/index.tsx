@@ -4,6 +4,8 @@ import { BsArrowLeft } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 
 import { Button, InputBlock, RadioButton, Select, Textarea } from '../../components';
+import { useLoader } from "../../context";
+import { Alert } from "../../utils";
 import { birthdayMask, cepMask, cpfMask, phoneMask } from '../../utils/mask';
 
 import { SignUp } from './style';
@@ -26,6 +28,8 @@ const INITIAL_STATE_REGISTER = {
 };
 
 export function Register() {
+  const { handleLoader } = useLoader();
+
   const navigate = useNavigate();
 
   const addressRef = useRef<HTMLInputElement>(null);
@@ -36,6 +40,7 @@ export function Register() {
   async function searchCep() {
     if (!register.cep) return;
 
+    handleLoader(true);
     try {
       const { data } = await axios.get(`https://viacep.com.br/ws/${register.cep}/json/`);
 
@@ -53,8 +58,10 @@ export function Register() {
         ? districtRef.current?.removeAttribute('disabled')
         : districtRef.current?.setAttribute('disabled', 'false');
     } catch (error) {
-      console.log(error);
-    } finally {}
+      Alert("CEP inválido", "error")
+    } finally {
+      handleLoader(false);
+    }
   }
 
   function handleChangeRegister(e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) {
@@ -73,14 +80,14 @@ export function Register() {
           </div>
         </header>
 
-        <form autoComplete="off">
+        <form noValidate>
           <InputBlock label="Nome" title="Insira seu nome" id="nameRegister"
             name="name" value={register.name} onChange={handleChangeRegister}
           />
           <InputBlock type="email" label="E-mail" title="Insira seu e-mail" id="emailRegister"
             name="email" value={register.email} onChange={handleChangeRegister}
           />
-          <div className="row g-4">
+          <div className="row g-lg-4 g-3">
             <div className="col-md-6 col-12">
               <InputBlock label="CPF" title="Insira seu CPF" id="cpfRegister"
                 name="cpf" value={cpfMask(register.cpf)} onChange={handleChangeRegister}
@@ -92,7 +99,7 @@ export function Register() {
               />
             </div>
           </div>
-          <div className="row g-4">
+          <div className="row g-lg-4 g-3">
             <div className="col-md-6 col-12">
               <InputBlock label="Data de Nascimento" title="Insira sua data de nascimento" id="birthdayRegister"
                 name="birthday" value={birthdayMask(register.birthday)} onChange={handleChangeRegister}
@@ -109,14 +116,14 @@ export function Register() {
               </Select>
             </div>
           </div>
-          <div className="row g-4">
+          <div className="row g-lg-4 g-3">
             <div className="col-sm-8 col-12">
               <InputBlock label="CEP" title="Insira seu CEP" id="cepRegister"
                 name="cep" value={cepMask(register.cep)} onChange={handleChangeRegister} maxLength={9}
               />
             </div>
             <div className="col-sm-4 col-12">
-              <Button block type="button" variant="primary" id="btn-cep" onClick={searchCep} disabled={!cepMask(register.cep) || cepMask(register.cep).length !== 9}>
+              <Button block type="button" variant="primary" id="btn-cep" onClick={searchCep} >
                 Consultar CEP
               </Button>
             </div>
@@ -124,7 +131,7 @@ export function Register() {
           <InputBlock label="Endereço" title="Insira seu endereço" id="addressRegister" ref={addressRef} disabled
             name="address" value={register.address} onChange={handleChangeRegister}
           />
-          <div className="row g-4">
+          <div className="row g-lg-4 g-3">
             <div className="col-sm-9 col-12">
               <InputBlock label="Bairro" title="Insira seu bairro" id="districtRegister" ref={districtRef} disabled
                 name="district" value={register.district} onChange={handleChangeRegister}
@@ -136,7 +143,7 @@ export function Register() {
               />
             </div>
           </div>
-          <div className="row g-4">
+          <div className="row g-lg-4 g-3">
             <div className="col-sm-9 col-12">
               <InputBlock label="Cidade" title="Insira sua cidade" id="cityRegister" disabled
                 name="city" value={register.city} onChange={handleChangeRegister}

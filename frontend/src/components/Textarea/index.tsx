@@ -19,7 +19,9 @@ const Floating = styled.fieldset`
 
 const Label = styled.label`
   font-size: 1rem;
-  padding: 1.2rem 1rem;
+  padding-left: 1rem;
+  left: 0;
+  top: calc(3.85rem / 3);
   pointer-events: none;
   position: absolute;
   transition: .3s;
@@ -74,7 +76,8 @@ const TextareaWrapper = styled.textarea<TextareaProps>`
 
     & ~ ${Label} {
       opacity: 0.85;
-      transform: scale(0.85) translateY(-1rem) translateX(0.5rem);
+      font-size: .85rem;
+      transform: translateY(-.85rem);
     }
   }
 `;

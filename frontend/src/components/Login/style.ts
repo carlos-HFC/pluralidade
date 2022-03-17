@@ -43,6 +43,11 @@ export const Wrapper = styled.div`
     justify-content: center;
     align-items: center;
     gap: 0.5rem;
+    flex-direction: column;
+
+    @media (min-width: 992px) {
+      flex-direction: row;
+    }
 
     span, a {
       color: ${props => props.theme.text};

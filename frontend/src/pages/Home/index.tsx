@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 
 import { Button, CardCourse, CardEvent } from '../../components';
 import { usePlurality } from "../../context";
-import { Loader, LoaderContainer } from "../../context/Loader/style";
 
 import img8 from '../../assets/img8.jpg';
 import img9 from '../../assets/img9.jpg';
@@ -26,7 +25,7 @@ export function Home() {
 
   return (
     <>
-      <Suspense fallback={<LoaderContainer><Loader /></LoaderContainer>}>
+      <Suspense fallback={"Loading"}>
         <Carousel />
       </Suspense>
 
@@ -58,7 +57,7 @@ export function Home() {
             </header>
             <div className="cards">
               {events.slice(0, 2).map(event => (
-                <CardEvent key={event.id} img={event.image} link={`/events/${event.id}`} title={event.title} date={format(parseISO(String(event.date)), "dd MMMM", { locale: ptBR })}>
+                <CardEvent key={event.id} img={event.image} link={`/events/${event.id}`} title={event.title} date={format(parseISO(String(event.date)), "dd MMM", { locale: ptBR })}>
                   {event.shortDescription}
                 </CardEvent>
               ))}
