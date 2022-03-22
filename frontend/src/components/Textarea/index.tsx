@@ -14,7 +14,7 @@ const Floating = styled.fieldset`
   display: flex;
   position: relative;
   height: 8rem;
-  transition: 0.3s;
+  transition: background-color .3s;
 `;
 
 const Label = styled.label`
@@ -24,7 +24,8 @@ const Label = styled.label`
   top: calc(3.85rem / 3);
   pointer-events: none;
   position: absolute;
-  transition: .3s;
+  transition: color .3s, font-size .3s, transform .3s, opacity .3s;
+  will-change: opacity, transform;
   color: ${props => props.theme.text};
   font-family: ${FONTS.secondary};
 `;
@@ -43,7 +44,7 @@ const TextareaWrapper = styled.textarea<TextareaProps>`
   position: relative;
   width: 100%;
   resize: none;
-  transition: box-shadow .3s linear, background-color .3s linear;
+  transition: box-shadow .3s, background-color .3s, color .3s;
   font-family: ${FONTS.secondary};
 
   &:is(:disabled, .disabled) {

@@ -1,5 +1,6 @@
 import { format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
+
 import { Title } from '../../components';
 import { usePlurality } from "../../context";
 
@@ -16,7 +17,7 @@ export function Events() {
           {events?.map(event => (
             <Event key={event.id}>
               <figure>
-                <img src={event.image} alt={event.title} loading="lazy" draggable="false" />
+                <img src={event.image} alt={event.title} loading="lazy" draggable="false" width={864} height={400} />
               </figure>
               <div>
                 <div className="date">
@@ -27,7 +28,7 @@ export function Events() {
                     {format(parseISO(String(event.date)), "MMM", { locale: ptBR })}
                   </span>
                 </div>
-                <h3>{event.title}</h3>
+                <h2>{event.title}</h2>
                 <p>{event.shortDescription}</p>
               </div>
             </Event>

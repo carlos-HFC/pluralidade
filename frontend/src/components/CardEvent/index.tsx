@@ -52,6 +52,7 @@ const Image = styled.div`
     height: 100%;
     object-fit: cover;
     transition: transform .5s, opacity .3s;
+    will-change: opacity, transform;
 
     @media (min-width: 992px) and (hover: hover) {
       opacity: 0.8;
@@ -67,6 +68,8 @@ const Image = styled.div`
     left: 0;
     bottom: 0;
     background: ${props => props.theme.header};
+    transition: background-color .3s;
+    will-change: background-color;
     padding: .5rem;
     width: 3.5rem;
     text-align: center;
@@ -95,6 +98,8 @@ const Body = styled.div`
     margin: 0;
     flex: 1;
     color: ${props => props.theme.text};
+    transition: color .3s;
+    will-change: color;
     font-family: ${FONTS.primary};
     font-weight: bold;
   }
@@ -103,6 +108,8 @@ const Body = styled.div`
     font-size: 1rem;
     margin: 0;
     color: ${props => props.theme.text};
+    transition: color .3s;
+    will-change: color;
     font-family: ${FONTS.secondary};
   }
 `;
@@ -112,7 +119,7 @@ export function CardEvent({ children, img, title, link, date }: CardProps) {
     <CardWrapper>
       <Link to={link}>
         <Image>
-          <img src={img} alt={title} title={title} loading="lazy" draggable="false" />
+          <img src={img} alt={title} title={title} loading="lazy" draggable="false" width={864} height={400} />
           <span>{date}</span>
         </Image>
         <Body>

@@ -46,7 +46,7 @@ export function Login() {
   return (
     <Wrapper>
       <header>
-        <h3>Login</h3>
+        <h1>Login</h1>
       </header>
 
       <form autoComplete="off" onSubmit={effectLogin}>

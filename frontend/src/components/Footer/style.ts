@@ -20,6 +20,8 @@ export const FooterWrapper = styled.footer`
   margin-top: auto;
   padding: 2rem;
   background: ${props => props.theme.footer};
+  transition: background-color .3s;
+  will-change: background-color;
 
   .container {
     display: flex;
@@ -51,6 +53,8 @@ export const FooterWrapper = styled.footer`
 
     span {
       color: ${props => props.theme.text};
+      transition: color .3s;
+      will-change: color;
 
       svg {
         animation: 1.5s ${pulse} infinite;
@@ -63,13 +67,15 @@ export const FooterWrapper = styled.footer`
     .${social} {
       position: relative;
       transition: transform 0.5s;
+      will-change: transform;
       cursor: pointer;
       line-height: 0;
       padding: 1rem;
       border-radius: 1rem;
 
       span {
-        transition: opacity 0.5s, transform 0.75s;
+        transition: opacity 0.5s, transform 0.75s, color .3s;
+        will-change: opacity, transform;
         position: absolute;
         display: flex;
         justify-content: center;
@@ -105,14 +111,20 @@ export const FooterWrapper = styled.footer`
 
   .facebook {
     background: ${props => props.theme.socials.facebook};
+    transition: background-color .3s;
+    will-change: background-color;
   }
   
   .twitter {
     background: ${props => props.theme.socials.twitter};
+    transition: background-color .3s;
+    will-change: background-color;
   }
   
   .instagram {
     background: ${props => props.theme.socials.instagram};
+    transition: background-color .3s;
+    will-change: background-color;
   }
 `;
 
@@ -129,7 +141,7 @@ export const FooterCols = styled.div`
   }
 
   img {
-    width: 140px;
+    width: 8.75rem;
     height: 100%
   }
 `;

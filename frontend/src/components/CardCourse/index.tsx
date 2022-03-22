@@ -51,6 +51,7 @@ const Image = styled.div`
     height: 100%;
     object-fit: cover;
     transition: transform .5s, opacity .3s;
+    will-change: opacity, transform;
 
     @media (min-width: 992px) and (hover: hover) {
       opacity: 0.8;
@@ -74,11 +75,13 @@ const Body = styled.div`
     gap: 1rem;
   }
 
-  h3 {
+  h2 {
     font-size: 1.25rem;
     margin: 0;
     flex: 1;
     color: ${props => props.theme.text};
+    transition: color .3s;
+    will-change: color;
     font-family: ${FONTS.primary};
     font-weight: bold;
   }
@@ -87,6 +90,8 @@ const Body = styled.div`
     font-size: 1rem;
     margin: 0;
     color: ${props => props.theme.text};
+    transition: color .3s;
+    will-change: color;
     font-family: ${FONTS.secondary};
   }
 `;
@@ -96,10 +101,10 @@ export function CardCourse({ children, title, img, link }: CardProps) {
     <CardWrapper>
       <Link to={link}>
         <Image>
-          <img src={img} alt={title} title={title} loading="lazy" draggable="false" />
+          <img src={img} alt={title} title={title} loading="lazy" draggable="false" width={864} height={400} />
         </Image>
         <Body>
-          <h3 title={title}>{title}</h3>
+          <h2 title={title}>{title}</h2>
           <p>{children}</p>
         </Body>
       </Link>

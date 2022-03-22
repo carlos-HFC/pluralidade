@@ -7,30 +7,35 @@ export const Wrapper = styled.div`
   margin: auto;
   display: flex;
   flex-direction: column;
-  gap: 30px;
   border-radius: 1rem;
+  gap: 1.5rem;
 
-  @media (min-width: 500px) {
-    padding: 2rem;
+  @media (min-width: 992px) {
+    gap: 2rem;
   }
 
   header {
     display: flex;
     flex-direction: column;
 
-    h3 {
+    h1 {
       text-align: center;
       font-weight: bold;
       color: ${props => props.theme.text};
-      font-family: ${FONTS.primary};
-      margin: 0;
+      font-size: 1.5rem;
+      transition: color .3s;
+      will-change: color;
     }
   }
 
   form {
     display: flex;
     flex-direction: column;
-    gap: 30px;
+    gap: 1rem;
+
+    @media (min-width: 992px) {
+      gap: 2rem;
+    }
 
     fieldset {
       border: 0;
@@ -52,6 +57,8 @@ export const Wrapper = styled.div`
     span, a {
       color: ${props => props.theme.text};
       font-family: ${FONTS.secondary};
+      transition: color .3s;
+      will-change: color;
     }
 
     a {

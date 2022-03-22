@@ -3,12 +3,12 @@ import styled from "styled-components";
 import { COLORS, FONTS } from "../../styles/variables";
 
 export const EventsContainer = styled.section.attrs({ className: "container" })`
-  padding: 100px .75rem;
+  padding: 5rem 1rem !important;
   display: flex;
   flex-direction: column;
 
   @media (min-width: 992px) {
-    padding: 150px .75rem;
+    padding: 10rem 1rem !important;
   }
 `;
 
@@ -20,8 +20,14 @@ export const Event = styled.article`
   border-radius: .25rem;
   box-shadow: 0 .125rem .5rem rgba(0,0,0,.2);
   background: ${props => props.theme.card.backgroundPrimary};
+  transition: background-color .3s;
+  width: 100%;
+  min-width: 100%;
+  cursor: pointer;
 
   @media (min-width: 992px) {
+    min-width: calc(50% - 1.5rem);
+    max-width: calc(50% - 1.5rem);
     gap: 1rem;
 
     @media (hover: hover) {
@@ -51,6 +57,7 @@ export const Event = styled.article`
       height: 100%;
       object-fit: cover;
       transition: transform .5s, opacity .3s;
+      will-change: opacity, transform;
 
       @media (min-width: 992px) and (hover: hover) {
         opacity: 0.8;
@@ -64,6 +71,7 @@ export const Event = styled.article`
     display: flex;
     flex-direction: column;
     gap: .5rem;
+    user-select: none;
 
     @media (min-width: 992px) {
       padding: 2.5rem 2rem;
@@ -80,6 +88,7 @@ export const Event = styled.article`
       gap: 0;
       color: ${COLORS.white};
       background: ${props => props.theme.header};
+      transition: background-color .3s;
       border-radius: .25rem;
       
       @media (min-width: 992px) {
@@ -92,6 +101,7 @@ export const Event = styled.article`
         color: ${COLORS.white};
         font-family: ${FONTS.primary};
         background: ${props => props.theme.header};
+        transition: background-color .3s;
         text-transform: capitalize;
       }
       
@@ -113,13 +123,11 @@ export const Event = styled.article`
       }
     }
 
-
-    h3 {
-      margin: 0;
-      font-family: ${FONTS.primary};
+    h2 {
       font-weight: bold;
       font-size: 1.5rem;
       color: ${props => props.theme.text};
+      transition: color .3s;
       
       @media (min-width: 992px) {
         font-size: 2rem;
@@ -130,6 +138,7 @@ export const Event = styled.article`
       margin: 0;
       font-family: ${FONTS.secondary};
       color: ${props => props.theme.text};
+      transition: color .3s;
       font-size: .85rem;
       
       @media (min-width: 992px) {
@@ -147,14 +156,5 @@ export const EventsGrid = styled.div`
   
   @media (min-width: 992px) {
     gap: 3rem;
-  }
-
-  ${Event} {
-    width: 100%;
-
-    @media (min-width: 992px) {
-      min-width: calc(50% - 1.5rem);
-      max-width: calc(50% - 1.5rem);
-    }
   }
 `;

@@ -16,7 +16,8 @@ const Floating = styled.fieldset`
   display: flex;
   position: relative;
   height: 4rem;
-  transition: 0.3s;
+  transition: background-color .3s;
+  will-change: background-color;
 `;
 
 const Button = styled.button.attrs({ type: 'button' })`
@@ -30,6 +31,7 @@ const Button = styled.button.attrs({ type: 'button' })`
   font-size: calc(0.875rem + 2px);
   font-weight: 700;
   transition: filter 0.3s;
+  will-change: filter;
   line-height: 1;
   outline: none;
   background: ${props => props.theme.login.button};
@@ -47,7 +49,8 @@ const Label = styled.label`
   padding-left: 1rem;
   pointer-events: none;
   position: absolute;
-  transition: .3s;
+  transition: opacity .3s, transform .3s, font-size .3s, color .3s;
+  will-change: opacity, transform;
   color: ${props => props.theme.text};
   font-family: ${FONTS.secondary};
 `;
@@ -65,7 +68,8 @@ const Input = styled.input<InputBlockProps>`
   border-radius: .5rem;
   position: relative;
   width: 100%;
-  transition: box-shadow .3s linear, background-color .3s linear;
+  transition: box-shadow .3s, background-color .3s;
+  will-change: box-shadow, background-color;
   font-family: ${FONTS.secondary};
 
   &:is(:disabled, .disabled) {

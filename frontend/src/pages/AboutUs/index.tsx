@@ -1,7 +1,7 @@
 import { Title } from "../../components";
 
-import accessibility from '../../assets/acessibilidade-web.jpg';
-import ceo from '../../assets/ceo.jpg';
+import accessibility from '../../assets/acessibilidade-web.webp';
+import ceo from '../../assets/ceo.webp';
 import logo from '../../assets/logo.png';
 
 import { AboutUsContainer, AboutUsDiv, AboutUsFigure } from './style';
@@ -12,54 +12,42 @@ export function AboutUs() {
       <Title title="Sobre Nós" />
       <AboutUsContainer>
         <AboutUsDiv>
-          <h3>Como tudo começou?</h3>
+          <h2>Como tudo começou?</h2>
           <AboutUsFigure side="right">
-            <img loading="lazy" src={ceo} alt="Fundador do Instituto Pluralidade" title="Fundador do Instituto Pluralidade" />
+            <img width={864} height={400} loading="lazy" src={ceo} alt="Fundador do Instituto Pluralidade" title="Fundador do Instituto Pluralidade" />
             <figcaption>Arthur Benjamin Martins</figcaption>
           </AboutUsFigure>
           <p>
-            O Instituto foi fundado no dia 23 de agosto de 2018, pelo empresário Arthur Benjamin Martins. Arthur, vem de uma família pobre onde era o mais velho de quatro irmãos, e seu irmão mais novo Mateus é deficiente visual. Vendo a dificuldade de seu irmão e sua mãe no dia a dia, resolveu terminar seus estudos no ensino médio e em seguida entrou no ensino superior, cursando Gestão de Negócios. No terceiro semestre de curso começou a fazer estágio em uma empresa de grande nome e foi conseguindo se promover, até realizar o sonho de ter a sua própria empresa.
+            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Neque inventore dolorem, quibusdam temporibus reiciendis quo hic blanditiis deleniti distinctio atque, illum doloremque harum deserunt iusto consequatur non iste! Mollitia, velit! Commodi fugiat doloremque eius odio aut nesciunt nulla delectus culpa et consequatur eum consectetur repudiandae quos facere porro, inventore exercitationem laboriosam animi. Itaque dolorum voluptates accusamus alias natus nostrum temporibus?
           </p>
           <p>
-            Em sua empresa adaptou lugares para portadores de necessidades, inclusive para seu irmão. Com esses diferenciais conseguiu alguns patrocínios e decidiu fundar o Instituto.
+            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Neque inventore dolorem, quibusdam temporibus reiciendis quo hic blanditiis deleniti distinctio atque, illum doloremque harum deserunt iusto consequatur non iste! Mollitia, velit! Commodi fugiat doloremque eius odio aut nesciunt nulla delectus culpa et consequatur eum consectetur repudiandae quos facere porro, inventore exercitationem laboriosam animi. Itaque dolorum voluptates accusamus alias natus nostrum temporibus?
           </p>
           <p>
-            Localizado na Rua Maestro Cardim, 000 - Bela Vista - SP, o Instituto Pluralidade, trata-se de uma instituição de ensino inclusivo preparado para acolher, incluir, socializar, educar e desenvolver crianças, jovens e adultos com ou sem necessidades especiais, buscando promover uma sociedade inclusiva, que garanta a igualdade de direitos e a valorização das diferenças.
+            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ipsam voluptates vero dignissimos? Natus nam commodi doloremque voluptatibus vel, assumenda nulla magnam corrupti laboriosam dolorem quos voluptate omnis sunt totam nesciunt.
           </p>
         </AboutUsDiv>
         <AboutUsDiv>
-          <h3>Nosso Propósito</h3>
+          <h2>Nosso Propósito</h2>
           <AboutUsFigure side="left">
-            <img loading="lazy" src={logo} alt="Logo do Instituto Pluralidade" title="Logo do Instituto Pluralidade" />
+            <img width={864} height={400} loading="lazy" src={logo} alt="Logo do Instituto Pluralidade" title="Logo do Instituto Pluralidade" />
             <figcaption>Logo do Instituto</figcaption>
           </AboutUsFigure>
           <p>
-            Oferecemos aos nossos alunos a oportunidade de desenvolverem suas competências e habilidades promovendo suas atuações no mundo, levando em consideração suas necessidades individuais, sociais e emocionais. Almejamos ser um centro educacional de referência para pessoas com ou sem necessidades especiais, inovando em propostas, práticas pedagógicas e sobretudo, na formação de cidadãos conscientes das peculiaridades de cada indivíduo. Corroborando assim, o respeito as diferenças, a solidariedade, responsabilidade, a cooperação e autonomia pessoal e coletiva. Denotando um ambiente acolhedor e mais humano no processo de aprendizagem.
+            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Similique dicta corporis mollitia autem? Id rerum sequi deserunt, nihil placeat eaque corporis maxime ipsa culpa. Corrupti, animi! Consequuntur ex illo non. Ipsa qui modi ad repellat rem nisi perspiciatis consectetur et dignissimos numquam quibusdam itaque aliquid cum voluptatum veniam totam perferendis repudiandae doloribus iure amet facere, ducimus neque. Assumenda, atque vero.
           </p>
         </AboutUsDiv>
         <AboutUsDiv>
-          <h3>O que é acessibilidade?</h3>
-          <p>
-            Segundo o dicionário, acessibilidade é um <abbr title="Substantivo Feminino">s.f.</abbr>, e significa "qualidade ou caráter do que é acessível; facilidade na aproximação, tratamento ou aquisição".
-          </p>
-          <p>
-            Acessibilidade é um atributo essencial do ambiente que garante a melhoria da qualidade de vida das pessoas. Deve estar presente nos espaços, no meio físico, no transporte, na informação e comunicação, inclusive nos sistemas e tecnologias da informação e comunicação, bem como em outros serviços e instalações abertos ao público ou de uso público, tanto na cidade como no campo. Além do mais, atualmente temos a Lei n°10.098/200 que estabelece normas e critérios para promover esses direitos.
-          </p>
-          <p>
-            Esse é um tema ainda pouco discutido, apesar de sua inegável relevância. Considerando que ela gera resultados sociais positivos e contribui para o desenvolvimento inclusivo e sustentável, sua implementação é fundamental, dependendo, porém, de mudanças culturais.
-          </p>
-        </AboutUsDiv>
-        <AboutUsDiv>
-          <h3>Mas o que é acessibilidade na web?</h3>
-          <AboutUsFigure side="left">
-            <img loading="lazy" src={accessibility} alt="Acessibilidade WEB" title="Acessibilidade WEB" />
+          <h2>Mas o que é acessibilidade na web?</h2>
+          <AboutUsFigure side="right">
+            <img width={864} height={400} loading="lazy" src={accessibility} alt="Acessibilidade WEB" title="Acessibilidade WEB" />
             <figcaption>União da acessibilidade para todos</figcaption>
           </AboutUsFigure>
           <p>
-            Acessibilidade na Web significa que pessoas com deficiências podem perceber, entender, navegar e interagir além de poder contribuir para a web. Por isso, fazer um site acessível não é apenas preocupar-se com um determinado grupo de pessoas, mas sim com todas as pessoas que acessem o seu site.
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod minima officia deserunt accusamus odio et, ad sed, qui explicabo error quaerat obcaecati ipsam autem tempora distinctio at aliquid quas repudiandae?
           </p>
           <p>
-            Atualmente temos a <strong>WAI (Web Acessibility Initiative - Iniciativa de Acessibilidade na Web)</strong> e a <strong>WCAG (Web Content Accessibility Guidelines - Diretrizes de Acessibilidade ao Conteúdo da Web)</strong>. Ambas trabalham juntas com o <strong>W3C (World Wide Web Consortium - Consórcio da World Wide Web)</strong> que é um consórcio internacional no qual organizações filiadas, uma equipe em tempo integral e o público trabalham juntos para desenvolver padrões para a Web. O valor social da Web está nas novas possibilidades de comunicação humana, comércio e compartilhamento de conhecimentos. Um dos principais objetivos do W3C é tornar esses benefícios disponíveis para todas as pessoas, independente do hardware que utilizam, software, infra-estrutura de rede, idioma, cultura, localização geográfica ou capacidade física e mental.
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolore labore doloribus et, recusandae qui minima, nulla delectus porro deserunt nemo rem, quis quasi provident aspernatur perspiciatis voluptatibus. Deleniti, sunt similique.
           </p>
         </AboutUsDiv>
       </AboutUsContainer>

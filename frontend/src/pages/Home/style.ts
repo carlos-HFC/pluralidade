@@ -1,13 +1,13 @@
 import styled, { css } from "styled-components";
 
-import { COLORS, FONTS } from '../../styles/variables';
+import { COLORS } from '../../styles/variables';
 
 export const HomeContainer = styled.section<{ type: 'courses' | 'aboutus' | 'events'; }>`
   width: 100%;
   padding: 100px 0;
 
-  @media (min-width: 768px) {
-    padding: 150px 0;
+  @media (min-width: 992px) {
+    padding: 10rem 0;
   }
 
   header, footer {
@@ -22,8 +22,7 @@ export const HomeContainer = styled.section<{ type: 'courses' | 'aboutus' | 'eve
 
     h2 {
       color: ${props => props.theme.text};
-      margin: 0;
-      font-family: ${FONTS.primary};
+      transition: color .3s;
       font-size: 2rem;
       font-weight: bold;
     }
@@ -34,8 +33,9 @@ export const HomeContainer = styled.section<{ type: 'courses' | 'aboutus' | 'eve
   }
 
   &:nth-child(odd) {
-    background: ${props => props.theme.login.background};
-
+    transition: background-color .3s;
+    background: ${props => props.theme.card.oddSection};
+    
     header {
       h2 {
         color: ${COLORS.white};
@@ -43,7 +43,7 @@ export const HomeContainer = styled.section<{ type: 'courses' | 'aboutus' | 'eve
     }
   }
 
-  ${props => props.type === 'courses' && css`  
+  ${props => props.type === 'courses' && css`
     .cards {
       display: flex;
       width: 100%;
@@ -62,13 +62,12 @@ export const HomeContainer = styled.section<{ type: 'courses' | 'aboutus' | 'eve
 
       article {
         background: ${props => props.theme.card.backgroundPrimary};
+        transition: background-color .3s;
       }
     }
   `}
 
   ${props => props.type === 'events' && css`
-    background: ${props => props.theme.login.background};
-
     .cards {
       display: flex;
       width: 100%;
@@ -87,6 +86,7 @@ export const HomeContainer = styled.section<{ type: 'courses' | 'aboutus' | 'eve
 
       article {
         background: ${props => props.theme.card.backgroundSecondary};
+        transition: background-color .3s;
       }
     }
   `}

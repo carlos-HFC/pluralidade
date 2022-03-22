@@ -24,14 +24,15 @@ const Fieldset = styled.fieldset`
 const Input = styled.input<Pick<RadioButtonProps, 'type'>>`
   background: transparent;
   appearance: none;
-  height: 1rem;
-  width: 1rem;
-  min-height: 1rem;
-  min-width: 1rem;
-  max-height: 1rem;
-  max-width: 1rem;
+  height: 1.25rem;
+  width: 1.25rem;
+  min-height: 1.25rem;
+  min-width: 1.25rem;
+  max-height: 1.25rem;
+  max-width: 1.25rem;
   outline: none;
-  transition: background-color .3s;
+  transition: background-color .3s, border-color .3s;
+  will-change: background-color, border-color;
   ${props => props.type === 'radio' ? 'border-radius: 50%;' : 'border-radius: .25rem;'}
   ${props => props.theme.name === 'light'
     ? css`
@@ -40,19 +41,20 @@ const Input = styled.input<Pick<RadioButtonProps, 'type'>>`
       &:checked {
         background: ${COLORS.purpleLight}
       }
-    `: css`
+    ` : css`
       border: 1px solid ${lighten(.25, COLORS.black)};
 
       &:checked {
         background: ${lighten(.25, COLORS.black)}
       }
-    `
-  }
+    `}
 `;
 
 const Label = styled.label`
   display: flex;
   color: ${props => props.theme.text};
+  transition: color .3s;
+  will-change: color;
   font-family: ${FONTS.secondary};
 `;
 

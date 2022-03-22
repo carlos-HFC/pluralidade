@@ -9,7 +9,7 @@ export function Footer() {
     <FooterWrapper id="footer">
       <div className="container">
         <FooterCols>
-          <img src={logo} alt="Logo Pluralidade" title="Logo Pluralidade" loading="lazy" />
+          <img src={logo} alt="Logo Pluralidade" title="Logo Pluralidade" loading="lazy" width={768} height={400} />
         </FooterCols>
         <FooterCols>
           <a title="Link para o Facebook" href="https://facebook.com" target="_blank" rel="noreferrer" className="facebook">

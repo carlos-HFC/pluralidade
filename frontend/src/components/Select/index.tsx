@@ -14,8 +14,9 @@ const Floating = styled.fieldset`
   display: flex;
   position: relative;
   height: 4rem;
-  transition: 0.3s;
   background: ${props => props.theme.login.floating};
+  transition: background-color .3s;
+  will-change: background-color;
 `;
 
 const Label = styled.label`
@@ -25,7 +26,8 @@ const Label = styled.label`
   padding-left: 1rem;
   pointer-events: none;
   position: absolute;
-  transition: .3s;
+  transition: color .3s, transform .3s, opacity .3s, font-size .3s;
+  will-change: opacity, transform, color, font-size;
   color: ${props => props.theme.text};
   font-family: ${FONTS.secondary};
 `;
@@ -43,12 +45,16 @@ const SelectWrapper = styled.select<SelectProps>`
   border-radius: .5rem;
   position: relative;
   width: 100%;
-  transition: box-shadow .3s linear, background-color .3s linear;
+  transition: box-shadow .3s, background-color .3s, color .3s;
+  will-change: box-shadow, background-color, color;
   font-family: ${FONTS.secondary};
 
   option {
     background: ${props => props.theme.login.floating};
     font-family: ${FONTS.secondary};
+    color: ${props => props.theme.text};
+    transition: color .3s, background-color .3s;
+    will-change: color, background-color;
   }
 
   &:is(:disabled, .disabled) {

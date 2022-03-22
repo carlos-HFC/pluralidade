@@ -4,27 +4,35 @@ import styled, { css } from "styled-components";
 import { COLORS, FONTS } from '../../styles/variables';
 
 export const AboutUsContainer = styled.section.attrs({ className: "container" })`
-  padding: 150px 2rem !important;
-  gap: 50px;
+  padding: 4rem 1rem !important;
+  gap: 3rem;
   display: flex;
   flex-direction: column;
 
   @media (min-width: 992px) {
-    padding: 150px 200px !important;
+    padding: 10rem 12.5rem !important;
   }
 `;
 
 export const AboutUsDiv = styled.div`
-  h3 {
-    margin-bottom: 1rem;
+  h2 {
+    display: flex;
     position: relative;
-    padding-left: 25px;
+    padding-left: 0;
     color: ${props => props.theme.text};
-    font-family: ${FONTS.primary};
+    transition: color .3s;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    
+    @media (min-width: 992px) {
+      margin-bottom: 1.5rem;
+      font-size: 1.75rem;
+      padding-left: 1.5rem;
+    }
 
     &::before {
       content: "";
-      display: flex;
+      display: none;
       width: 10px;
       height: 10px;
       background: ${lighten(.3, COLORS.gray)};
@@ -35,21 +43,29 @@ export const AboutUsDiv = styled.div`
       margin-right: 50px;
       border-radius: 50%;
       top: 40%;
+
+      @media (min-width: 992px) {
+        display: flex;
+      }
     }
   }
 
-  p, strong {
-    text-align: justify;
+  p {
     color: ${props => props.theme.text};
+    transition: color .3s;
     font-family: ${FONTS.secondary};
     margin: 0;
-    font-size: 1rem;
+    font-size: .9rem;
+
+    @media (min-width: 992px) {
+      font-size: 1rem;
+    }
   }
 `;
 
 export const AboutUsFigure = styled.figure<{ side: 'right' | 'left'; }>`
-  min-width: 50px;
-  max-width: 350px;
+  min-width: 3rem;
+  max-width: 21.5rem;
   width: 50%;
   padding-bottom: .8rem;
   margin: 0;
@@ -60,12 +76,20 @@ export const AboutUsFigure = styled.figure<{ side: 'right' | 'left'; }>`
   
   ${props => props.side === 'left' && css`
     float: left;
-    padding-right: .8rem;
+    padding-right: 1rem;
+
+    @media (min-width: 992px) {
+      padding-right: 2rem;
+    }
   `}
 
   ${props => props.side === 'right' && css`
     float: right;
-    padding-left: .8rem;
+    padding-left: 1rem;
+
+    @media (min-width: 992px) {
+      padding-left: 2rem;
+    }
   `}
 
   img {

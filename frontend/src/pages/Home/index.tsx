@@ -18,11 +18,6 @@ export function Home() {
 
   const navigate = useNavigate();
 
-  function navigateToPage(page: string) {
-    window.scroll({ top: 0, behavior: 'auto' });
-    return navigate(page);
-  }
-
   return (
     <>
       <Suspense fallback={"Loading"}>
@@ -43,7 +38,7 @@ export function Home() {
               ))}
             </div>
             <footer>
-              <Button variant="primary" onClick={() => navigateToPage('/courses')}>Ver mais Cursos</Button>
+              <Button variant="primary" onClick={() => navigate('/courses')}>Ver mais Cursos</Button>
             </footer>
           </div>
         </HomeContainer>
@@ -63,7 +58,7 @@ export function Home() {
               ))}
             </div>
             <footer>
-              <Button variant="white" onClick={() => navigateToPage('/events')}>Ver mais Eventos</Button>
+              <Button variant="white" onClick={() => navigate('/events')}>Ver mais Eventos</Button>
             </footer>
           </div>
         </HomeContainer>
@@ -88,7 +83,7 @@ export function Home() {
             </div>
           </div>
           <footer>
-            <Button variant="primary" onClick={() => navigateToPage('/aboutus')}>
+            <Button variant="primary" onClick={() => navigate('/aboutus')}>
               Ver mais Sobre Nós
             </Button>
           </footer>

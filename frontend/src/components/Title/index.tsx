@@ -5,21 +5,21 @@ import { COLORS, FONTS } from '../../styles/variables';
 
 const Wrapper = styled.div`
   background: ${props => props.theme.pageTitle};
+  transition: background-color .3s;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 250px;
+  height: 16.5rem;
   
   @media (min-width: 992px) {
-    height: 400px;
+    height: 25rem;
   }
 
   h1 {
     color: ${COLORS.white};
     font-weight: bold;
-    letter-spacing: .75px;
+    letter-spacing: .125rem;
     text-align: center;
-    padding: 10px;
     font-family: ${FONTS.primary};
     font-size: 2.5rem;
 
@@ -28,7 +28,6 @@ const Wrapper = styled.div`
     }
   }
 `;
-
 
 interface TitleProps {
   title: ReactNode;

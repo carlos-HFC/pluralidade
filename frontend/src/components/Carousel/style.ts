@@ -26,6 +26,7 @@ export const Prev = styled.div`
   background-image: linear-gradient(to right, #222, transparent);
 
   button {
+    cursor: pointer;
     border: 0;
     font-size: 0;
     background: transparent;
@@ -56,6 +57,7 @@ export const Next = styled.div`
   justify-content: flex-end;
 
   button {
+    cursor: pointer;
     border: 0;
     font-size: 0;
     background: transparent;
@@ -66,6 +68,7 @@ export const Next = styled.div`
     svg {
       color: rgba(255, 255, 255, 0.2);
       font-size: 4rem;
+
       @media (min-width: 768px) {
         font-size: 8rem;
       }
@@ -87,13 +90,13 @@ export const Image = styled.div<{ active?: boolean; }>`
   position: absolute;
   opacity: 0;
   transition: opacity 1.5s;
+  will-change: opacity;
   ${props => props.active && 'opacity: 1;'}
 
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    image-rendering: optimizeQuality;
   }
 `;
 
@@ -118,13 +121,14 @@ export const Dots = styled.div`
 export const Dot = styled.span<{ active?: boolean; }>`
   background: ${transparentize(.5, '#fff')};
   cursor: pointer;
-  width: 40px;
+  width: 2.5rem;
   height: 3px;
   transition: background-color 0.3s;
+  will-change: background-color;
   ${props => props.active && `background: ${props.theme.carousel.dots};`}
 
   @media (min-width: 768px) {
-    height: 4px;
-    width: 80px;
+    height: .25rem;
+    width: 5rem;
   }
 `;
