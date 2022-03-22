@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { Modal } from 'react-bootstrap';
 import { MdClose } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 
-import { Login } from '..';
+import { Login, Modal } from '..';
 
 import logo from '../../assets/icon.png';
 
@@ -36,32 +35,53 @@ export const Header = () => {
     },
   ];
 
+  function handleOpenMenu(active: boolean) {
+    setOpenMenu(active);
+
+    setTimeout(() => {
+      active
+        ? document.body.style.overflow = "hidden"
+        : document.body.style.overflow = "auto";
+    }, 500);
+  }
+
+  function handleOpenLogin(active: boolean) {
+    setOpenMenu(false);
+    setOpenLogin(active);
+
+    setTimeout(() => {
+      active
+        ? document.body.style.overflow = "hidden"
+        : document.body.style.overflow = "auto";
+    }, 500);
+  }
+
   return (
     <>
       <HeaderWrapper id="menu">
         <div className="container">
           <div className="brand" title="Pluralidade">
             <Link to="/">
-              <img src={logo} alt="Logo Pluralidade" title="Logo Pluralidade" loading="lazy" />
+              <img src={logo} alt="Logo Pluralidade" title="Logo Pluralidade" loading="lazy" width={864} height={400} />
             </Link>
           </div>
           <Menu>
-            <div className="hamb" title="Abrir menu" onClick={() => setOpenMenu(true)}>
+            <div className="hamb" title="Abrir menu" onClick={() => handleOpenMenu(true)}>
               <Hamb />
               <Hamb />
               <Hamb />
             </div>
             <MenuList active={openMenu}>
               <div className="close" title="Fechar menu">
-                <MdClose cursor="pointer" color="white" size={24} onClick={() => setOpenMenu(false)} />
+                <MdClose cursor="pointer" color="white" size={24} onClick={() => handleOpenMenu(false)} />
               </div>
               <div className="list">
                 {menuItems.map((item, i) => (
-                  <Link key={i} onClick={() => setOpenMenu(false)} to={item.link} title={item.title} className="link">
+                  <Link key={i} onClick={() => handleOpenMenu(false)} to={item.link} title={item.title} className="link">
                     {item.title}
                   </Link>
                 ))}
-                <span onClick={() => setOpenLogin(true)} title="Login" className="link">
+                <span onClick={() => handleOpenLogin(true)} title="Login" className="link">
                   Login
                 </span>
               </div>
@@ -69,9 +89,9 @@ export const Header = () => {
           </Menu>
         </div>
       </HeaderWrapper>
-      <Modal contentClassName="login" centered show={openLogin} onHide={() => setOpenLogin(false)}>
-        <div className="d-flex justify-content-end">
-          <MdClose onClick={() => setOpenLogin(false)} cursor="pointer" size={24} />
+      <Modal className="login" show={openLogin} onHide={() => handleOpenLogin(false)}>
+        <div className="close">
+          <MdClose onClick={() => handleOpenLogin(false)} cursor="pointer" size={24} />
         </div>
         <Login />
       </Modal>

@@ -4,14 +4,14 @@ import styled from 'styled-components';
 import { FONTS } from '../../styles/variables';
 
 export const Menu = styled.div`
-  gap: 5px;
   display: flex;
 `;
 
 export const MenuList = styled.div<{ active: boolean; }>`
   display: flex;
   flex-direction: column;
-  transition: transform 1s, background .3s;
+  transition: transform 1s, background-color .3s;
+  will-change: transform, background-color;
   position: absolute;
   top: 0;
   left: 0;
@@ -34,7 +34,7 @@ export const MenuList = styled.div<{ active: boolean; }>`
 `;
 
 export const Hamb = styled.span`
-  width: 30px;
+  width: 2rem;
   height: 3px;
   background: #fff;
   box-shadow: 0 2px 5px ${transparentize(.6, '#000')};
@@ -43,6 +43,8 @@ export const Hamb = styled.span`
 export const HeaderWrapper = styled.header`
   padding: calc(1rem + 50px) 0 1rem;
   background: ${props => props.theme.header};
+  transition: background-color .3s;
+  will-change: background-color;
 
   .container {
     display: flex;
@@ -50,8 +52,8 @@ export const HeaderWrapper = styled.header`
     align-items: center;
 
     .brand {
-      width: 60px;
-      height: 60px;
+      width: 3.75rem;
+      height: 3.75rem;
       display: flex;
 
       img {
@@ -108,6 +110,7 @@ export const HeaderWrapper = styled.header`
           height: 2px;
           display: block;
           transition: width 0.25s;
+          will-change: width;
         }
 
         @media (hover: hover) {

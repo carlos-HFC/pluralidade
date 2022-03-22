@@ -7,6 +7,7 @@ export * from './Footer';
 export * from './Header';
 export * from './InputBlock';
 export * from './Login';
+export * from './Modal';
 export * from './RadioButton';
 export * from './Select';
 export * from './Textarea';
