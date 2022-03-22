@@ -17,17 +17,17 @@ export const Container = styled.div.attrs({ className: 'container' })`
   display: flex;
   justify-content: space-between;
   align-items: center;
-`;
 
-export const Link = styled.a`
-  color: ${COLORS.black};
-  text-decoration: underline;
-  font-size: 1rem;
-  font-family: ${FONTS.secondary};
+  a {
+    color: ${COLORS.black};
+    text-decoration: underline;
+    font-size: 1rem;
+    font-family: ${FONTS.secondary};
 
-  @media (hover: hover) {
-    &:hover {
-      color: ${COLORS.black};
+    @media (hover: hover) {
+      &:hover {
+        color: ${COLORS.black};
+      }
     }
   }
 `;
@@ -41,7 +41,8 @@ export const Switch = styled.label`
     background: #fff;
     border: 1px solid ${transparentize(.6, COLORS.gray)};
     cursor: pointer;
-    transition: 0.2s;
+    transition: border-color 0.2s, background-color .2s;
+    will-change: background-color, border-color;
     display: flex;
     align-items: center;
     width: 50px;
@@ -53,14 +54,15 @@ export const Switch = styled.label`
       border-radius: 50%;
       background: #f7f7f7;
       border: 1px solid ${transparentize(.6, COLORS.gray)};
-      bottom: -.2rem;
+      bottom: -.25rem;
       content: "";
       height: 1.5rem;
       left: -.25rem;
       position: absolute;
-      transition: 0.2s;
+      transition: transform 0.2s;
       width: 1.5rem;
       box-shadow: 0 2px 4px rgba(0,0,0,.3);
+      will-change: transform;
     }
   }
 

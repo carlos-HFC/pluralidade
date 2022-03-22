@@ -17,12 +17,11 @@ export function Accessibility({ handleTheme }: AccessibilityProps) {
     <S.AccessibilityWrapper>
       <S.Container>
         {pathname === "/register"
-          ? <Link to="/" title="Home">Home</Link>
-          : <S.Link href="#menu" title="Menu">Menu</S.Link>}
-
-        <S.Link href="#main" title="Conteúdo">Conteúdo</S.Link>
+          ? <Link accessKey="h" to="/" title="Home">Home</Link>
+          : <a accessKey="m" href="#menu" title="Menu">Menu</a>}
+        <a accessKey="c" href="#content" title="Conteúdo">Conteúdo</a>
         <S.Switch title="Mudar tema">
-          <input type="checkbox" onClick={handleTheme} defaultChecked={name === 'dark'} />
+          <input accessKey="s" type="checkbox" onClick={handleTheme} defaultChecked={name === 'dark'} />
           <span />
         </S.Switch>
       </S.Container>
