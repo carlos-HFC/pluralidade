@@ -1,16 +1,16 @@
-import { lazy, memo, Suspense, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { Route, Routes as Switch, useLocation } from 'react-router-dom';
 import { ToastContainer } from "react-toastify";
 import { DefaultTheme, ThemeProvider } from 'styled-components';
 
 import * as C from '../components';
-import { Loader, LoaderContainer } from "../context/Loader/style";
 import * as P from '../pages';
 
 import { GlobalStyle } from '../styles';
 import { light, dark } from '../styles/theme';
 
-const Footer = memo(lazy(() => import('../components').then(({ Footer }) => ({ default: Footer }))));
+const Aboutus = memo(P.AboutUs);
+const Footer = memo(C.Footer);
 
 export function Routes() {
   const { pathname } = useLocation();
@@ -19,6 +19,11 @@ export function Routes() {
 
   const handleTheme = () => setTheme(theme.name === 'dark' ? light : dark);
 
+  useEffect(() => {
+    window.scroll({ top: 0, behavior: 'auto' });
+    document.body.style.overflow = "auto";
+  }, [pathname]);
+
   return (
     <ThemeProvider theme={theme}>
       <ToastContainer theme={theme.name === 'dark' ? 'dark' : 'colored'} />
@@ -26,19 +31,17 @@ export function Routes() {
       {/* {pathname !== '/register' && <Accessibility handleTheme={handleTheme} />} */}
       <C.Accessibility handleTheme={handleTheme} />
       {pathname !== '/register' && <C.Header />}
-      <main id="main">
+      <main id="content">
         <Switch>
           <Route path="/" element={<P.Home />} />
           <Route path="/register" element={<P.Register />} />
-          <Route path="/aboutus" element={<P.AboutUs />} />
+          <Route path="/aboutus" element={<Aboutus />} />
           <Route path="/contact" element={<P.Contact />} />
           <Route path="/courses" element={<P.Courses />} />
           <Route path="/events" element={<P.Events />} />
         </Switch>
       </main>
-      <Suspense fallback={<LoaderContainer><Loader /></LoaderContainer>}>
-        {pathname !== '/register' && <Footer />}
-      </Suspense>
+      {pathname !== '/register' && <Footer />}
     </ThemeProvider>
   );
 }
