@@ -24,6 +24,7 @@ declare module 'styled-components' {
     card: {
       backgroundPrimary: string;
       backgroundSecondary: string;
+      oddSection: string;
     };
     socials: {
       facebook: string;
@@ -46,7 +47,7 @@ export interface Courses {
   endDate: string;
   pcd: boolean;
   spots: number;
-  period: string;
+  period: 'M' | 'T' | 'N';
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date | null;
