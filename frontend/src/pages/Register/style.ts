@@ -4,44 +4,30 @@ import { FONTS } from "../../styles/variables";
 
 export const SignUp = styled.section`
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 50px 0;
+  padding: 3rem 0;
   background: ${props => props.theme.login.background};
-  
-  @media (min-width: 992px) {
-    padding: 50px;
-  }
-
-  h3, h6, svg {
-    margin: 0;
-    color: ${props => props.theme.text};
-  }
+  transition: background-color .3s;
 
   .signup {
     width: 100%;
     display: flex;
-    padding: 2rem 1rem;
+    padding: 2.5rem 1rem;
     margin: auto;
     flex-direction: column;
-    max-width: 600px;
-    gap: 1.5rem;
-    
-    @media (min-width: 992px) {
-      padding: 2rem;
-    }
+    max-width: 37.5rem;
+    gap: 2rem;
 
-    header {
+    h1 {
       display: flex;
-      flex-direction: column;
-
-      h3 {
-        text-align: center;
-        font-weight: bold;
-        font-family: ${FONTS.primary};
-      }
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      font-weight: bold;
+      position: relative;
+      width: 100%;
+      color: ${props => props.theme.text};
+      transition: color .3s;
+      font-size: 1.5rem;
     }
 
     form {
@@ -53,17 +39,68 @@ export const SignUp = styled.section`
         gap: 2rem;
       }
 
-      h6 {
+      span {
         font-family: ${FONTS.secondary};
+        font-weight: bold;
       }
 
-      #btn-cep {
-        height: 100%;
+      .col {
+        &-half {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+          width: 100%;
+
+          @media (min-width: 992px) {
+            flex-direction: row;
+            gap: 2rem;
+          }
+        }
+
+        &-threequarter {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+          width: 100%;
+
+          & > :first-child {
+            @media (min-width: 992px) {
+              width: 75%
+            }
+          }
+
+          & > :last-child {
+            @media (min-width: 992px) {
+              width: 25%
+            }
+          }
+
+          @media (min-width: 992px) {
+            flex-direction: row;
+            gap: 2rem;
+          }
+        }
+      }
+
+      .set__deficiency {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+
+        & > div {
+          display: flex;
+          gap: 2rem;
+
+          fieldset {
+            width: auto;
+          }
+        }
       }
 
       fieldset {
         border: 0;
         background: ${props => props.theme.login.floating};
+        width: 100%;
       }
     }
   }

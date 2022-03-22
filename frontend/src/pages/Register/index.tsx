@@ -1,7 +1,5 @@
 import axios from 'axios';
 import { ChangeEvent, useRef, useState } from 'react';
-import { BsArrowLeft } from 'react-icons/bs';
-import { useNavigate } from 'react-router-dom';
 
 import { Button, InputBlock, RadioButton, Select, Textarea } from '../../components';
 import { useLoader } from "../../context";
@@ -30,8 +28,6 @@ const INITIAL_STATE_REGISTER = {
 export function Register() {
   const { handleLoader } = useLoader();
 
-  const navigate = useNavigate();
-
   const addressRef = useRef<HTMLInputElement>(null);
   const districtRef = useRef<HTMLInputElement>(null);
 
@@ -44,7 +40,7 @@ export function Register() {
     try {
       const { data } = await axios.get(`https://viacep.com.br/ws/${register.cep}/json/`);
 
-      if (data.erro) return;
+      if (data.erro) return Alert("CEP inválido", "error");
 
       const { localidade: city, logradouro: address, bairro: district, uf } = data;
 
@@ -58,7 +54,7 @@ export function Register() {
         ? districtRef.current?.removeAttribute('disabled')
         : districtRef.current?.setAttribute('disabled', 'false');
     } catch (error) {
-      Alert("CEP inválido", "error")
+      Alert("CEP inválido", "error");
     } finally {
       handleLoader(false);
     }
@@ -71,14 +67,7 @@ export function Register() {
   return (
     <SignUp>
       <div className="signup">
-        <header>
-          <div>
-            <BsArrowLeft size={24} cursor="pointer" onClick={() => navigate('/')} />
-          </div>
-          <div>
-            <h3>Cadastre-se</h3>
-          </div>
-        </header>
+        <h1>Cadastre-se</h1>
 
         <form noValidate>
           <InputBlock label="Nome" title="Insira seu nome" id="nameRegister"
@@ -87,77 +76,57 @@ export function Register() {
           <InputBlock type="email" label="E-mail" title="Insira seu e-mail" id="emailRegister"
             name="email" value={register.email} onChange={handleChangeRegister}
           />
-          <div className="row g-lg-4 g-3">
-            <div className="col-md-6 col-12">
-              <InputBlock label="CPF" title="Insira seu CPF" id="cpfRegister"
-                name="cpf" value={cpfMask(register.cpf)} onChange={handleChangeRegister}
-              />
-            </div>
-            <div className="col-md-6 col-12">
-              <InputBlock label="Telefone/Celular" title="Insira seu telefone/celular" id="phoneRegister"
-                name="phone" value={phoneMask(register.phone)} onChange={handleChangeRegister}
-              />
-            </div>
+          <div className="col-half">
+            <InputBlock label="CPF" title="Insira seu CPF" id="cpfRegister"
+              name="cpf" value={cpfMask(register.cpf)} onChange={handleChangeRegister}
+            />
+            <InputBlock label="Telefone/Celular" title="Insira seu telefone/celular" id="phoneRegister"
+              name="phone" value={phoneMask(register.phone)} onChange={handleChangeRegister}
+            />
           </div>
-          <div className="row g-lg-4 g-3">
-            <div className="col-md-6 col-12">
-              <InputBlock label="Data de Nascimento" title="Insira sua data de nascimento" id="birthdayRegister"
-                name="birthday" value={birthdayMask(register.birthday)} onChange={handleChangeRegister}
-              />
-            </div>
-            <div className="col-md-6 col-12">
-              <Select label="Gênero" id="genderRegister"
-                name="gender" value={register.gender} onChange={handleChangeRegister}
-              >
-                <option defaultChecked disabled value="">Selecione o gênero</option>
-                <option value="M">Masculino</option>
-                <option value="F">Feminino</option>
-                <option value="O">Outros</option>
-              </Select>
-            </div>
+          <div className="col-half">
+            <InputBlock label="Data de Nascimento" title="Insira sua data de nascimento" id="birthdayRegister"
+              name="birthday" value={birthdayMask(register.birthday)} onChange={handleChangeRegister}
+            />
+            <Select label="Gênero" id="genderRegister"
+              name="gender" value={register.gender} onChange={handleChangeRegister}
+            >
+              <option defaultChecked disabled value="">Selecione o gênero</option>
+              <option value="M">Masculino</option>
+              <option value="F">Feminino</option>
+              <option value="O">Outros</option>
+            </Select>
           </div>
-          <div className="row g-lg-4 g-3">
-            <div className="col-sm-8 col-12">
-              <InputBlock label="CEP" title="Insira seu CEP" id="cepRegister"
-                name="cep" value={cepMask(register.cep)} onChange={handleChangeRegister} maxLength={9}
-              />
-            </div>
-            <div className="col-sm-4 col-12">
-              <Button block type="button" variant="primary" id="btn-cep" onClick={searchCep} >
-                Consultar CEP
-              </Button>
-            </div>
+          <div className="col-threequarter">
+            <InputBlock label="CEP" title="Insira seu CEP" id="cepRegister"
+              name="cep" value={cepMask(register.cep)} onChange={handleChangeRegister} maxLength={9}
+            />
+            <Button block type="button" variant="primary" onClick={searchCep} disabled={!cepMask(register.cep) || cepMask(register.cep).length !== 9}>
+              Consultar CEP
+            </Button>
           </div>
           <InputBlock label="Endereço" title="Insira seu endereço" id="addressRegister" ref={addressRef} disabled
             name="address" value={register.address} onChange={handleChangeRegister}
           />
-          <div className="row g-lg-4 g-3">
-            <div className="col-sm-9 col-12">
-              <InputBlock label="Bairro" title="Insira seu bairro" id="districtRegister" ref={districtRef} disabled
-                name="district" value={register.district} onChange={handleChangeRegister}
-              />
-            </div>
-            <div className="col-sm-3 col-12">
-              <InputBlock label="Número" title="Insira seu número" id="numberRegister" maxLength={5}
-                name="number" value={register.number.replace(/\D/g, '')} onChange={handleChangeRegister}
-              />
-            </div>
+          <div className="col-threequarter">
+            <InputBlock label="Bairro" title="Insira seu bairro" id="districtRegister" ref={districtRef} disabled
+              name="district" value={register.district} onChange={handleChangeRegister}
+            />
+            <InputBlock label="Número" title="Insira seu número" id="numberRegister" maxLength={5}
+              name="number" value={register.number.replace(/\D/g, '')} onChange={handleChangeRegister}
+            />
           </div>
-          <div className="row g-lg-4 g-3">
-            <div className="col-sm-9 col-12">
-              <InputBlock label="Cidade" title="Insira sua cidade" id="cityRegister" disabled
-                name="city" value={register.city} onChange={handleChangeRegister}
-              />
-            </div>
-            <div className="col-sm-3 col-12">
-              <InputBlock label="UF" title="Insira sua UF" id="ufRegister" disabled
-                name="uf" value={register.uf} onChange={handleChangeRegister}
-              />
-            </div>
+          <div className="col-threequarter">
+            <InputBlock label="Cidade" title="Insira sua cidade" id="cityRegister" disabled
+              name="city" value={register.city} onChange={handleChangeRegister}
+            />
+            <InputBlock label="UF" title="Insira sua UF" id="ufRegister" disabled
+              name="uf" value={register.uf} onChange={handleChangeRegister}
+            />
           </div>
-          <div className="gap-2 d-flex flex-column">
-            <h6>Tem deficiência?</h6>
-            <div className="d-flex flex-row gap-4">
+          <div className="set__deficiency">
+            <span>Tem deficiência?</span>
+            <div>
               <RadioButton id="deficientTrueRegister" label="Sim" type="radio" title="Sim, tenho deficiência"
                 name="deficient" checked={register.deficient === "true"} value="true" onChange={handleChangeRegister}
               />
@@ -173,7 +142,7 @@ export function Register() {
             Cadastrar
           </Button>
         </form>
-      </div>
-    </SignUp>
+      </div >
+    </SignUp >
   );
 }
