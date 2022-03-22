@@ -5,21 +5,29 @@ import { FONTS } from "../../styles/variables";
 
 export const ContactContainer = styled.section.attrs({ className: "container" })`
   display: flex;
+  padding: 4rem 1rem !important;
   flex-direction: column;
-  padding: 100px .75rem;
-
+  gap: 2rem;
+  
   @media (min-width: 992px) {
-    padding: 150px 0;
+    gap: 3rem;
+    padding: 10rem 1rem !important;
+    flex-direction: row;
   }
 
-  iframe {
+  .contact {
     width: 100%;
-    height: 200px;
-    border: 0;
-    padding-bottom: 3rem;
 
-    @media (min-width: 768px) {
-      height: 450px;
+    @media (min-width: 992px) {
+      width: 35%;
+    }
+  }
+
+  .form {
+    width: 100%;
+
+    @media (min-width: 992px) {
+      width: 65%;
     }
   }
 `;
@@ -28,9 +36,28 @@ export const ContactData = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  width: 100%;
 
   input, textarea {
     background: ${props => props.theme.card.backgroundPrimary};
+    transition: background-color .3s;
+  }
+
+  .form {
+    &__inputs { 
+      display: flex;
+      width: 100%;
+      gap: 1rem;
+      flex-direction: column;
+      
+      @media (min-width: 992px) {
+        flex-direction: row;
+      }
+
+      fieldset {
+        width: 100%
+      }
+    }
   }
 `;
 
@@ -49,16 +76,19 @@ export const ContactInfo = styled.div`
 
     span, a {
       color: ${props => props.theme.text};
+      transition: color .3s;
       font-family: ${FONTS.secondary};
       text-decoration: none;
       font-size: .9rem;
+      font-style: normal;
       
       @media (min-width: 992px) {
         font-size: 1rem;
       }
       
       &:last-child {
-        color: ${props => lighten(.5, props.theme.text)};
+        color: ${props => lighten(.2, props.theme.text)};
+        transition: color .3s;
       }
     }
 
@@ -72,6 +102,7 @@ export const ContactInfo = styled.div`
     
     svg {
       color: ${props => props.theme.text};
+      transition: color .3s;
       font-size: 1.5rem;
       margin-top: .5rem;
     }

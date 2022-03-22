@@ -49,59 +49,51 @@ export function Contact() {
     <>
       <Title title="Contate-nos" />
       <ContactContainer>
-        <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d7314.096862684385!2d-46.639497!3d-23.566704!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce59a33f9666e3%3A0xda9e218caa168b75!2sR.%20Maestro%20Cardim%20-%20Bela%20Vista%2C%20S%C3%A3o%20Paulo%20-%20SP!5e0!3m2!1spt-BR!2sbr!4v1640707688869!5m2!1spt-BR!2sbr" loading="lazy" />
-
-        <div className="row gap-5 gap-lg-0">
-          <ContactData as="form" className="col-lg-8 col-12" onSubmit={sendMessage} noValidate autoComplete="off">
-            <div className="row gap-3 gap-lg-0">
-              <div className="col-lg-6 col-12">
-                <InputBlock label="Nome" title="Insira seu nome" id="nameContact"
-                  name="name" value={contact.name} onChange={handleChange}
-                />
-              </div>
-              <div className="col-lg-6 col-12">
-                <InputBlock label="E-mail" type="email" title="Insira seu e-mail" id="emailContact"
-                  name="email" value={contact.email} onChange={handleChange}
-                />
-              </div>
-            </div>
-            <Textarea label="Descrição" title="Insira sua descrição" id="descriptionContact"
-              name="description" value={contact.description} onChange={handleChange}
+        <ContactData as="form" className="form" onSubmit={sendMessage} noValidate autoComplete="off">
+          <div className="form__inputs">
+            <InputBlock label="Nome" title="Insira seu nome" id="nameContact"
+              name="name" value={contact.name} onChange={handleChange}
             />
-            <Button variant="primary" type="submit">
-              Enviar
-            </Button>
-          </ContactData>
-          <ContactData className="col-lg-4 col-12" as="address">
-            <ContactInfo>
-              <div>
-                <BsHouse />
-              </div>
-              <div>
-                <span>Rua Maestro Cardim, 000</span>
-                <span>Bela Vista, São Paulo - SP</span>
-              </div>
-            </ContactInfo>
-            <ContactInfo>
-              <div>
-                <BsPhone />
-              </div>
-              <div>
-                <span>+55 11 98451 7815</span>
-                <span>Seg a Sex, das 7h as 20h</span>
-              </div>
-            </ContactInfo>
-            <ContactInfo>
-              <div>
-                <BsEnvelope />
-              </div>
-              <div>
-                <a href="mailto:contato@institutopluralidade.org.br">contato@institutopluralidade.org.br</a>
-                <span>Envie-nos sua mensagem a qualquer momento!</span>
-              </div>
-            </ContactInfo>
-          </ContactData>
-        </div>
+            <InputBlock label="E-mail" type="email" title="Insira seu e-mail" id="emailContact"
+              name="email" value={contact.email} onChange={handleChange}
+            />
+          </div>
+          <Textarea label="Descrição" title="Insira sua descrição" id="descriptionContact"
+            name="description" value={contact.description} onChange={handleChange}
+          />
+          <Button variant="primary" type="submit">
+            Enviar
+          </Button>
+        </ContactData>
+        <ContactData as="address" className="contact">
+          <ContactInfo>
+            <div>
+              <BsHouse />
+            </div>
+            <div>
+              <span>Rua Maestro Cardim, 000</span>
+              <span>Bela Vista, São Paulo - SP</span>
+            </div>
+          </ContactInfo>
+          <ContactInfo>
+            <div>
+              <BsPhone />
+            </div>
+            <div>
+              <span>+55 11 98451 7815</span>
+              <span>Seg a Sex, das 7h as 20h</span>
+            </div>
+          </ContactInfo>
+          <ContactInfo>
+            <div>
+              <BsEnvelope />
+            </div>
+            <div>
+              <a href="mailto:contato@institutopluralidade.org.br">contato@institutopluralidade.org.br</a>
+              <span>Envie-nos sua mensagem a qualquer momento!</span>
+            </div>
+          </ContactInfo>
+        </ContactData>
       </ContactContainer>
     </>
   );
