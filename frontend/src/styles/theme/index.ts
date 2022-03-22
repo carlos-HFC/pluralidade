@@ -1,4 +1,4 @@
-import { lighten } from 'polished';
+import { darken, lighten } from 'polished';
 
 import { COLORS } from "../variables";
 
@@ -25,6 +25,7 @@ export const dark = {
   card: {
     backgroundPrimary: '#232323',
     backgroundSecondary: '#333',
+    oddSection: '#222',
   },
   socials: {
     facebook: '#333',
@@ -40,7 +41,7 @@ export const light = {
   name: 'light',
   background: COLORS.white,
   text: COLORS.black,
-  header: lighten(.15, COLORS.purple),
+  header: darken(.3, COLORS.purpleLight),
   footer: lighten(.2, COLORS.pinkLight),
   pageTitle: COLORS.purpleLight,
   login: {
@@ -59,6 +60,7 @@ export const light = {
   card: {
     backgroundPrimary: COLORS.white,
     backgroundSecondary: COLORS.white,
+    oddSection: lighten(.05, COLORS.purpleLight),
   },
   socials: {
     facebook: COLORS.facebook,
